@@ -156,8 +156,6 @@ jobs:
     - name: 整理固件文件
       id: organizer
       run: |
-        mkdir config
-        find openwrt/bin/targets/ -name "*config.buildinfo*" | xargs -i mv -f {} config
         mkdir -p ./artifact/firmware
         mkdir -p ./artifact/vmware
         mkdir -p ./artifact/package
