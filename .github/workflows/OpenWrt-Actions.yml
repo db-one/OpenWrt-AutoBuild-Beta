@@ -107,14 +107,6 @@ jobs:
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
 
-        echo "Apply Files..."
-        if [ -n "$(ls -A "build/${{matrix.target}}/files" 2>/dev/null)" ]; then
-         cp -rf build/${{matrix.target}}/files files
-        fi
-        if [ -n "$(ls -A "build/${{matrix.target}}/sources" 2>/dev/null)" ]; then
-         cp -Rf build/${{matrix.target}}/sources/* ./
-        fi
-
         echo "Apply Custom"
         if [ -f "build/${{matrix.target}}/$CUSTOM_SH" ]; then
         (
@@ -123,6 +115,15 @@ jobs:
         )
         fi
          mv build/${{matrix.target}}/$CONFIG_FILE .config
+
+        echo "Apply Files..."
+        if [ -n "$(ls -A "build/${{matrix.target}}/files" 2>/dev/null)" ]; then
+         cp -rf build/${{matrix.target}}/files files
+        fi
+        if [ -n "$(ls -A "build/${{matrix.target}}/sources" 2>/dev/null)" ]; then
+         cp -Rf build/${{matrix.target}}/sources/* ./
+        fi
+
         make defconfig
 
     - name: SSH远程连接服务器配置固件
