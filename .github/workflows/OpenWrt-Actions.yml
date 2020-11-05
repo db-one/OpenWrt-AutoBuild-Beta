@@ -111,8 +111,8 @@ jobs:
         if [ -n "$(ls -A "build/${{matrix.target}}/files" 2>/dev/null)" ]; then
          cp -rf build/${{matrix.target}}/files files
         fi
-        if [ -n "$(ls -A "build/${{matrix.target}}/source" 2>/dev/null)" ]; then
-         cp -Rf build/${{matrix.target}}/source/* ./
+        if [ -n "$(ls -A "build/${{matrix.target}}/sources" 2>/dev/null)" ]; then
+         cp -Rf build/${{matrix.target}}/sources/* ./
         fi
 
         echo "Apply Custom"
