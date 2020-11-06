@@ -107,16 +107,15 @@ jobs:
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
 
-        echo "Apply Custom"
+        echo "执行脚本"
         if [ -f "build/${{matrix.target}}/$CUSTOM_SH" ]; then
         (
           chmod +x build/${{matrix.target}}/$CUSTOM_SH
           /bin/bash "build/${{matrix.target}}/$CUSTOM_SH"
         )
         fi
-         mv build/${{matrix.target}}/$CONFIG_FILE .config
 
-        echo "Apply Files..."
+        echo "复制文件..."
         if [ -n "$(ls -A "build/${{matrix.target}}/files" 2>/dev/null)" ]; then
          cp -rf build/${{matrix.target}}/files files
         fi
@@ -124,6 +123,8 @@ jobs:
          cp -Rf build/${{matrix.target}}/sources/* ./
         fi
 
+        echo "写入配置文件"
+         mv build/${{matrix.target}}/$CONFIG_FILE .config
         make defconfig
 
     - name: SSH远程连接服务器配置固件
