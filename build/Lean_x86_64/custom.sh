@@ -147,7 +147,7 @@ CONFIG_PACKAGE_luci-app-eqos=y #IP限速
 # CONFIG_PACKAGE_luci-app-smartdns=y #smartdns服务器
 # CONFIG_PACKAGE_luci-app-adguardhome=y #ADguardhome
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
-CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
+# CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
 EOF
 
 # ShadowsocksR插件:
