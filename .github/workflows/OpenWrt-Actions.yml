@@ -23,15 +23,15 @@ on:
 #    - cron: 0 21 * * *
 
 # 点赞☆Star触发编译
-  watch:
-    types: [started]
+#  watch:
+#    types: [started]
 
 # 编辑触发
-  push:
-    branches:
-      - master
-    paths:
-      - '开启编译'
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - '开启编译'
 
 env: 
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
