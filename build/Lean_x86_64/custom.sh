@@ -35,6 +35,11 @@ svn co https://github.com/xiaorouji/openwrt-package/trunk/package package/small
 # 替换更新haproxy默认版本
 rm -rf feeds/packages/net/haproxy && svn co https://github.com/lienol/openwrt-packages/trunk/net/haproxy feeds/packages/net/haproxy
 
+# 替换更新wrtbwmon默认版本
+rm -rf package/lean/luci-app-wrtbwmon
+svn co https://github.com/281677160/openwrt-package/trunk/wrtbwmon package/wrtbwmon
+svn co https://github.com/281677160/openwrt-package/trunk/luci-app-wrtbwmon-zhcn package/luci-app-wrtbwmon
+
 # 替换https-dns-proxy.init文件,解决用LEDE源码加入passwall编译固件后DNS转发127.0.0.1#5053和12.0.0.1#5054问题
 curl -fsSL  https://raw.githubusercontent.com/Lienol/openwrt-packages/19.07/net/https-dns-proxy/files/https-dns-proxy.init > feeds/packages/net/https-dns-proxy/files/https-dns-proxy.init
 
