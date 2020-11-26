@@ -134,7 +134,7 @@ CONFIG_PACKAGE_luci-app-eqos=y #IP限速
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 CONFIG_PACKAGE_luci-theme-edge=y #edge主题
 CONFIG_PACKAGE_luci-app-autopoweroff=y #定时设置
-CONFIG_PACKAGE_luci-app-wrtbwmon-zhcn=y #实时流量监测
+CONFIG_PACKAGE_luci-app-wrtbwmon-zh=y #实时流量监测
 EOF
 
 # ShadowsocksR插件:
