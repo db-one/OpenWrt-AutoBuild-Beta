@@ -219,6 +219,8 @@ jobs:
     - name: 自动发布固件到 Releases
       uses: softprops/action-gh-release@v1
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
         name: ${{ env.FILE_DATE1 }} 「 ${{ env.WXFB_MESSAGE }} 」固件
         tag_name: ${{ env.FILE_DATE2 }}-${{matrix.target}}
