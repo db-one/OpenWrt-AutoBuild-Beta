@@ -28,9 +28,9 @@ sed -i 's#option database_directory /var/lib/nlbwmon#option database_directory /
 sed -i 's@background-color: #e5effd@background-color: #f8fbfe@g' package/openwrt-package/luci-theme-edge/htdocs/luci-static/edge/cascade.css #luci-theme-edge主题颜色微调
 sed -i 's#rgba(223, 56, 18, 0.04)#rgba(223, 56, 18, 0.02)#g' package/openwrt-package/luci-theme-edge/htdocs/luci-static/edge/cascade.css #luci-theme-edge主题颜色微调
 
-#创建自定义配置文件 - Lean_x86_64
+#创建自定义配置文件 - Lean_x86_64_Long
 
-cd build/Lean_x86_64
+cd build/Lean_x86_64_Long
 touch ./.config
 
 #
