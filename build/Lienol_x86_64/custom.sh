@@ -132,6 +132,8 @@ CONFIG_PACKAGE_luci-app-oaf=y #应用过滤
 # CONFIG_PACKAGE_luci-app-serverchan=y #微信推送
 CONFIG_PACKAGE_luci-app-eqos=y #IP限速
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
+CONFIG_PACKAGE_luci-theme-edge=y #edge主题
+CONFIG_PACKAGE_luci-app-autopoweroff=y #定时设置
 EOF
 
 # ShadowsocksR插件:
@@ -248,7 +250,6 @@ cat >> .config <<EOF
 CONFIG_PACKAGE_luci-theme-argon-dark-mod=y
 CONFIG_PACKAGE_luci-theme-argon-light-mod=y
 CONFIG_PACKAGE_luci-theme-bootstrap=y
-CONFIG_PACKAGE_luci-theme-edge=y
 # CONFIG_PACKAGE_luci-theme-bootstrap-mod is not set
 # CONFIG_PACKAGE_luci-theme-darkmatter is not set
 # CONFIG_PACKAGE_luci-theme-freifunk-generic is not set

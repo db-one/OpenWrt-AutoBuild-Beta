@@ -15,6 +15,7 @@ rm -rf feeds/packages/net/haproxy
 
 # 添加第三方软件包
 git clone https://github.com/281677160/openwrt-package.git -b master package/openwrt-package
+svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-theme-atmaterial package/luci-theme-atmaterial
 
 # 更新并安装源
 ./scripts/feeds clean
@@ -131,6 +132,9 @@ CONFIG_PACKAGE_luci-app-control-weburl=y #网址过滤
 # CONFIG_PACKAGE_luci-app-adguardhome=y #ADguardhome
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 # CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
+CONFIG_PACKAGE_luci-theme-atmaterial=y #atmaterial 三合一主题
+CONFIG_PACKAGE_luci-theme-edge=y #edge主题
+CONFIG_PACKAGE_luci-app-autopoweroff=y #定时设置
 EOF
 
 # ShadowsocksR插件:
@@ -230,10 +234,8 @@ EOF
 
 # LuCI主题:
 cat >> .config <<EOF
-CONFIG_PACKAGE_luci-theme-atmaterial=y
 CONFIG_PACKAGE_luci-theme-argon=y
 CONFIG_PACKAGE_luci-theme-netgear=y
-CONFIG_PACKAGE_luci-theme-edge=y
 EOF
 
 # 常用软件包:
