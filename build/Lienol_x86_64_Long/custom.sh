@@ -130,6 +130,7 @@ CONFIG_PACKAGE_luci-app-openclash=y #OpenClash客户端
 CONFIG_PACKAGE_luci-app-eqos=y #IP限速
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 CONFIG_PACKAGE_luci-theme-edge=y #edge主题
+CONFIG_PACKAGE_luci-app-jd-dailybonus=y #京东签到
 EOF
 
 # ShadowsocksR插件:

@@ -134,6 +134,7 @@ CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 # CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
 CONFIG_PACKAGE_luci-theme-atmaterial=y #atmaterial 三合一主题
 CONFIG_PACKAGE_luci-theme-edge=y #edge主题
+CONFIG_PACKAGE_luci-app-jd-dailybonus=y #京东签到
 EOF
 
 # ShadowsocksR插件:
@@ -248,6 +249,7 @@ CONFIG_PACKAGE_nano=y
 # CONFIG_PACKAGE_vim-fuller=y
 CONFIG_PACKAGE_wget=y
 CONFIG_PACKAGE_bash=y
+CONFIG_PACKAGE_node=y
 CONFIG_PACKAGE_kmod-tun=y
 CONFIG_PACKAGE_libcap=y
 CONFIG_PACKAGE_libcap-bin=y
