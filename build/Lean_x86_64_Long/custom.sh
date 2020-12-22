@@ -134,7 +134,6 @@ CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 # CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
 CONFIG_PACKAGE_luci-theme-atmaterial=y #atmaterial 三合一主题
 CONFIG_PACKAGE_luci-theme-edge=y #edge主题
-CONFIG_PACKAGE_luci-app-jd-dailybonus=y #京东签到
 EOF
 
 # ShadowsocksR插件:
