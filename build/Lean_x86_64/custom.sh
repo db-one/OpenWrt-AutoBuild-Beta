@@ -155,7 +155,7 @@ CONFIG_PACKAGE_naiveproxy=y
 CONFIG_PACKAGE_kcptun-client=y
 CONFIG_PACKAGE_chinadns-ng=y
 CONFIG_PACKAGE_brook=y
-CONFIG_PACKAGE_v2ray-plugin=n
+CONFIG_PACKAGE_luci-app-passwall_INCLUDE_v2ray-plugin=n
 EOF
 
 # 常用LuCI插件:
