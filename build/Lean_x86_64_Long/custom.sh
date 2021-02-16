@@ -187,7 +187,7 @@ CONFIG_PACKAGE_luci-app-music-remote-center=n #PCHiFi数字转盘遥控
 CONFIG_PACKAGE_luci-app-usb-printer=n #USB打印机
 CONFIG_PACKAGE_luci-app-sqm=n #SQM智能队列管理
 CONFIG_PACKAGE_luci-app-jd-dailybonus=n #京东签到服务
-CONFIG_PACKAGE_luci-app-uugamebooster=n #UU加速器
+CONFIG_PACKAGE_luci-app-uugamebooster=n #UU游戏加速器
 #
 # VPN相关插件(禁用):
 #
