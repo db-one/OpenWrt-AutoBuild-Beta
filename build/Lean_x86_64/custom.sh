@@ -136,7 +136,6 @@ CONFIG_PACKAGE_luci-theme-edge=y #edge主题
 # CONFIG_PACKAGE_luci-app-turboacc=y #Turbo ACC 网络加速设置
 # CONFIG_PACKAGE_luci-app-dnsfilter=y #基于DNS的广告过滤
 CONFIG_PACKAGE_luci-theme-opentopd=y #仿KOOS主题
-CONFIG_PACKAGE_luci-app-qos-gargoyle=y #QOS
 CONFIG_PACKAGE_luci-app-autotimeset=y #定时设置插件
 CONFIG_PACKAGE_luci-app-autopoweroff=y #定时设置插件
 CONFIG_PACKAGE_luci-app-poweroffdevice=y #关机插件
