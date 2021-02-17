@@ -29,6 +29,9 @@ on:
 
 env: 
   TZ: Asia/Shanghai
+  REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   GITHUB_RELEASE: https://github.com/db-one/Beta-OpenWrt-AutoBuild/releases
 
 jobs: 
@@ -125,7 +128,7 @@ jobs:
          mv build/${{matrix.target}}/$CONFIG_FILE .config
         make defconfig
 
-    - name: SSH远程连接服务器配置固件
+    - name: SSH远程连接服务器
       uses: P3TERX/ssh2actions@v1.0.0
       if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
       env:
@@ -265,7 +268,7 @@ jobs:
     - name: 完成编译信息通知
       if: steps.organizer.outputs.status == 'success' && env.SERVERCHAN_SCKEY == 'true'
       run: |
-        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=您的${{ env.FB_MESSAGE }}固件成功编译完成了！
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=您的${{ env.FB_MESSAGE }}固件成功编译完成了！
       
           完成时间：${{ env.FILE_DATE1 }}
       
@@ -275,7 +278,7 @@ jobs:
       
           WeTransfer：${{ env.WETRANSFER_URL }}
       
-          固件已经编译完成 🎈！！！"
+          固件已经编译完成 🎈！！！" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" 
 
 
 
