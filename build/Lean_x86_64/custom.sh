@@ -129,14 +129,13 @@ CONFIG_PACKAGE_luci-app-eqos=y #IP限速
 # CONFIG_PACKAGE_luci-app-control-weburl=y #网址过滤
 # CONFIG_PACKAGE_luci-app-smartdns=y #smartdns服务器
 # CONFIG_PACKAGE_luci-app-adguardhome=y #ADguardhome
-# CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
+CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 # CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
 CONFIG_PACKAGE_luci-theme-atmaterial=y #atmaterial 三合一主题
 CONFIG_PACKAGE_luci-theme-edge=y #edge主题
 # CONFIG_PACKAGE_luci-app-turboacc=y #Turbo ACC 网络加速设置
 # CONFIG_PACKAGE_luci-app-dnsfilter=y #基于DNS的广告过滤
 CONFIG_PACKAGE_luci-app-autotimeset=y #定时重启系统，网络
-CONFIG_PACKAGE_luci-app-poweroffdevice=y #关机插件
 EOF
 
 # ShadowsocksR插件:
