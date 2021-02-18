@@ -138,7 +138,7 @@ CONFIG_PACKAGE_luci-theme-edge=y #edge主题
 CONFIG_PACKAGE_luci-theme-opentopd=y #仿KOOS主题
 CONFIG_PACKAGE_luci-app-autotimeset=y #定时设置插件
 CONFIG_PACKAGE_luci-app-autopoweroff=y #定时设置插件
-CONFIG_PACKAGE_luci-app-poweroffdevice=y #关机插件
+# CONFIG_PACKAGE_luci-app-poweroffdevice=y #关机插件
 EOF
 
 # ShadowsocksR插件:
