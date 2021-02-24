@@ -124,7 +124,6 @@ EOF
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-app-syncdial=y #多拨虚拟WAN
 CONFIG_PACKAGE_luci-app-mwan3=y #MWAN负载均衡
-CONFIG_PACKAGE_luci-app-mwan3helper=y #MWAN3分流助手
 EOF
 
 # 第三方插件选择:
@@ -197,9 +196,9 @@ CONFIG_PACKAGE_luci-app-sqm=n #SQM智能队列管理
 CONFIG_PACKAGE_luci-app-jd-dailybonus=n #京东签到服务
 CONFIG_PACKAGE_luci-app-uugamebooster=n #UU游戏加速器
 
-CONFIG_PACKAGE_luci-app-vnstat=n #vnStat网络监控（图表）
-CONFIG_PACKAGE_luci-app-watchcat=n #断网检测功能与定时重启
-CONFIG_PACKAGE_luci-app-statistics=n #流量监控工具
+CONFIG_PACKAGE_luci-app-vnstat=y #vnStat网络监控（图表）
+CONFIG_PACKAGE_luci-app-watchcat=y #断网检测功能与定时重启
+CONFIG_PACKAGE_luci-app-statistics=y #流量监控工具
 
 #
 # VPN相关插件(禁用):
