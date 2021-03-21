@@ -146,6 +146,7 @@ CONFIG_PACKAGE_luci-app-godproxy=y #GodProxy去广告，基于GodProxyP修改而
 # CONFIG_PACKAGE_luci-app-dnsfilter=y #基于DNS的广告过滤
 CONFIG_PACKAGE_luci-app-autotimeset=y #定时重启系统，网络
 CONFIG_PACKAGE_luci-app-ddnsto=y #ddnsto
+CONFIG_PACKAGE_ddnsto=y
 EOF
 
 # ShadowsocksR插件:
