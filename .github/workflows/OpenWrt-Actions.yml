@@ -127,6 +127,9 @@ jobs:
         echo "写入配置文件"
         mv build/${{matrix.target}}/$CONFIG_FILE .config
         make defconfig
+
+    - name: 输出配置文件
+      run: |
         cat .config
 
     - name: SSH远程连接服务器
