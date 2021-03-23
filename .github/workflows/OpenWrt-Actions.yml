@@ -125,8 +125,9 @@ jobs:
         fi
 
         echo "写入配置文件"
-         mv build/${{matrix.target}}/$CONFIG_FILE .config
+        mv build/${{matrix.target}}/$CONFIG_FILE .config
         make defconfig
+        cat .config
 
     - name: SSH远程连接服务器
       uses: P3TERX/ssh2actions@v1.0.0
@@ -255,7 +256,7 @@ jobs:
     - name: 删除运行记录
       uses: db-one/delete-workflow-runs@main
       with:
-        retain_days: 5     #保留最后多少记录不删除
+        retain_days: 1     #保留最后多少记录不删除
         keep_minimum_runs: 0
 
     - name: 删除自动发布的旧固件
