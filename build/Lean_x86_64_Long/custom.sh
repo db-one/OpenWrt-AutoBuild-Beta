@@ -24,7 +24,7 @@ rm -rf feeds/packages/net/haproxy
 ZZZ="package/lean/default-settings/files/zzz-default-settings"
 #
 sed -i "/uci commit fstab/a\uci commit network" $ZZZ
-sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ                                                    # 设置密码为空
+sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                               #取消系统默认密码
 sed -i "/uci commit network/i\uci set network.lan.ipaddr='10.0.0.1'" $ZZZ                 # IPv4 地址(openwrt后台地址)
 # sed -i "/uci commit network/i\uci set network.lan.netmask='255.255.255.0'" $ZZZ           # IPv4 子网掩码
 # sed -i "/uci commit network/i\uci set network.lan.gateway='192.168.2.1'" $ZZZ             # IPv4 网关
@@ -33,9 +33,10 @@ sed -i "/uci commit network/i\uci set network.lan.ipaddr='10.0.0.1'" $ZZZ       
 # sed -i "/uci commit network/i\uci set network.lan.delegate='0'" $ZZZ                      # 去掉LAN口使用内置的 IPv6 管理
 sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-X86'" $ZZZ       # 修改主机名称为OpenWrt-X86
 sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ              # 增加自己个性名称
-
-# sed -i 's/luci-theme-bootstrap/luci-theme-atmaterial/g' feeds/luci/collections/luci/Makefile   # 强制选择默认主题选项
-sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/atmaterial_red" $ZZZ        # 选择默认主题
+# sed -i 's@.*admin_status/index/mwan.htm*@#&@g' $ZZZ                                       #在首页显示 mwan 服务
+sed -i 's@.*admin_status/index/upnp.htm*@#&@g' $ZZZ                                       #在首页显示 upnp 服务
+sed -i 's@.*admin_status/index/ddns.htm*@#&@g' $ZZZ                                       #在首页显示 ddns 服务
+# sed -i 's@.*admin_status/index/minidlna.htm*@#&@g' $ZZZ                                   #在首页显示 minidlna 服务
 
 #sed -i 's/PATCHVER:=5.4/PATCHVER:=4.19/g' target/linux/x86/Makefile                      # 修改内核版本为4.19
 
