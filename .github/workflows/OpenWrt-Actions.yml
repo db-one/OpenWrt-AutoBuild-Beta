@@ -130,7 +130,7 @@ jobs:
 
     - name: 输出配置文件
       run: |
-        cat .config
+        cd openwrt && cat .config
 
     - name: SSH远程连接服务器
       uses: P3TERX/ssh2actions@v1.0.0
