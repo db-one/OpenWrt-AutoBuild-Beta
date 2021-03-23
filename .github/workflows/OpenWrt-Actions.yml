@@ -124,7 +124,7 @@ jobs:
          cp -Rf build/${{matrix.target}}/sources/* ./
         fi
 
-        echo "写入配置文件"
+        echo "写入配置文件..."
         mv build/${{matrix.target}}/$CONFIG_FILE .config
         make defconfig
 

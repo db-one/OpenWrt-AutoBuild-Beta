@@ -20,7 +20,7 @@ rm -rf feeds/packages/libs/libcap
 svn co https://github.com/openwrt/packages/trunk/libs/libcap feeds/packages/libs/libcap
 
 # 自定义定制选项
-ZZZ="package/lean/default-settings/files/zzz-default-settings"
+ZZZ="package/default-settings/files/zzz-default-settings"
 #
 sed -i "/uci commit fstab/a\uci commit network" $ZZZ
 # sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ                                                    # 设置密码为空
