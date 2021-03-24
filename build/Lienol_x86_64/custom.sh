@@ -28,7 +28,7 @@ sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-X86'" $
 sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ              # 增加自己个性名称
 sed -i 's@.*view/admin_status/index*@#&@g' $ZZZ                                           #在首页显示一些服务
 #sed -i 's/PATCHVER:=5.4/PATCHVER:=4.19/g' target/linux/x86/Makefile                      # 修改内核版本为4.19
-sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/atmaterial_red" $ZZZ        # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
+sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/argon" $ZZZ        # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
 
 # ================================================
 sed -i 's#option commit_interval 24h#option commit_interval 10m#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               #修改流量统计写入为10分钟
@@ -142,7 +142,8 @@ CONFIG_PACKAGE_luci-app-oaf=y #应用过滤
 # CONFIG_PACKAGE_luci-app-serverchan=y #微信推送
 CONFIG_PACKAGE_luci-app-eqos=y #IP限速
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
-CONFIG_PACKAGE_luci-theme-atmaterial=y #atmaterial 三合一主题
+CONFIG_PACKAGE_luci-theme-argon=y #argon主题
+CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
 CONFIG_PACKAGE_luci-theme-edge=y #edge主题
 # CONFIG_PACKAGE_luci-app-turboacc=y #Turbo ACC 网络加速设置
 CONFIG_PACKAGE_luci-app-godproxy=y #GodProxy去广告，基于GodProxyP修改而来
@@ -234,14 +235,7 @@ EOF
 
 # LuCI主题:
 cat >> .config <<EOF
-CONFIG_PACKAGE_luci-theme-argon-dark-mod=y
-CONFIG_PACKAGE_luci-theme-argon-light-mod=y
 CONFIG_PACKAGE_luci-theme-bootstrap=y
-CONFIG_PACKAGE_luci-theme-bootstrap-mod=n
-CONFIG_PACKAGE_luci-theme-darkmatter=n
-CONFIG_PACKAGE_luci-theme-freifunk-generic=n
-CONFIG_PACKAGE_luci-theme-material=n
-CONFIG_PACKAGE_luci-theme-openwrt=n
 EOF
 
 # 常用软件包:
