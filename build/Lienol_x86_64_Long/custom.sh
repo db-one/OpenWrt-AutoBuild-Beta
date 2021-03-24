@@ -22,19 +22,15 @@ svn co https://github.com/openwrt/packages/trunk/libs/libcap feeds/packages/libs
 # 自定义定制选项
 ZZZ="package/default-settings/files/zzz-default-settings"
 #
-sed -i "/uci commit fstab/a\uci commit network" $ZZZ
 # sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                               #取消系统默认密码
-sed -i "/uci commit network/i\uci set network.lan.ipaddr='10.0.0.1'" $ZZZ                 # IPv4 地址(openwrt后台地址)
-# sed -i "/uci commit network/i\uci set network.lan.netmask='255.255.255.0'" $ZZZ           # IPv4 子网掩码
-# sed -i "/uci commit network/i\uci set network.lan.gateway='192.168.2.1'" $ZZZ             # IPv4 网关
-# sed -i "/uci commit network/i\uci set network.lan.broadcast='192.168.2.255'" $ZZZ         # IPv4 广播
-# sed -i "/uci commit network/i\uci set network.lan.dns='223.5.5.5 114.114.114.114'" $ZZZ   # DNS(多个DNS要用空格分开)
-# sed -i "/uci commit network/i\uci set network.lan.delegate='0'" $ZZZ                      # 去掉LAN口使用内置的 IPv6 管理
 sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-X86'" $ZZZ       # 修改主机名称为OpenWrt-X86
 sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ              # 增加自己个性名称
 sed -i 's@.*view/admin_status/index*@#&@g' $ZZZ                                           #在首页显示一些服务
 
 #sed -i 's/PATCHVER:=5.4/PATCHVER:=4.19/g' target/linux/x86/Makefile                      # 修改内核版本为4.19
+sed -i 's#192.168.1.1#10.0.0.1#g' package/base-files/files/bin/config_generate            #定制默认IP
+
+sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/atmaterial_red" $ZZZ        # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
 
 # ================================================
 sed -i 's#max-width:200px#max-width:1000px#g' feeds/luci/modules/luci-mod-admin-full/luasrc/view/admin_status/index.htm #修改首页样式
