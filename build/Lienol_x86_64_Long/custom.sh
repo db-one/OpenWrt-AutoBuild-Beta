@@ -35,8 +35,6 @@ sed -i 's@%D %V, %C@%D %V, %C Lienol_x86_64@g' package/base-files/files/etc/bann
 sed -i 's#option commit_interval 24h#option commit_interval 10m#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               #修改流量统计写入为10分钟
 sed -i 's#option database_directory /var/lib/nlbwmon#option database_directory /etc/config/nlbwmon_data#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               #修改流量统计数据存放默认位置
 sed -i 's@interval: 5@interval: 1@g' package/lean/luci-app-wrtbwmon/htdocs/luci-static/wrtbwmon/wrtbwmon.js               #wrtbwmon默认刷新时间更改为1秒
-sed -i 's@vpn@services@g' package/lean/luci-app-zerotier/luasrc/controller/zerotier.lua               #修改zerotier到服务菜单
-sed -i 's@vpn@services@g' package/lean/luci-app-zerotier/luasrc/view/zerotier/zerotier_status.htm               #修改zerotier到服务菜单
 
 # 创建自定义配置文件 - Lienol_x86_64_Long
 
@@ -192,7 +190,6 @@ CONFIG_PACKAGE_luci-app-control-webrestriction=y #访问限制
 CONFIG_PACKAGE_luci-app-control-weburl=y #网址过滤
 CONFIG_PACKAGE_luci-app-nlbwmon=y #宽带流量监控
 CONFIG_PACKAGE_luci-app-wrtbwmon=y #实时流量监测
-CONFIG_PACKAGE_luci-app-watchcat=y #配置拨号自动断开重连
 CONFIG_PACKAGE_luci-app-sfe=y #高通开源的 Shortcut FE 转发加速引擎
 CONFIG_PACKAGE_luci-app-smartdns=n #smartdns服务器
 CONFIG_PACKAGE_luci-app-diskman=n #磁盘管理磁盘信息
