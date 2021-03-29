@@ -19,6 +19,8 @@ git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-pa
 rm -rf package/lean/luci-theme-argon
 rm -rf package/lean/v2ray-plugin
 rm -rf feeds/packages/net/haproxy
+rm -rf package/lean/luci-app-sfe
+rm -rf package/lean/luci-app-flowoffload
 
 # 自定义定制选项
 ZZZ="package/lean/default-settings/files/zzz-default-settings"
