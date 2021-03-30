@@ -16,6 +16,11 @@ on:
         description: 'build-openwrt'
         required: true
         default: '编译OpenWrt固件'
+      ssh:
+        description: 'SSH远程'
+        required: false
+        default: 'ssh-actions'
+
 
 
 # 定时触发编译(每天早3点)
@@ -134,7 +139,7 @@ jobs:
 
     - name: SSH远程连接服务器
       uses: P3TERX/ssh2actions@v1.0.0
-      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
+      if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh' && github.event.inputs.ssh  != 'false')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
