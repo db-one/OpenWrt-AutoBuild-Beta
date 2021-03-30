@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       ssh:
-        description: 'SSH远程'
+        description: '编译OpenWrt固件-SSH远程：改为“ssh”打开SSH连接'
         required: false
         default: 'ssh-actions'
 
