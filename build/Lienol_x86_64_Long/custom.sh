@@ -5,11 +5,11 @@
 # sudo -E apt-get -y install rename
 
 # 更新feeds文件
-sed -i 's#src-git luci https://github.com/Lienol/openwrt-luci.git;17.01#src-git luci https://github.com/Lienol/openwrt-luci.git;19.07#g' feeds.conf.default #更换luci版本
+sed -i 's#src-git luci https://github.com/Lienol/openwrt-luci.git;17.01#src-git luci https://github.com/Lienol/openwrt-luci.git;18.06#g' feeds.conf.default #更换luci版本
 cat feeds.conf.default
 
 # 添加第三方软件包
-git clone https://github.com/db-one/dbone-packages.git -b 19.07 package/dbone-packages
+git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-packages
 
 # 更新并安装源
 ./scripts/feeds clean
