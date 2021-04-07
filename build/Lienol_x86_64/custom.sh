@@ -27,7 +27,7 @@ svn co https://github.com/openwrt/packages/trunk/libs/libcap feeds/packages/libs
 ZZZ="package/default-settings/files/zzz-default-settings"
 #
 sed -i 's#192.168.1.1#10.0.0.1#g' package/base-files/files/bin/config_generate            # 定制默认IP
-# sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                             # 取消系统默认密码
+# sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                           # 取消系统默认密码
 sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-X86'" $ZZZ       # 修改主机名称为OpenWrt-X86
 sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ              # 增加自己个性名称
 sed -i 's@.*view/admin_status/index*@#&@g' $ZZZ                                           # 在首页显示一些服务
@@ -151,8 +151,6 @@ CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 CONFIG_PACKAGE_luci-theme-argon=y #argon主题
 # CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
 CONFIG_PACKAGE_luci-theme-edge=y #edge主题
-# CONFIG_PACKAGE_luci-app-turboacc=y #Turbo ACC 网络加速设置
-# CONFIG_PACKAGE_luci-app-godproxy=y #GodProxy去广告，基于GodProxyP修改而来
 CONFIG_PACKAGE_luci-app-autotimeset=y #定时重启系统，网络
 # CONFIG_PACKAGE_luci-app-ddnsto=y #小宝开发的DDNS.to内网穿透
 # CONFIG_PACKAGE_ddnsto=y #DDNS.to内网穿透软件包
