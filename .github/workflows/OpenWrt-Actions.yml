@@ -278,7 +278,7 @@ jobs:
     - name: 编译成功信息通知-企业微信
       if: steps.organizer.outputs.status == 'success' && env.WECHAT_WORK == 'true'
       run: |
-        curl "http://$WECHAT_WORK_URL/push?token=$WECHAT_WORK_TOKEN&message=您的${{ env.FB_MESSAGE }}固件成功编译完成了！
+        curl "http://$WECHAT_WORK_URL?token=$WECHAT_WORK_TOKEN&message=您的${{ env.FB_MESSAGE }}固件成功编译完成了！
 
           编译时间：${{ env.FILE_DATE1 }}
 
