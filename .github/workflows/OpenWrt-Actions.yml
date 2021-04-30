@@ -89,6 +89,10 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
+    - name: 固件编译开始通知-企业微信
+      run: |
+        curl "http://${{ secrets.WECHAT_WORK_URL }}?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=您的${{ env.FB_MESSAGE }}固件编译开始！"
+
     - name: 下载${{matrix.target}}源码
       working-directory: /workdir
       run: |
