@@ -278,7 +278,7 @@ jobs:
     - name: 编译成功信息通知-企业微信
       if: steps.organizer.outputs.status == 'success' && env.WECHAT_WORK_PUSH == 'true'
       run: |
-        curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！%0a编译时间：${{ env.FILE_DATE1 }}%0a发布地址：${{ env.GITHUB_RELEASE }}%0a奶牛快传：${{ env.COWTRANSFER_URL }}%0aWeTransfer：${{ env.WETRANSFER_URL }}%0a固件已经编译完成 🎈！！！"
+        curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！%0a编译时间：${{ env.FILE_DATE1 }}%0a发布地址：${{ env.GITHUB_RELEASE }}%0a奶牛快传：${{ env.COWTRANSFER_URL }}%0aWeTransfer：${{ env.WETRANSFER_URL }}%0a固件已经编译完成🎈！！！"
 
     - name: 编译成功信息通知-Telegram
       if: steps.organizer.outputs.status == 'success' && env.TELEGRAM_BOT == 'true'
