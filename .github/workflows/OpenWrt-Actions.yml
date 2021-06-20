@@ -106,7 +106,9 @@ jobs:
         echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
         echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
         echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
-        echo "START_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+        echo "编译开始时间..."
+        START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+        echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
     - name: 加载源,定制文件并生成自定义配置
       run: |
@@ -187,13 +189,13 @@ jobs:
         cp -rf $(find openwrt/bin/targets/ -type f -name "*combined*vhdx*") ./artifact/hyperv/ || true
         cp -rf $(find openwrt/bin/targets/ -type f -name "*combined*vmdk*") ./artifact/vmware/
         echo "::set-output name=status::success"
-        echo "END_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
-        echo "START_SECONDS=$(date --date=${{ env.START_TIME }} +%s)" >> $GITHUB_ENV
-        echo "END_SECONDS=$(date --date=${{ env.END_TIME }} +%s)" >> $GITHUB_ENV
-        echo "SECONDS=${{ env.END_SECONDS }}-${{ env.START_SECONDS }}" >> $GITHUB_ENV
-        echo "HOUR=$(( ${{ env.SECONDS }}/3600 ))" >> $GITHUB_ENV
-        echo "MIN=$(( (${{ env.SECONDS }}-${{ env.HOUR }}*3600)/60 ))" >> $GITHUB_ENV
-        echo "sec=$(( ${{ env.SECONDS }}-${{ env.HOUR }}*3600-${{ env.MIN }}*60 ))" >> $GITHUB_ENV
+        echo "编译完成时间..."
+        START_SECONDS=${{ env.START_SECONDS }}
+        END_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+        END_SECONDS=$(date --date="$END_TIME" +%s)
+        SECONDS=$((END_SECONDS-START_SECONDS))
+        HOUR=$(( $SECONDS/3600 )) && MIN=$(( ($SECONDS-${HOUR}*3600)/60 )) && SEC=$(( $SECONDS-${HOUR}*3600-${MIN}*60 ))
+        echo "BUILD_TIME=${HOUR}时${MIN}分${SEC}秒" >> $GITHUB_ENV
 
     - name: 上传固件文件
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true'
@@ -306,7 +308,7 @@ jobs:
     - name: 编译成功信息通知-企业微信
       if: steps.organizer.outputs.status == 'success' && env.WECHAT_WORK_PUSH == 'true'
       run: |
-        curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！%0a%0a编译时间：${{ env.FILE_TIME1 }}%0a%0a发布地址：${{ env.GITHUB_RELEASE }}%0a%0a奶牛快传：${{ env.COWTRANSFER_URL }}%0a%0aWeTransfer：${{ env.WETRANSFER_URL }}%0a%0a编译用时：${{ env.HOUR }}时${{ env.MIN }}分${{ env.SEC }}秒%0a%0a固件已经编译完成🎈！！！"
+        curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！%0a%0a编译时间：${{ env.FILE_TIME1 }}%0a%0a发布地址：${{ env.GITHUB_RELEASE }}%0a%0a奶牛快传：${{ env.COWTRANSFER_URL }}%0a%0aWeTransfer：${{ env.WETRANSFER_URL }}%0a%0a编译用时：${{ env.BUILD_TIME }}%0a%0a固件已经编译完成🎈！！！"
 
     - name: 编译成功信息通知-Telegram
       if: steps.organizer.outputs.status == 'success' && env.TELEGRAM_BOT == 'true'
@@ -321,7 +323,7 @@ jobs:
 
           WeTransfer：${{ env.WETRANSFER_URL }}
           
-          编译用时：${{ env.HOUR }}时${{ env.MIN }}分${{ env.SEC }}秒
+          编译用时：${{ env.BUILD_TIME }}
 
           固件已经编译完成 🎈！！！"
 
