@@ -243,6 +243,11 @@ CONFIG_PACKAGE_libcap=y
 CONFIG_PACKAGE_libcap-bin=y
 CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables-mod-extra=y
+#luci-app-turboacc依赖
+CONFIG_PACKAGE_dnsproxy=y
+CONFIG_PACKAGE_dnsforwarder=y
+CONFIG_PACKAGE_kmod-ipt-offload=y
+CONFIG_PACKAGE_kmod-fast-classifier=y
 EOF
 
 # 其他软件包:
