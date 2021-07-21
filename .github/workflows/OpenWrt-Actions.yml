@@ -139,7 +139,7 @@ jobs:
     - name: 输出编译信息
       run: |
         echo " 系统空间      类型   总数  已用  可用 使用率"
-        cd ../ && df -hT $PWD && cd openwrt
+        df -hT $PWD && cd openwrt
 
         echo ""
         echo ""
