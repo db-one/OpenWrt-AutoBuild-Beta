@@ -44,9 +44,9 @@ sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-
 # sed -i 's#vpn#services#g' package/lean/luci-app-zerotier/luasrc/controller/zerotier.lua               # 修改zerotier到服务菜单
 # sed -i 's#vpn#services#g' package/lean/luci-app-zerotier/luasrc/view/zerotier/zerotier_status.htm               # 修改zerotier到服务菜单
 
-# 创建自定义配置文件 - Lienol_x86_64
+# 创建自定义配置文件
 
-cd build/Lienol_x86_64
+cd $WORKPATH
 touch ./.config
 
 #
@@ -278,34 +278,8 @@ EOF
 
 sed -i 's/^[ \t]*//g' ./.config
 
-# ========================写入编译信息脚本========================
-
-#写入编译信息脚本
-cat >> Plugin-list.sh <<EOF
-#!/bin/bash
-cd openwrt
-
-grep -i CONFIG_PACKAGE_luci-app .config | grep  -v \# > Plug-in
-grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
-sed -i '/INCLUDE/d' Plug-in > /dev/null 2>&1
-sed -i 's/CONFIG_PACKAGE_/、/g' Plug-in
-sed -i 's/=y/\ /g' Plug-in
-awk '$0=NR$0' Plug-in > Plug-2
-awk '{print "	" $0}' Plug-2 > Plug-in
-
-if [ -n "$(ls -A "Plug-in" 2>/dev/null)" ]; then
-	echo
-	echo
-	echo "	      已选插件列表"
-	chmod -R +x Plug-in
-	source Plug-in
-	rm -rf {Plug-in,Plug-2}
-fi
-EOF
-# ========================写入编译信息脚本========================
-
-# 返回工作目录
-cd ../..
+# 返回目录
+cd $HOME
 
 # 配置文件创建完成
 

@@ -75,7 +75,6 @@ jobs:
         echo "HOME=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
 
-
     - name: 初始化系统环境
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -154,7 +153,7 @@ jobs:
         echo " 系统空间      类型   总数  已用  可用 使用率"
         df -hT $PWD
         echo
-        echo
+        echo "=========================================="
 
         grep -i CONFIG_PACKAGE_luci-app .config | grep  -v \# > Plug-in
         grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
@@ -164,18 +163,16 @@ jobs:
         awk '$0=NR$0' Plug-in > Plug-2
         awk '{print "	" $0}' Plug-2 > Plug-in
 
-        if [ -n "$(ls -A "Plug-in" 2>/dev/null)" ]; then
-         echo
-         echo
-         echo "	      已选插件列表"
-         cat ${HOME}/Plug-in || true
-         rm -rf {Plug-in,Plug-2}
-         echo
-        fi
-
         echo
+        echo
+        echo "	      已选插件列表"
+        cat ${HOME}/Plug-in || true
+        rm -rf {Plug-in,Plug-2}
+
+        echo "=========================================="
         echo
         echo "输出完整插件信息..."
+        echo
         echo
         cd openwrt && cat .config
 

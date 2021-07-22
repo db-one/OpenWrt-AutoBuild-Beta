@@ -37,7 +37,7 @@ sed -i 's#option database_generations 10#option database_generations 3#g' feeds/
 sed -i 's#option database_directory /var/lib/nlbwmon#option database_directory /etc/config/nlbwmon_data#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               # 修改流量统计数据存放默认位置
 sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-static/wrtbwmon/wrtbwmon.js               # wrtbwmon默认刷新时间更改为1秒
 
-#创建自定义配置文件 - Lean_x86_64
+#创建自定义配置文件
 
 cd $WORKPATH
 touch ./.config
@@ -266,7 +266,7 @@ EOF
 
 sed -i 's/^[ \t]*//g' ./.config
 
-# 返回工作目录
-cd ../..
+# 返回目录
+cd $HOME
 
 # 配置文件创建完成
