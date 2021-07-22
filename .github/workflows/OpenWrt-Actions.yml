@@ -152,6 +152,7 @@ jobs:
         cd openwrt
         echo " 系统空间      类型   总数  已用  可用 使用率"
         df -hT $PWD
+
         echo
         echo "=========================================="
 
@@ -159,6 +160,7 @@ jobs:
         grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
         sed -i '/INCLUDE/d' Plug-in > /dev/null 2>&1
         sed -i 's/CONFIG_PACKAGE_/、/g' Plug-in
+        sed -i '/qbittorrent_static/d' Plug-in > /dev/null 2>&1
         sed -i 's/=y/\ /g' Plug-in
         awk '$0=NR$0' Plug-in > Plug-2
         awk '{print "	" $0}' Plug-2 > Plug-in
@@ -166,15 +168,18 @@ jobs:
         echo
         echo
         echo "	      已选插件列表"
-        cat ${HOME}/Plug-in || true
+        cat Plug-in || true
         rm -rf {Plug-in,Plug-2}
 
+        echo
         echo "=========================================="
+
+        echo
         echo
         echo "输出完整插件信息..."
         echo
         echo
-        cd openwrt && cat .config
+        cat .config
 
     - name: 下载固件包
       run: |
