@@ -286,10 +286,11 @@ if [ -n "$(ls -A "Plug-in" 2>/dev/null)" ]; then
 	echo
 	echo "	      已选插件列表"
 	chmod -R +x Plug-in
-	source Plug-in
+	cat Plug-in
 	rm -rf {Plug-in,Plug-2}
 fi
 EOF
+
 # ========================写入编译信息脚本========================
 
 # 返回工作目录
