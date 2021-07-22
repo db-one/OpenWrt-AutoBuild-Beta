@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lean_x86_64]  #[Lean_x86_64,Lienol_x86_64,Lean_x86_64_Long,Lienol_x86_64_Long]
+        target: [Lean_x86_64,Lienol_x86_64,Lean_x86_64_Long,Lienol_x86_64_Long]  #[Lean_x86_64,Lienol_x86_64,Lean_x86_64_Long,Lienol_x86_64_Long]
 
     steps:
     - name: 准备完成
@@ -145,15 +145,16 @@ jobs:
 
     - name: 输出编译信息
       run: |
-        cd openwrt
+        echo
         echo " 系统空间      类型   总数  已用  可用 使用率"
         df -hT $PWD
+        echo
+        echo
 
-        echo ""
-        
         #写入脚本
         cat >> Plugin-list.sh <<EOF
         #!/bin/bash
+        cd openwrt
 
         grep -i CONFIG_PACKAGE_luci-app .config | grep  -v \# > Plug-in
         grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
@@ -164,15 +165,15 @@ jobs:
         awk '{print "	" $0}' Plug-2 > Plug-in
 
         if [ -n "$(ls -A "Plug-in" 2>/dev/null)" ]; then
-         echo
-         echo
          echo "	      已选插件列表"
          chmod -R +x Plug-in
          source Plug-in
          rm -rf {Plug-in,Plug-2}
-         echo
         fi
         EOF
+
+        echo
+        echo
 
         #执行脚本
         if [ -f "build/${{matrix.target}}/Plugin-list.sh" ]; then
@@ -182,9 +183,10 @@ jobs:
         )
         fi
 
-        echo ""
+        echo
+        echo
         echo "输出完整编译信息..."
-        echo ""
+        echo
         cd openwrt && cat .config
 
     - name: 下载固件包
