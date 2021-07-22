@@ -151,9 +151,6 @@ jobs:
         echo
         echo
 
-        #写入脚本
-        cat >> Plugin-list.sh <<EOF
-        #!/bin/bash
         cd openwrt
 
         grep -i CONFIG_PACKAGE_luci-app .config | grep  -v \# > Plug-in
@@ -170,18 +167,9 @@ jobs:
          source Plug-in
          rm -rf {Plug-in,Plug-2}
         fi
-        EOF
 
         echo
         echo
-
-        #执行脚本
-        if [ -f "build/${{matrix.target}}/Plugin-list.sh" ]; then
-        (
-          chmod +x build/${{matrix.target}}/Plugin-list.sh
-          /bin/bash "build/${{matrix.target}}/Plugin-list.sh"
-        )
-        fi
 
         echo
         echo
