@@ -271,7 +271,6 @@ sed -i 's/^[ \t]*//g' ./.config
 #写入编译信息脚本
 cat >> Plugin-list.sh <<EOF
 #!/bin/bash
-cd openwrt
 
 grep -i CONFIG_PACKAGE_luci-app .config | grep  -v \# > Plug-in
 grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
