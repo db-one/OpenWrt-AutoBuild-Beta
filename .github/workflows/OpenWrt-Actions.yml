@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lean_x86_64,Lienol_x86_64,Lean_x86_64_Long,Lienol_x86_64_Long]  #[Lean_x86_64,Lienol_x86_64,Lean_x86_64_Long,Lienol_x86_64_Long]
+        target: [Lean_x86_64]  #[Lean_x86_64,Lienol_x86_64,Lean_x86_64_Long,Lienol_x86_64_Long]
 
     steps:
     - name: 准备完成
@@ -145,11 +145,19 @@ jobs:
 
     - name: 输出编译信息
       run: |
-        echo
+        cd openwrt
         echo " 系统空间      类型   总数  已用  可用 使用率"
         df -hT $PWD
         echo
         echo
+
+        #执行脚本
+        if [ -f "build/${{matrix.target}}/Plugin-list.sh" ]; then
+        (
+          chmod +x build/${{matrix.target}}/Plugin-list.sh
+          /bin/bash "build/${{matrix.target}}/Plugin-list.sh"
+        )
+        fi
 
         grep -i CONFIG_PACKAGE_luci-app .config | grep  -v \# > Plug-in
         grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
@@ -162,7 +170,7 @@ jobs:
         if [ -n "$(ls -A "Plug-in" 2>/dev/null)" ]; then
          echo
          echo
-         echo "	      已选插件列表"
+         echo "	      已选插件列表2"
          chmod -R +x Plug-in
          cat Plug-in
          rm -rf {Plug-in,Plug-2}
