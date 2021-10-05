@@ -32,7 +32,6 @@ sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/atmateria
 
 # ================================================
 sed -i 's#%D %V, %C#%D %V, %C Lean_x86_64#g' package/base-files/files/etc/banner               # 自定义banner显示
-sed -i 's#/etc/shadow#[ -n "$FAILSAFE" -a -x /bin/bash ]  || {\n        for FILE in /etc/shell-motd.d/*.sh; do\n                [ -f "$FILE" ] \&\& env -i bash "$FILE"\n        done\n        unset FILE\n}\n&#' package/base-files/files/etc/profile
 sed -i 's#option commit_interval 24h#option commit_interval 10m#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               # 修改流量统计写入为10分钟
 sed -i 's#option database_generations 10#option database_generations 3#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               # 修改流量统计数据周期
 sed -i 's#option database_directory /var/lib/nlbwmon#option database_directory /etc/config/nlbwmon_data#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               # 修改流量统计数据存放默认位置
