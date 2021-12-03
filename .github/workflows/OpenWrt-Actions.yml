@@ -12,12 +12,8 @@ name: 编译OpenWrt固件
 on:
   workflow_dispatch:
     inputs:
-      cache:
-        description: '编译OpenWrt固件-缓存加速：改为“cache”打开缓存加速'
-        required: false
-        default: 'cache-actions'
       ssh:
-        description: '编译OpenWrt固件-SSH远程：改为“ssh”打开SSH连接'
+        description: '编译OpenWrt固件-SSH远程：默认关闭，改为“ssh”打开SSH连接'
         required: false
         default: 'ssh-actions'
 
@@ -107,7 +103,7 @@ jobs:
 
     - name: 缓存加速
       uses: klever1988/cachewrtbuild@main
-      if: (github.event.inputs.cache == 'cache' && github.event.inputs.cache  != 'false') || env.CACHE_BUILD == 'true'
+      if: env.CACHE_BUILD == 'true'
       with:
         ccache: 'true'
         prefix: ${{ github.workspace }}/openwrt
