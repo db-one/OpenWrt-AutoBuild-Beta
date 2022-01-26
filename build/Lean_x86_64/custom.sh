@@ -42,6 +42,8 @@ sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-
 
 # ========================定制部分========================
 cat >> $ZZZ <<EOF
+sleep 30s
+
 cat /dev/null > /etc/bench.log
 echo " (CpuMark : 56983.857988" >> /etc/bench.log
 echo " Scores)" >> /etc/bench.log
@@ -50,16 +52,9 @@ if [ -f "/etc/bench.log" ]; then
  sed -i '/coremark/d' /etc/crontabs/root
  crontab /etc/crontabs/root
 fi
+
 EOF
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
-
-cat >> $ZZZ <<EOF
-echo "CURRENT_Version=lede-x86-64-$FILE_TIME2" >> /bin/openwrt_info
-echo "DEFAULT_Device=x86-64" >> /bin/openwrt_info
-EOF
-sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
-
-cat $ZZZ
 
 # =======================================================
 
