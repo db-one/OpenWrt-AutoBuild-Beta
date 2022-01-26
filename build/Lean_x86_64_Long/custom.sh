@@ -41,19 +41,13 @@ sed -i 's#option database_generations 10#option database_generations 3#g' feeds/
 sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-static/wrtbwmon/wrtbwmon.js               # wrtbwmon默认刷新时间更改为1秒
 
 # ========================定制部分========================
+sed -i '93d' feeds/packages/utils/coremark/Makefile
 cat >> $ZZZ <<EOF
-sleep 30s
-
 cat /dev/null > /etc/bench.log
 echo " (CpuMark : 56983.857988" >> /etc/bench.log
 echo " Scores)" >> /etc/bench.log
-
-sed -i '/coremark/d' /etc/crontabs/root
-crontab /etc/crontabs/root
-
 EOF
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
-
 # =======================================================
 
 
