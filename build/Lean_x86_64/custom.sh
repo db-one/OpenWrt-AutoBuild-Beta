@@ -41,7 +41,7 @@ sed -i 's#option database_generations 10#option database_generations 3#g' feeds/
 sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-static/wrtbwmon/wrtbwmon.js               # wrtbwmon默认刷新时间更改为1秒
 
 # ========================定制部分========================
-sed -i '4d' feeds/packages/utils/coremark/coremark
+sed -i '/coremark.sh/d' feeds/packages/utils/coremark/coremark
 cat >> $ZZZ <<EOF
 cat /dev/null > /etc/bench.log
 echo " (CpuMark : 56983.857988" >> /etc/bench.log
@@ -159,7 +159,8 @@ cat >> .config <<EOF
 # CONFIG_PACKAGE_luci-app-serverchan=y #微信推送
 # CONFIG_PACKAGE_luci-app-eqos=y #IP限速
 # CONFIG_PACKAGE_luci-app-control-weburl=y #网址过滤
-# CONFIG_PACKAGE_luci-app-smartdns=y #smartdns服务器
+CONFIG_PACKAGE_luci-app-smartdns=y #smartdns服务器
+CONFIG_PACKAGE_smartdns=y #smartdns服务器
 # CONFIG_PACKAGE_luci-app-adguardhome=y #ADguardhome
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 # CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
