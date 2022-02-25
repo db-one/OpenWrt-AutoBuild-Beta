@@ -13,12 +13,12 @@ git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-pa
 
 # 更新并安装源
 ./scripts/feeds clean
-./scripts/feeds update -a && ./scripts/feeds install -a
+./scripts/feeds update -a
+./scripts/feeds install -a -f
 
 # 删除部分默认包
-rm -rf package/lean/luci-app-qbittorrent
-rm -rf package/lean/luci-theme-argon
-rm -rf package/lean/v2ray-plugin
+rm -rf feeds/luci/applications/luci-app-qbittorrent
+rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf feeds/packages/net/haproxy
 
 # 自定义定制选项
@@ -166,7 +166,6 @@ CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 CONFIG_PACKAGE_luci-theme-atmaterial_new=y #atmaterial 三合一主题
 CONFIG_PACKAGE_luci-theme-neobird=y #Neobird 主题
 CONFIG_PACKAGE_luci-app-autotimeset=y #定时重启系统，网络
-CONFIG_PACKAGE_luci-app-ikoolproxy=y #iKoolProxy去广告
 # CONFIG_PACKAGE_luci-app-ddnsto=y #小宝开发的DDNS.to内网穿透
 # CONFIG_PACKAGE_ddnsto=y #DDNS.to内网穿透软件包
 EOF
