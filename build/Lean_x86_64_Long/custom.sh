@@ -8,6 +8,13 @@
 # sed -i 's@#src-git helloworld@src-git helloworld@g' feeds.conf.default #启用helloworld
 cat feeds.conf.default
 
+# 恢复缺失包
+git clone https://github.com/db-one/dbone-packages -b 18.06
+cd dbone-packages
+git reset --hard 79ca6042fef91844763f2d5bf2eb92ddb72349c0
+cd ../
+mv -f dbone-packages/passwall/luci-app-passwall ./ && rm -rf dbone-packages
+
 # 添加第三方软件包
 git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-packages
 
