@@ -42,7 +42,7 @@ sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-
 # ========================定制部分========================
 #显示CpuMark分数
 sed -i '/coremark.sh/d' feeds/packages/utils/coremark/coremark
-cat >> $ZZZ <<EOF
+cat >> $ZZZ <<'EOF'
 cat /dev/null > /etc/bench.log
 echo " (CpuMark : 56983.857988" >> /etc/bench.log
 echo " Scores)" >> /etc/bench.log
@@ -50,7 +50,7 @@ EOF
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # 添加系统信息
-cat >> package/base-files/files/etc/profile <<EOF
+cat >> package/base-files/files/etc/profile <<'EOF'
 # 添加系统信息
 [ -n "$FAILSAFE" -a -x /bin/bash ]  || {
 	for FILE in /etc/shell-motd.d/*.sh; do
