@@ -31,7 +31,6 @@ sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ    
 # sed -i 's/PATCHVER:=5.4/PATCHVER:=4.19/g' target/linux/x86/Makefile                     # 修改内核版本为4.19
 sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/neobird" $ZZZ        # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
 sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
-num=`sed -n -e '/fixup IPv6 slave interface if parent is a bridge/=' $NET` && num=`expr $num + 10` && sed -i "${num}i set network.ipv6=interface \n set network.ipv6.proto='dhcpv6' \n set network.ipv6.ifname='@lan'" $NET #添加@LAN IPV6
 
 # ================================================
 sed -i 's#%D %V, %C#%D %V, %C Lean_x86_64#g' package/base-files/files/etc/banner               # 自定义banner显示
@@ -52,7 +51,6 @@ EOF
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # 添加系统信息
-sed -i '/profile/d' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 cat >> package/base-files/files/etc/profile <<'EOF'
 # 添加系统信息
 [ -n "$FAILSAFE" -a -x /bin/bash ]  || {
@@ -62,6 +60,11 @@ cat >> package/base-files/files/etc/profile <<'EOF'
 	unset FILE
 }
 EOF
+
+#添加旁路由IPV6模式
+num=`sed -n -e '/fixup IPv6 slave interface if parent is a bridge/=' $NET` && num=`expr $num + 10` && sed -i "${num}i set network.ipv6=interface \n set network.ipv6.proto='dhcpv6' \n set network.ipv6.ifname='@lan'" $NET #添加@LAN IPV6
+FIRWALL="package/network/config/firewall/files/firewall.config"
+num=`sed -n -e '/Uncomment this line to disable ipv6 rules/=' $FIRWALL` && num=`expr $num + 9` && sed -i "${num}i	option network 'lan ipv6'" $FIRWALL
 # =======================================================
 
 
