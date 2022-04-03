@@ -62,9 +62,9 @@ cat >> package/base-files/files/etc/profile <<'EOF'
 EOF
 
 #添加旁路由IPV6模式
-num=`sed -n -e '/fixup IPv6 slave interface if parent is a bridge/=' $NET` && num=`expr $num + 10` && sed -i "${num}i set network.ipv6=interface \n set network.ipv6.proto='dhcpv6' \n set network.ipv6.ifname='@lan'" $NET #添加@LAN IPV6
+num=`sed -n -e '/fixup IPv6 slave interface if parent is a bridge/=' $NET` && num=`expr $num + 10` && sed -i "${num}i set network.ipv6=interface \n set network.ipv6.proto='dhcpv6' \n set network.ipv6.ifname='@lan'" $NET
 FIRWALL="package/network/config/firewall/files/firewall.config"
-num=`sed -n -e '/Uncomment this line to disable ipv6 rules/=' $FIRWALL` && num=`expr $num + 9` && sed -i "${num}i	option network 'lan ipv6'" $FIRWALL
+num=`sed -n -e "/'lan'/=" $FIRWALL` && num=`expr $num + 4` && sed -i "${num}i	option network 'lan ipv6'" $FIRWALL
 # =======================================================
 
 
