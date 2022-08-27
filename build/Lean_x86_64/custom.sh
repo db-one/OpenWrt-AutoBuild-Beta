@@ -29,7 +29,6 @@ sed -i 's#OpenWrt#OpenWrt-X86#g' $NET                                           
 sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                             # 取消系统默认密码
 sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ              # 增加自己个性名称
 # sed -i 's/PATCHVER:=5.4/PATCHVER:=4.19/g' target/linux/x86/Makefile                     # 修改内核版本为4.19
-sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/neobird" $ZZZ        # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
 sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
 
 # ================================================
@@ -41,34 +40,15 @@ sed -i 's#option database_generations 10#option database_generations 3#g' feeds/
 sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-static/wrtbwmon/wrtbwmon.js               # wrtbwmon默认刷新时间更改为1秒
 
 # ========================定制部分========================
-#去掉CpuMark跑数，直接显示分数
-sed -i '/coremark.sh/d' feeds/packages/utils/coremark/coremark
-cat >> $ZZZ <<'EOF'
-cat /dev/null > /etc/bench.log
-echo " (CpuMark : 56983.857988" >> /etc/bench.log
-echo " Scores)" >> /etc/bench.log
-EOF
 
-# 修改退出命令到最后
-sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
-# 添加系统信息
-cat >> package/base-files/files/etc/profile <<'EOF'
-# 添加系统信息
-[ -n "$FAILSAFE" -a -x /bin/bash ]  || {
-	for FILE in /etc/shell-motd.d/*.sh; do
-		[ -f "$FILE" ] && env -i bash "$FILE"
-	done
-	unset FILE
-}
-# 设置nano为默认编辑器
-export EDITOR="/usr/bin/nano"
-EOF
+mkdir -p files
+cp ${GITHUB_WORKSPACE}/openwrt/build/scripts/files/* ./
+# 初次开机设置脚本
+mkdir -p files/etc/uci-defaults/
+cp ${GITHUB_WORKSPACE}/openwrt/build/scripts/uci-defaults/* files/etc/uci-defaults/
+chmod a+x files/etc/uci-defaults/*
 
-#添加旁路由IPV6模式
-num=`sed -n -e '/fixup IPv6 slave interface if parent is a bridge/=' $NET` && num=`expr $num + 10` && sed -i "${num}i set network.ipv6=interface \n set network.ipv6.proto='dhcpv6' \n set network.ipv6.ifname='@lan'" $NET
-FIRWALL="package/network/config/firewall/files/firewall.config"
-num=`sed -n -e "/'lan'/=" $FIRWALL` && num=`expr $num + 4` && sed -i "${num}i	option network 'lan ipv6'" $FIRWALL
 # =======================================================
 
 
@@ -233,7 +213,6 @@ CONFIG_PACKAGE_luci-app-haproxy-tcp=n #Haproxy负载均衡
 CONFIG_PACKAGE_luci-app-diskman=n #磁盘管理磁盘信息
 CONFIG_PACKAGE_luci-app-transmission=n #Transmission离线下载
 CONFIG_PACKAGE_luci-app-qbittorrent=n #qBittorrent离线下载
-CONFIG_PACKAGE_luci-app-qbittorrent-simple_dynamic=n #qBittorrent离线下载
 CONFIG_PACKAGE_luci-app-amule=n #电驴离线下载
 CONFIG_PACKAGE_luci-app-xlnetacc=n #迅雷快鸟
 CONFIG_PACKAGE_luci-app-zerotier=n #zerotier内网穿透
@@ -291,6 +270,7 @@ CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables-mod-extra=y
 CONFIG_PACKAGE_vsftpd=y
 CONFIG_PACKAGE_openssh-sftp-server=y
+CONFIG_PACKAGE_qemu-ga=y
 EOF
 
 # 其他软件包:

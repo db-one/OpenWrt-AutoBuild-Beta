@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lean_x86_64,Lean_x86_64_Long]  #[Lean_x86_64,Lean_x86_64_Long]
+        target: [Lean_x86_64]  #[Lean_x86_64,Lean_x86_64_Long]
 
     steps:
     - name: 准备完成
@@ -166,7 +166,8 @@ jobs:
         grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
         sed -i '/INCLUDE/d' Plug-in > /dev/null 2>&1
         sed -i 's/CONFIG_PACKAGE_/、/g' Plug-in
-        sed -i '/Transparent/d' Plug-in > /dev/null 2>&1 #排除 luci-app-passwall_Transparent_Proxy
+        sed -i '/Transparent_Proxy/d' Plug-in > /dev/null 2>&1 #排除 luci-app-passwall_Transparent_Proxy
+        sed -i '/qbittorrent-simple_dynamic/d' Plug-in > /dev/null 2>&1 #排除 luci-app-qbittorrent-simple_dynamic
         sed -i 's/=y/\ /g' Plug-in
         awk '$0=NR$0' Plug-in > Plug-2
         awk '{print "	" $0}' Plug-2 > Plug-in

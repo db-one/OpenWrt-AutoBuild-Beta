@@ -6,7 +6,8 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 
-SHOW_IP_PATTERN="^[ewr].*|^br.*|^lt.*|^umts.*"
+#获取网卡IP地址类型
+SHOW_IP_PATTERN="^[ewrv].*|^br.*|^lt.*|^umts.*"
 
 
 # don't edit below here
