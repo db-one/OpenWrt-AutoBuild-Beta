@@ -40,18 +40,13 @@ sed -i 's#option database_generations 10#option database_generations 3#g' feeds/
 sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-static/wrtbwmon/wrtbwmon.js               # wrtbwmon默认刷新时间更改为1秒
 
 # ========================定制部分========================
-echo  搜索文件1
 
 mkdir -p files
-cp ${GITHUB_WORKSPACE}/scripts/files/* files/
+cp ${GITHUB_WORKSPACE}/openwrt/build/scripts/files/* files/
 # 初次开机设置脚本
 mkdir -p files/etc/uci-defaults/
-cp ${GITHUB_WORKSPACE}/scripts/uci-defaults/* files/etc/uci-defaults/
+cp ${GITHUB_WORKSPACE}/openwrt/build/scripts/uci-defaults/* files/etc/uci-defaults/
 chmod a+x files/etc/uci-defaults/*
-
-echo  搜索文件2
-find / -name ceshi
-find / -name xxx-default-settings
 
 # =======================================================
 
