@@ -43,10 +43,10 @@ sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-
 
 
 mkdir -p files
-cp ${GITHUB_WORKSPACE}/openwrt/build/scripts/files/* ./
+cp ${GITHUB_WORKSPACE}/scripts/files/* files/
 # 初次开机设置脚本
 mkdir -p files/etc/uci-defaults/
-cp ${GITHUB_WORKSPACE}/openwrt/build/scripts/uci-defaults/* files/etc/uci-defaults/
+cp ${GITHUB_WORKSPACE}/scripts/uci-defaults/* files/etc/uci-defaults/
 chmod a+x files/etc/uci-defaults/*
 
 # =======================================================
