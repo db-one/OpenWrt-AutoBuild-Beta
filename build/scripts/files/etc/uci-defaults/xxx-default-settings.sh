@@ -20,19 +20,4 @@ cat /dev/null > /etc/bench.log
 echo " (CpuMark : 56983.857988" >> /etc/bench.log
 echo " Scores)" >> /etc/bench.log
 
-# 添加系统信息
-cat >> /etc/profile <<'EOF'
-# 添加系统信息
-[ -n "$FAILSAFE" -a -x /bin/bash ]  || {
-	for FILE in /etc/shell-motd.d/*.sh; do
-		[ -f "$FILE" ] && env -i bash "$FILE"
-	done
-	unset FILE
-}
-# 设置nano为默认编辑器
-export EDITOR="/usr/bin/nano"
-EOF
-
-
-# rm -rf /etc/uci-defaults/zzz-default-settings.sh
 exit 0

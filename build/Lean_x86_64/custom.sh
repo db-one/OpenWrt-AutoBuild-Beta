@@ -29,9 +29,10 @@ sed -i 's#OpenWrt#OpenWrt-X86#g' $NET                                           
 sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                             # 取消系统默认密码
 sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ              # 增加自己个性名称
 # sed -i 's/PATCHVER:=5.4/PATCHVER:=4.19/g' target/linux/x86/Makefile                     # 修改内核版本为4.19
+sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/neobird" $ZZZ        # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
 sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
 
-# ================================================
+# =======================================================
 sed -i 's#%D %V, %C#%D %V, %C Lean_x86_64#g' package/base-files/files/etc/banner               # 自定义banner显示
 sed -i 's@list listen_https@# list listen_https@g' package/network/services/uhttpd/files/uhttpd.config               # 停止监听443端口
 sed -i 's#option commit_interval 24h#option commit_interval 10m#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               # 修改流量统计写入为10分钟
@@ -41,17 +42,42 @@ sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-
 
 # ========================定制部分========================
 
-cp -rf ${GITHUB_WORKSPACE}/openwrt/build/scripts/files files
-chmod -R 755 ${HOME}/files/* ./
-
-echo 查看文件
-ls -d */*/*/*/*/*
 
 
-# 初次开机设置脚本
-#mkdir -p files/etc/uci-defaults/
-#cp -rf ${GITHUB_WORKSPACE}/openwrt/build/scripts/uci-defaults/* files/etc/uci-defaults/
-#chmod a+x files/etc/uci-defaults/*
+#设置旁路由IPV6模式
+cat >$ZZZ <<-EOF
+#uci set network.lan.gateway='192.168.2.1'                   # 旁路由设置 IPv4 网关（去掉uci前面的#生效）
+#uci set network.lan.broadcast='192.168.2.255'               # 旁路由设置 IPv4 广播（去掉uci前面的#生效）
+#uci set network.lan.dns='223.5.5.5 114.114.114.114'         # 旁路由设置 DNS(多个DNS要用空格分开)（去掉uci前面的#生效）
+uci set network.lan.delegate='1'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
+uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
+uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能（去掉uci前面的#生效）
+#uci delete network.lan.type                                 # 旁路由去掉桥接模式（去掉uci前面的#生效）
+
+# 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
+uci set network.ipv6=interface
+uci set network.ipv6.proto='dhcpv6'
+uci set network.ipv6.ifname='@lan'
+uci set network.ipv6.reqaddress='try'
+uci set network.ipv6.reqprefix='auto'
+uci set firewall.@zone[0].network='lan ipv6'
+EOF
+
+# 修改退出命令到最后
+sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
+
+# 添加系统信息
+cat >> package/base-files/files/etc/profile <<'EOF'
+# 添加系统信息
+[ -n "$FAILSAFE" -a -x /bin/bash ]  || {
+	for FILE in /etc/shell-motd.d/*.sh; do
+		[ -f "$FILE" ] && env -i bash "$FILE"
+	done
+	unset FILE
+}
+# 设置nano为默认编辑器
+export EDITOR="/usr/bin/nano"
+EOF
 
 # =======================================================
 
