@@ -42,8 +42,6 @@ sed -i 's#interval: 5#interval: 1#g' package/lean/luci-app-wrtbwmon/htdocs/luci-
 
 # ========================定制部分========================
 
-
-
 #设置旁路由IPV6模式
 cat >$ZZZ <<-EOF
 #uci set network.lan.gateway='192.168.2.1'                   # 旁路由设置 IPv4 网关（去掉uci前面的#生效）
