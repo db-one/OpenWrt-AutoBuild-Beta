@@ -32,6 +32,7 @@ echo '
 	done
 	unset FILE
 }
+
 # 设置nano为默认编辑器
 export EDITOR="/usr/bin/nano"
 
