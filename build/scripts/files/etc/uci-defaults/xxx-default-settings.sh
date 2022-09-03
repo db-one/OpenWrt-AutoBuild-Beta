@@ -21,4 +21,21 @@ cat /dev/null > /etc/bench.log
 echo " (CpuMark : 56983.857988" >> /etc/bench.log
 echo " Scores)" >> /etc/bench.log
 
+# 添加系统信息
+grep "shell-motd" /etc/profile >/dev/null
+if [ $? -eq 1 ]; then
+echo '
+# 添加系统信息
+[ -n "$FAILSAFE" -a -x /bin/bash ]  || {
+	for FILE in /etc/shell-motd.d/*.sh; do
+		[ -f "$FILE" ] && env -i bash "$FILE"
+	done
+	unset FILE
+}
+# 设置nano为默认编辑器
+export EDITOR="/usr/bin/nano"
+
+' >> /etc/profile
+fi
+
 exit 0

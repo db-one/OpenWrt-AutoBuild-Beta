@@ -64,19 +64,6 @@ EOF
 # 修改退出命令到最后
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
-# 添加系统信息
-cat >> package/base-files/files/etc/profile <<'EOF'
-# 添加系统信息
-[ -n "$FAILSAFE" -a -x /bin/bash ]  || {
-	for FILE in /etc/shell-motd.d/*.sh; do
-		[ -f "$FILE" ] && env -i bash "$FILE"
-	done
-	unset FILE
-}
-# 设置nano为默认编辑器
-export EDITOR="/usr/bin/nano"
-EOF
-
 # =======================================================
 
 
