@@ -22,7 +22,7 @@ rm -rf feeds/packages/net/haproxy
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
-ZZZ="package/lean/default-settings/files/zzz-default-settings"
+ZZZ="package/lean/default-settings/files/zzz-default-settings" && export ZZZ
 #
 sed -i 's#192.168.1.1#10.0.0.1#g' $NET                                                    # 定制默认IP
 sed -i 's#OpenWrt#OpenWrt-X86#g' $NET                                                     # 修改默认名称为OpenWrt-X86

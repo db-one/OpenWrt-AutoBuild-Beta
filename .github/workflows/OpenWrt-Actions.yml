@@ -162,6 +162,12 @@ jobs:
         cd openwrt
         echo " 系统空间      类型   总数  已用  可用 使用率"
         df -hT $PWD
+        
+        echo
+        echo "=========================================="
+
+        echo "	    当前编译版本：$(cat $ZZZ|grep DISTRIB_REVISION= | sed 's/^.\{24\}//g' | sed 's/.\{26\}$//')"
+        echo
 
         echo
         echo "=========================================="
