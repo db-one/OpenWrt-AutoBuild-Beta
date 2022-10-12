@@ -19,6 +19,7 @@ git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-pa
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf feeds/packages/net/haproxy
+rm -rf package/lean/autocore
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
@@ -30,7 +31,7 @@ sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                   
 sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ              # 增加自己个性名称
 # sed -i 's/PATCHVER:=5.4/PATCHVER:=4.19/g' target/linux/x86/Makefile                     # 修改内核版本为4.19
 sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/neobird" $ZZZ        # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
-sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
+# sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
 
 # =======================================================
 sed -i 's#%D %V, %C#%D %V, %C Lean_x86_64#g' package/base-files/files/etc/banner               # 自定义banner显示
@@ -286,6 +287,8 @@ CONFIG_PACKAGE_iptables-mod-extra=y
 CONFIG_PACKAGE_vsftpd=y
 CONFIG_PACKAGE_openssh-sftp-server=y
 CONFIG_PACKAGE_qemu-ga=y
+CONFIG_PACKAGE_myautocore-x86=y
+EOF
 EOF
 
 # 其他软件包:
