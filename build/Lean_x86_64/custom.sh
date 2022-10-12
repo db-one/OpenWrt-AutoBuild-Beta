@@ -242,7 +242,6 @@ CONFIG_PACKAGE_luci-app-uugamebooster=n #UU游戏加速器
 CONFIG_PACKAGE_luci-app-dockerman=n #Docker管理
 CONFIG_PACKAGE_luci-app-ttyd=n #ttyd
 CONFIG_PACKAGE_luci-app-wireguard=n #wireguard端
-# CONFIG_PACKAGE_luci-app-autoreboot is not set
 #
 # VPN相关插件(禁用):
 #
