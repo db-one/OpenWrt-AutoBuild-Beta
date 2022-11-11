@@ -65,9 +65,6 @@ uci set network.ipv6.ifname='@lan'
 uci set network.ipv6.reqaddress='try'
 uci set network.ipv6.reqprefix='auto'
 uci set firewall.@zone[0].network='lan ipv6'
-# 应用配置
-uci commit network
-uci commit dhcp
 EOF
 
 # 修改退出命令到最后
