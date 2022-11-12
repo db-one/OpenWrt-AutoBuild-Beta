@@ -46,7 +46,6 @@ fi
 # 设置旁路由模式
 if [ $(ifconfig | grep -E "(eth|ens)" | wc -l) -eq 1 ] ; then
 uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关
-uci set network.lan.netmask='255.255.255.0'                  # IPv4 子网掩码
 uci set network.lan.dns='223.5.5.5 223.6.6.6'                # 旁路由设置 DNS(多个DNS要用空格分开)
 uci set network.lan.delegate='1'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
 uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
@@ -63,5 +62,8 @@ uci set network.ipv6.ifname='@lan'
 uci set network.ipv6.reqaddress='try'
 uci set network.ipv6.reqprefix='auto'
 uci set firewall.@zone[0].network='lan ipv6'
+# 应用配置
+uci commit network
+uci commit dhcp
 
 exit 0
