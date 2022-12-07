@@ -33,7 +33,7 @@ sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ    
 # sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/neobird" $ZZZ        # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
 # sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
 
-# ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
+# ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 sed -i 's#%D %V, %C#%D %V, %C Lean_x86_64#g' package/base-files/files/etc/banner               # 自定义banner显示
 sed -i 's@list listen_https@# list listen_https@g' package/network/services/uhttpd/files/uhttpd.config               # 停止监听443端口
 # sed -i 's#option commit_interval 24h#option commit_interval 10m#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               # 修改流量统计写入为10分钟
@@ -41,7 +41,7 @@ sed -i 's@list listen_https@# list listen_https@g' package/network/services/uhtt
 # sed -i 's#option database_directory /var/lib/nlbwmon#option database_directory /etc/config/nlbwmon_data#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               # 修改流量统计数据存放默认位置
 sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/htdocs/luci-static/wrtbwmon/wrtbwmon.js               # wrtbwmon默认刷新时间更改为1秒
 
-# ========================定制部分========================
+# ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
 # cat >> $ZZZ <<-EOF
 # EOF
@@ -49,16 +49,17 @@ sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/h
 # 修改退出命令到最后
 # sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
-# =======================================================
+# ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 # 下载 OpenClash 核心
-if [[ `grep -c "CONFIG_PACKAGE_luci-app-openclash=y" ${WORKPATH}/$CUSTOM_SH` -eq '1' ]]; then
+grep "CONFIG_PACKAGE_luci-app-openclash=y" $WORKPATH/$CUSTOM_SH >/dev/null
+if [ $? -eq 0 ]; then
   echo "正在执行：给OpenClash下载核心"
-  rm -rf ${HOME}/files/etc/openclash/core
-  rm -rf ${HOME}/clash-core && mkdir -p ${HOME}/clash-core
-  cd ${HOME}/clash-core
+  rm -rf $HOME/files/etc/openclash/core
+  rm -rf $HOME/clash-core && mkdir -p $HOME/clash-core
+  cd $HOME/clash-core
 
   wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/dev/clash-linux-amd64.tar.gz
   if [[ $? -ne 0 ]];then
@@ -67,15 +68,15 @@ if [[ `grep -c "CONFIG_PACKAGE_luci-app-openclash=y" ${WORKPATH}/$CUSTOM_SH` -eq
     echo "OpenClash Dve内核下载成功"
   fi
   tar -zxvf clash-linux-amd64.tar.gz
-  if [[ -f "${HOME}/files/etc/openclash/core/clash" ]]; then
-    mkdir -p ${HOME}/files/etc/openclash/core
-    mv -f ${HOME}/clash-core/clash ${HOME}/files/etc/openclash/core/clash
-    sudo chmod +x ${HOME}/files/etc/openclash/core/clash
+  if [[ -f "$HOME/files/etc/openclash/core/clash" ]]; then
+    mkdir -p $HOME/files/etc/openclash/core
+    mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash
+    sudo chmod +x $HOME/files/etc/openclash/core/clash
     echo "OpenClash Dve内核下载成功"
   else
     echo "OpenClash Dve内核下载失败"
   fi
-  rm -rf ${HOME}/clash-core/clash-linux-amd64.tar.gz
+  rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
 
   wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/meta/clash-linux-amd64.tar.gz
   if [[ $? -ne 0 ]];then
@@ -84,18 +85,18 @@ if [[ `grep -c "CONFIG_PACKAGE_luci-app-openclash=y" ${WORKPATH}/$CUSTOM_SH` -eq
     echo "OpenClash Meta内核下载成功"
   fi
   tar -zxvf clash-linux-amd64.tar.gz
-  if [[ -f "${HOME}/clash-core/clash" ]]; then
-    mkdir -p ${HOME}/files/etc/openclash/core
-    mv -f ${HOME}/clash-core/clash ${HOME}/files/etc/openclash/core/clash_meta
-    sudo chmod +x ${HOME}/files/etc/openclash/core/clash_meta
+  if [[ -f "$HOME/clash-core/clash" ]]; then
+    mkdir -p $HOME/files/etc/openclash/core
+    mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_meta
+    sudo chmod +x $HOME/files/etc/openclash/core/clash_meta
     echo "OpenClash Meta内核下载成功"
   else
     echo "OpenClash Meta内核下载失败"
   fi
-  rm -rf ${HOME}/clash-core/clash-linux-amd64.tar.gz
+  rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
 
-  cd ${HOME}
-  rm -rf ${HOME}/clash-core
+  cd $HOME
+  rm -rf $HOME/clash-core
 fi
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
@@ -107,7 +108,7 @@ cd $WORKPATH
 touch ./.config
 
 #
-# ========================固件定制部分========================
+# ●●●●●●●●●●●●●●●●●●●●●●●●固件定制部分●●●●●●●●●●●●●●●●●●●●●●●●
 # 
 
 # 
@@ -120,12 +121,12 @@ touch ./.config
 #
 # 有些插件/选项是默认开启的, 如果想要关闭, 请参照以下示例进行编写:
 # 
-#          =========================================
+#          ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 #         |  # 取消编译VMware镜像:                    |
 #         |  cat >> .config <<EOF                   |
 #         |  # CONFIG_VMDK_IMAGES is not set        |
 #         |  EOF                                    |
-#          =========================================
+#          ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 #
 
 # 
@@ -330,7 +331,7 @@ EOF
 
 
 # 
-# ========================固件定制部分结束========================
+# ●●●●●●●●●●●●●●●●●●●●●●●●固件定制部分结束●●●●●●●●●●●●●●●●●●●●●●●● #
 # 
 
 sed -i 's/^[ \t]*//g' ./.config
