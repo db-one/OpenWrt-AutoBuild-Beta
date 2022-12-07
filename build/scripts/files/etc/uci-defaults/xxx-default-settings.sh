@@ -6,7 +6,10 @@ if [ -f /bin/bash ];then
 fi
 
 # 设置NTP时间服务器
-# uci add_list system.ntp.server=120.25.115.20
+#uci add_list system.ntp.server='ntp.tencent.com'
+#uci add_list system.ntp.server='ntp1.aliyun.com'
+#uci add_list system.ntp.server='ntp.ntsc.ac.cn'
+#uci add_list system.ntp.server='cn.ntp.org.cn'
 # uci commit system
 
 # 设置默认主题

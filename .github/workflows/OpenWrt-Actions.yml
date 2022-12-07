@@ -12,10 +12,11 @@ name: 编译OpenWrt固件
 on:
   workflow_dispatch:
     inputs:
-      ssh:
-        description: '编译OpenWrt固件-SSH远程：默认关闭，改为“ssh”打开SSH连接'
+      SSH_ACTION:
+        description: 'SSH远程配置固件'
         required: false
-        default: 'ssh-actions'
+        default: 'false'
+        type: boolean
 
 
 # 定时触发编译(1,2,5,6,8,10,12,15,16,18,20,22,25,26,28,30早3点)
@@ -151,7 +152,7 @@ jobs:
 
     - name: SSH远程连接服务器
       uses: makebl/debugger-action@master
-      if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh' && github.event.inputs.ssh  != 'false')
+      if: env.SSH_ACTIONS == 'true' || (github.event.inputs.SSH_ACTION == 'true')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
