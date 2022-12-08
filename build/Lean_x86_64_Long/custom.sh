@@ -13,7 +13,7 @@ git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-pa
 
 # 更新并安装源
 ./scripts/feeds clean
-./scripts/feeds update -a >/dev/null && ./scripts/feeds install -a -f >/dev/null
+./scripts/feeds update -a && ./scripts/feeds install -a -f
 
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
@@ -57,45 +57,45 @@ sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/h
 grep "CONFIG_PACKAGE_luci-app-openclash=y" $WORKPATH/$CUSTOM_SH >/dev/null
 if [ $? -eq 0 ]; then
   echo "正在执行：为OpenClash下载核心"
-  rm -rf $HOME/files/etc/openclash/core
-  rm -rf $HOME/clash-core && mkdir -p $HOME/clash-core
-  cd $HOME/clash-core
-
+  rm -rf $WORKPATH/files/etc/openclash/core
+  rm -rf $WORKPATH/clash-core && mkdir -p $WORKPATH/clash-core
+  cd $WORKPATH/clash-core
+# 下载Dve核心
   wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/dev/clash-linux-amd64.tar.gz
   if [[ $? -ne 0 ]];then
     wget -q https://github.com/vernesong/OpenClash/releases/download/Clash/clash-linux-amd64.tar.gz
   else
-    echo "OpenClash Dve内核压缩包下载成功"
+    echo "OpenClash Dve内核压缩包下载成功，开始解压文件"
   fi
   tar -zxvf clash-linux-amd64.tar.gz
-  if [[ -f "$HOME/files/etc/openclash/core/clash" ]]; then
-    mkdir -p $HOME/files/etc/openclash/core
-    mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash
-    sudo chmod +x $HOME/files/etc/openclash/core/clash
+  if [[ -f "$WORKPATH/clash-core/clash" ]]; then
+    mkdir -p $WORKPATH/files/etc/openclash/core
+    mv -f $WORKPATH/clash-core/clash $WORKPATH/files/etc/openclash/core/clash
+    chmod +x $WORKPATH/files/etc/openclash/core/clash
     echo "OpenClash Dve内核下载成功"
   else
     echo "OpenClash Dve内核下载失败"
   fi
-  rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
-
+  rm -rf $WORKPATH/clash-core/clash-linux-amd64.tar.gz
+# 下载Meta核心
   wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/meta/clash-linux-amd64.tar.gz
   if [[ $? -ne 0 ]];then
     wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/meta/clash-linux-amd64.tar.gz
   else
-    echo "OpenClash Meta内核压缩包下载成功"
+    echo "OpenClash Meta内核压缩包下载成功，开始解压文件"
   fi
   tar -zxvf clash-linux-amd64.tar.gz
-  if [[ -f "$HOME/clash-core/clash" ]]; then
-    mkdir -p $HOME/files/etc/openclash/core
-    mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_meta
-    sudo chmod +x $HOME/files/etc/openclash/core/clash_meta
+  if [[ -f "$WORKPATH/clash-core/clash" ]]; then
+    mkdir -p $WORKPATH/files/etc/openclash/core
+    mv -f $WORKPATH/clash-core/clash $WORKPATH/files/etc/openclash/core/clash_meta
+    chmod +x $WORKPATH/files/etc/openclash/core/clash_meta
     echo "OpenClash Meta内核下载成功"
   else
     echo "OpenClash Meta内核下载失败"
   fi
-  rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
+  rm -rf $WORKPATH/clash-core/clash-linux-amd64.tar.gz
 
-  rm -rf $HOME/clash-core
+  rm -rf $WORKPATH/clash-core
 fi
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
@@ -121,10 +121,10 @@ touch ./.config
 # 有些插件/选项是默认开启的, 如果想要关闭, 请参照以下示例进行编写:
 # 
 #          ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-#         |  # 取消编译VMware镜像:                    |
-#         |  cat >> .config <<EOF                   |
-#         |  # CONFIG_VMDK_IMAGES is not set        |
-#         |  EOF                                    |
+#        ■|  # 取消编译VMware镜像:                    |■
+#        ■|  cat >> .config <<EOF                   |■
+#        ■|  # CONFIG_VMDK_IMAGES is not set        |■
+#        ■|  EOF                                    |■
 #          ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 #
 
