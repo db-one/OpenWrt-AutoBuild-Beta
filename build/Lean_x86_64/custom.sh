@@ -13,7 +13,7 @@ git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-pa
 
 # 更新并安装源
 ./scripts/feeds clean
-./scripts/feeds update -a && ./scripts/feeds install -a -f
+./scripts/feeds update -a >/dev/null && ./scripts/feeds install -a -f >/dev/null
 
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
@@ -56,7 +56,7 @@ sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/h
 # 下载 OpenClash 核心
 grep "CONFIG_PACKAGE_luci-app-openclash=y" $WORKPATH/$CUSTOM_SH >/dev/null
 if [ $? -eq 0 ]; then
-  echo "正在执行：给OpenClash下载核心"
+  echo "正在执行：为OpenClash下载核心"
   rm -rf $HOME/files/etc/openclash/core
   rm -rf $HOME/clash-core && mkdir -p $HOME/clash-core
   cd $HOME/clash-core
@@ -65,7 +65,7 @@ if [ $? -eq 0 ]; then
   if [[ $? -ne 0 ]];then
     wget -q https://github.com/vernesong/OpenClash/releases/download/Clash/clash-linux-amd64.tar.gz
   else
-    echo "OpenClash Dve内核下载成功"
+    echo "OpenClash Dve内核压缩包下载成功"
   fi
   tar -zxvf clash-linux-amd64.tar.gz
   if [[ -f "$HOME/files/etc/openclash/core/clash" ]]; then
@@ -82,7 +82,7 @@ if [ $? -eq 0 ]; then
   if [[ $? -ne 0 ]];then
     wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/meta/clash-linux-amd64.tar.gz
   else
-    echo "OpenClash Meta内核下载成功"
+    echo "OpenClash Meta内核压缩包下载成功"
   fi
   tar -zxvf clash-linux-amd64.tar.gz
   if [[ -f "$HOME/clash-core/clash" ]]; then
@@ -95,7 +95,6 @@ if [ $? -eq 0 ]; then
   fi
   rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
 
-  cd $HOME
   rm -rf $HOME/clash-core
 fi
 
