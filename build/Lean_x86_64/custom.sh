@@ -75,14 +75,13 @@ sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-# 下载 OpenClash 核心
+# 下载 OpenClash 内核
 grep "CONFIG_PACKAGE_luci-app-openclash=y" $WORKPATH/$CUSTOM_SH >/dev/null
 if [ $? -eq 0 ]; then
-  echo "正在执行：为OpenClash下载核心"
-  rm -rf $HOME/files/etc/openclash/core
-  rm -rf $HOME/clash-core && mkdir -p $HOME/clash-core
+  echo "正在执行：为OpenClash下载内核"
+  mkdir -p $HOME/clash-core
   cd $HOME/clash-core
-# 下载Dve核心
+# 下载Dve内核
   wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/dev/clash-linux-amd64.tar.gz
   if [[ $? -ne 0 ]];then
     wget -q https://github.com/vernesong/OpenClash/releases/download/Clash/clash-linux-amd64.tar.gz
@@ -94,12 +93,12 @@ if [ $? -eq 0 ]; then
     mkdir -p $HOME/files/etc/openclash/core
     mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash
     chmod +x $HOME/files/etc/openclash/core/clash
-    echo "OpenClash Dve内核下载成功"
+    echo "OpenClash Dve内核配置成功"
   else
-    echo "OpenClash Dve内核下载失败"
+    echo "OpenClash Dve内核配置失败"
   fi
   rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
-# 下载Meta核心
+# 下载Meta内核
   wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/meta/clash-linux-amd64.tar.gz
   if [[ $? -ne 0 ]];then
     wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/meta/clash-linux-amd64.tar.gz
@@ -111,9 +110,9 @@ if [ $? -eq 0 ]; then
     mkdir -p $HOME/files/etc/openclash/core
     mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_meta
     chmod +x $HOME/files/etc/openclash/core/clash_meta
-    echo "OpenClash Meta内核下载成功"
+    echo "OpenClash Meta内核配置成功"
   else
-    echo "OpenClash Meta内核下载失败"
+    echo "OpenClash Meta内核配置失败"
   fi
   rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
 
