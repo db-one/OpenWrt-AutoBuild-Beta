@@ -39,7 +39,7 @@ env:
 
 jobs: 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
 
     name: 编译 ${{matrix.target}}
@@ -134,26 +134,20 @@ jobs:
         fi
 
         echo "复制脚本文件..."
-        if [ -n "$(ls -A "${GITHUB_WORKSPACE}/openwrt/build/scripts/files" 2>/dev/null)" ]; then
          cp -rf ${GITHUB_WORKSPACE}/openwrt/build/scripts/files files
          chmod -R 755 ${HOME}/files/* ./
-        fi
         echo "复制配置文件..."
-        if [ -n "$(ls -A "${WORKPATH}/files" 2>/dev/null)" ]; then
          cp -rf ${WORKPATH}/files files
          chmod -R 755 ${WORKPATH}/files/* ./
-        fi
         echo "复制源码文件..."
-        if [ -n "$(ls -A "${WORKPATH}/sources" 2>/dev/null)" ]; then
          cp -Rf ${WORKPATH}/sources/* ./
-        fi
 
         echo "写入配置文件..."
         mv ${WORKPATH}/$CONFIG_FILE .config
         make defconfig
 
     - name: SSH远程连接服务器
-      uses: makebl/debugger-action@master
+      uses: danshui-git/debugger-action@main
       if: env.SSH_ACTIONS == 'true' || (github.event.inputs.SSH_ACTION == 'true')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

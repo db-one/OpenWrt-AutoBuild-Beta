@@ -43,11 +43,33 @@ sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/h
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
-# cat >> $ZZZ <<-EOF
-# EOF
+cat >> $ZZZ <<-EOF
+# 设置旁路由模式
+uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关
+uci set network.lan.dns='223.5.5.5 223.6.6.6'                # 旁路由设置 DNS(多个DNS要用空格分开)
+# uci set network.lan.delegate='0'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
+uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
+uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
+# uci delete network.lan.type                                # 旁路由桥接模式-禁用
+
+# 旁路IPV6需要全部禁用
+uci set network.lan.ip6assign=''                             # IPV6分配长度-禁用
+uci set dhcp.lan.ra=''                                       # 路由通告服务-禁用
+uci set dhcp.lan.dhcpv6=''                                   # DHCPv6 服务-禁用
+uci set dhcp.lan.ra_management=''                            # DHCPv6 模式-禁用
+
+# 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
+uci set network.ipv6=interface
+uci set network.ipv6.proto='dhcpv6'
+uci set network.ipv6.ifname='@lan'
+uci set network.ipv6.reqaddress='try'
+uci set network.ipv6.reqprefix='auto'
+uci set firewall.@zone[0].network='lan ipv6'
+
+EOF
 
 # 修改退出命令到最后
-# sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
+sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
@@ -57,9 +79,9 @@ sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/h
 grep "CONFIG_PACKAGE_luci-app-openclash=y" $WORKPATH/$CUSTOM_SH >/dev/null
 if [ $? -eq 0 ]; then
   echo "正在执行：为OpenClash下载核心"
-  rm -rf $WORKPATH/files/etc/openclash/core
-  rm -rf $WORKPATH/clash-core && mkdir -p $WORKPATH/clash-core
-  cd $WORKPATH/clash-core
+  rm -rf $HOME/files/etc/openclash/core
+  rm -rf $HOME/clash-core && mkdir -p $HOME/clash-core
+  cd $HOME/clash-core
 # 下载Dve核心
   wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/dev/clash-linux-amd64.tar.gz
   if [[ $? -ne 0 ]];then
@@ -68,15 +90,15 @@ if [ $? -eq 0 ]; then
     echo "OpenClash Dve内核压缩包下载成功，开始解压文件"
   fi
   tar -zxvf clash-linux-amd64.tar.gz
-  if [[ -f "$WORKPATH/clash-core/clash" ]]; then
-    mkdir -p $WORKPATH/files/etc/openclash/core
-    mv -f $WORKPATH/clash-core/clash $WORKPATH/files/etc/openclash/core/clash
-    chmod +x $WORKPATH/files/etc/openclash/core/clash
+  if [[ -f "$HOME/clash-core/clash" ]]; then
+    mkdir -p $HOME/files/etc/openclash/core
+    mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash
+    chmod +x $HOME/files/etc/openclash/core/clash
     echo "OpenClash Dve内核下载成功"
   else
     echo "OpenClash Dve内核下载失败"
   fi
-  rm -rf $WORKPATH/clash-core/clash-linux-amd64.tar.gz
+  rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
 # 下载Meta核心
   wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/meta/clash-linux-amd64.tar.gz
   if [[ $? -ne 0 ]];then
@@ -85,17 +107,17 @@ if [ $? -eq 0 ]; then
     echo "OpenClash Meta内核压缩包下载成功，开始解压文件"
   fi
   tar -zxvf clash-linux-amd64.tar.gz
-  if [[ -f "$WORKPATH/clash-core/clash" ]]; then
-    mkdir -p $WORKPATH/files/etc/openclash/core
-    mv -f $WORKPATH/clash-core/clash $WORKPATH/files/etc/openclash/core/clash_meta
-    chmod +x $WORKPATH/files/etc/openclash/core/clash_meta
+  if [[ -f "$HOME/clash-core/clash" ]]; then
+    mkdir -p $HOME/files/etc/openclash/core
+    mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_meta
+    chmod +x $HOME/files/etc/openclash/core/clash_meta
     echo "OpenClash Meta内核下载成功"
   else
     echo "OpenClash Meta内核下载失败"
   fi
-  rm -rf $WORKPATH/clash-core/clash-linux-amd64.tar.gz
+  rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
 
-  rm -rf $WORKPATH/clash-core
+  rm -rf $HOME/clash-core
 fi
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
