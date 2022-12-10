@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # 将默认的shell改为bash
-if [ -f /bin/bash ];then
-  sed -i '/^root:/s#/bin/ash#/bin/bash#' /etc/passwd
-fi
+# if [ -f /bin/bash ];then
+#   sed -i '/^root:/s#/bin/ash#/bin/bash#' /etc/passwd
+# fi
 
 # 设置NTP时间服务器
 #uci add_list system.ntp.server='ntp.tencent.com'
