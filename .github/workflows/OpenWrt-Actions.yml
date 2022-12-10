@@ -198,10 +198,10 @@ jobs:
 
         echo
         echo
-        # echo "输出完整插件信息..."
+        echo "输出完整插件信息..."
         echo
         echo
-        # cat .config
+        cat .config
 
     - name: 下载编译所需文件
       run: |
