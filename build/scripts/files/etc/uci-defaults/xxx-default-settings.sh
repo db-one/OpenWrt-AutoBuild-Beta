@@ -5,9 +5,8 @@ if [ -f /bin/bash ];then
   sed -i '/^root:/s#/bin/ash#/bin/bash#' /etc/passwd
 fi
 
-# 修复OpenClash核心文件错误和默认开启开机启动
+# 修复OpenClash核心文件错误
 cp -rf /rom/etc/openclash/core/* /etc/openclash/core
-num=`sed -n -e "/option enable '0'/=" /etc/config/openclash` && sed -i "${num}s/0/1/g" /etc/config/openclash
 
 # 设置NTP时间服务器
 #uci add_list system.ntp.server='ntp.tencent.com'
