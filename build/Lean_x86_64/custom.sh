@@ -73,9 +73,10 @@ sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
-sed -i '/openclash.config.enable/{N;d;}' package/dbone-packages/luci-app-openclash/Makefile
+sed -i '/openclash.config.enable/{N;d;}' package/dbone-packages/luci-app-openclash/root/etc/uci-defaults/luci-openclash
 ##输出open clash显示
-cat package/dbone-packages/luci-app-openclash/Makefile
+cat package/dbone-packages/luci-app-openclash/root/etc/uci-defaults/luci-openclash
+
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 # 下载 OpenClash 内核
