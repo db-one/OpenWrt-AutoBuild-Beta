@@ -73,6 +73,10 @@ sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
+sed -i '/openclash.config.enable/d' package/dbone-packages/luci-app-openclash/Makefile
+sed -i '/uci -q commit openclash/d' package/dbone-packages/luci-app-openclash/Makefile
+##输出open clash显示
+cat package/dbone-packages/luci-app-openclash/Makefile
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 # 下载 OpenClash 内核
@@ -115,6 +119,25 @@ if [ $? -eq 0 ]; then
     echo "OpenClash Meta内核配置失败"
   fi
   rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
+# 下载TUN内核
+  curl -fsSL https://api.github.com/repos/vernesong/OpenClash/contents/core-lateset/premium  -o premium.api
+  amd64_kernel="$(grep -Eo "clash-linux-amd64-.*.gz" premium.api |grep -v 'v3' |awk 'NR==1')"
+  wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/premium/$amd64_kernel
+  if [[ $? -ne 0 ]];then
+    wget -q https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/premium/$amd64_kernel
+  else
+    echo "OpenClash TUN内核压缩包下载成功，开始解压文件"
+  fi
+  tar -zxvf $amd64_kernel
+  if [[ -f "$HOME/clash-core/clash" ]]; then
+    mkdir -p $HOME/files/etc/openclash/core
+    mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_tun
+    chmod +x $HOME/files/etc/openclash/core/clash_tun
+    echo "OpenClash TUN内核配置成功"
+  else
+    echo "OpenClash TUN内核配置失败"
+  fi
+  rm -rf $HOME/clash-core/$amd64_kernel
 
   rm -rf $HOME/clash-core
 fi
