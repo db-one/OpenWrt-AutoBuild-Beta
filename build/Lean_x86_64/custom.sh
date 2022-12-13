@@ -72,6 +72,8 @@ EOF
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
+sed -i '/rm -rf \/etc\/openclash/d' package/dbone-packages/luci-app-openclash/Makefile
+
 
 sed -i '/commit firewall/a\cp -Rf /etc/openclash/custom/ /root/openclash_custom' package/dbone-packages/luci-app-openclash/root/etc/uci-defaults/luci-openclash
 
