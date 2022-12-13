@@ -159,9 +159,9 @@ jobs:
         echo "复制源码文件..."
         if [ -n "$(ls -A "${WORKPATH}/sources" 2>/dev/null)" ]; then
           if [ -d "files" ];then
-           cp -rf ${WORKPATH}/sources/* files
+           cp -rf ${WORKPATH}/sources/* ./
           else
-           cp -rf ${WORKPATH}/sources/ files
+           cp -rf ${WORKPATH}/sources/ ./
           fi
         fi
 
