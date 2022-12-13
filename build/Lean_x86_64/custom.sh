@@ -72,17 +72,7 @@ EOF
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-sed -i '/rm -rf \/etc\/openclash/d' package/dbone-packages/luci-app-openclash/Makefile
 
-
-sed -i '/commit firewall/a\cp -Rf /etc/openclash/custom/ /root/openclash_custom' package/dbone-packages/luci-app-openclash/root/etc/uci-defaults/luci-openclash
-
-
-sed -i '/commit firewall/a\cp -Rf /etc/openclash/custom/ /tmp/openclash_custom' package/dbone-packages/luci-app-openclash/root/etc/uci-defaults/luci-openclash
-sed -i '/luci-indexcache/a\cp -Rf /tmp/openclash_custom/openclash_custom_rules.list /etc/openclash/custom' package/dbone-packages/luci-app-openclash/root/etc/uci-defaults/luci-openclash
-sed -i '/luci-indexcache/a\cp -Rf /tmp/openclash_custom/openclash_custom_rules_2.list /etc/openclash/custom' package/dbone-packages/luci-app-openclash/root/etc/uci-defaults/luci-openclash
-##输出open clash显示
-cat package/dbone-packages/luci-app-openclash/root/etc/uci-defaults/luci-openclash
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 # 下载 OpenClash 内核
