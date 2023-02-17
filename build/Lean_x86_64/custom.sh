@@ -10,6 +10,7 @@ cat feeds.conf.default
 
 # 添加第三方软件包
 git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-packages
+git clone https://github.com/gngpp/luci-theme-design package/luci-theme-design
 
 # 更新并安装源
 ./scripts/feeds clean
@@ -46,7 +47,7 @@ sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/h
 cat >> $ZZZ <<-EOF
 # 设置旁路由模式
 uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关
-uci set network.lan.dns='223.5.5.5 223.6.6.6'                # 旁路由设置 DNS(多个DNS要用空格分开)
+uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
 uci set network.lan.delegate='0'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
 uci set dhcp.@dnsmasq[0].filter_aaaa='1'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
 uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
@@ -255,6 +256,7 @@ CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 # CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
 CONFIG_PACKAGE_luci-theme-atmaterial_new=y #atmaterial 三合一主题
 CONFIG_PACKAGE_luci-theme-neobird=y #Neobird 主题
+CONFIG_PACKAGE_luci-theme-design=y #design 主题
 CONFIG_PACKAGE_luci-app-autotimeset=y #定时重启系统，网络
 # CONFIG_PACKAGE_luci-app-ddnsto=y #小宝开发的DDNS.to内网穿透
 # CONFIG_PACKAGE_ddnsto=y #DDNS.to内网穿透软件包
