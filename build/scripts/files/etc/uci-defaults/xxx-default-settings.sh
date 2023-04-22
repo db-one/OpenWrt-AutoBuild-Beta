@@ -51,7 +51,5 @@ fi
 
 # 强制显示2500M和全双工（默认PVE下VirtIO不识别）
 ethtool -s eth0 speed 2500 duplex full
-# 从本地服务器更新自定义规则
-wget -q http://10.0.0.15/openclash_custom_rules.list -O /etc/openclash/custom/openclash_custom_rules.list --no-check-certificate && /etc/init.d/openclash restart
 
 exit 0
