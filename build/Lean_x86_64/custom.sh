@@ -33,6 +33,7 @@ sed -i 's#192.168.1.1#10.0.0.1#g' $NET                                          
 sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                             # 取消系统默认密码
 sed -i "s/OpenWrt /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ              # 增加自己个性名称
 sed -i "s/$KERNEL_PATCHVER/$KERNEL_TESTING_PATCHVER/g" target/linux/x86/Makefile        # 修改内核版本为最新
+echo "sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' /etc/rc.local" >> $ZZZ  # 强制显示2500M和全双工（默认PVE下VirtIO不识别）
 # sed -i "/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/neobird" $ZZZ        # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
 # sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
 

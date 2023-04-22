@@ -49,7 +49,4 @@ export EDITOR="/usr/bin/nano"
 ' >> /etc/profile
 fi
 
-# 强制显示2500M和全双工（默认PVE下VirtIO不识别）
-ethtool -s eth0 speed 2500 duplex full
-
 exit 0
