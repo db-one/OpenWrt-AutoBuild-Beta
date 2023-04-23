@@ -72,6 +72,11 @@ uci set firewall.@zone[0].network='lan ipv6'
 
 EOF
 
+# 强制显示2500M和全双工（默认PVE下VirtIO不识别）
+cat >> $ZZZ <<-EOF
+sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' /etc/rc.local
+EOF
+
 # 修改退出命令到最后
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
