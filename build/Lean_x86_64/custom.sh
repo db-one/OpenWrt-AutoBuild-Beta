@@ -43,6 +43,7 @@ sed -i 's@list listen_https@# list listen_https@g' package/network/services/uhtt
 # sed -i 's#option database_generations 10#option database_generations 3#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               # 修改流量统计数据周期
 # sed -i 's#option database_directory /var/lib/nlbwmon#option database_directory /etc/config/nlbwmon_data#g' feeds/packages/net/nlbwmon/files/nlbwmon.config               # 修改流量统计数据存放默认位置
 sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/htdocs/luci-static/wrtbwmon/wrtbwmon.js               # wrtbwmon默认刷新时间更改为1秒
+sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' package/base-files/files//etc/rc.local               # 强制显示2500M和全双工（默认PVE下VirtIO不识别）
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
@@ -68,9 +69,6 @@ uci set network.ipv6.ifname='eth0'
 uci set network.ipv6.reqaddress='try'
 uci set network.ipv6.reqprefix='auto'
 uci set firewall.@zone[0].network='lan ipv6'
-
-# 强制显示2500M和全双工（默认PVE下VirtIO不识别）
-sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' /etc/rc.local
 
 EOF
 
