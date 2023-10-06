@@ -302,7 +302,7 @@ CONFIG_PACKAGE_luci-app-accesscontrol=y #上网时间控制
 CONFIG_PACKAGE_luci-app-wol=y #网络唤醒
 CONFIG_PACKAGE_luci-app-nps=n #nps内网穿透
 CONFIG_PACKAGE_luci-app-frpc=y #Frp内网穿透
-CONFIG_PACKAGE_luci-app-nlbwmon=n #宽带流量监控
+# CONFIG_PACKAGE_luci-app-nlbwmon is not set #宽带流量监控
 CONFIG_PACKAGE_luci-app-wrtbwmon=y #实时流量监测
 CONFIG_PACKAGE_luci-app-haproxy-tcp=n #Haproxy负载均衡
 CONFIG_PACKAGE_luci-app-diskman=n #磁盘管理磁盘信息
