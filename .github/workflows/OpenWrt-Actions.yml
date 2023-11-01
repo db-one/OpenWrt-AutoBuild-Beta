@@ -17,7 +17,8 @@ on:
         required: false
         default: 'false'
         type: boolean
-      CACHE_BUILD:
+
+      CACHE_BUILDS:
         description: '缓存加速'
         required: false
         default: 'true'
@@ -126,7 +127,7 @@ jobs:
 
     - name: 缓存加速
       uses: stupidloud/cachewrtbuild@main
-      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
+      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILDS == 'true')
       with:
         ccache: 'true'
         prefix: ${{ github.workspace }}/openwrt
