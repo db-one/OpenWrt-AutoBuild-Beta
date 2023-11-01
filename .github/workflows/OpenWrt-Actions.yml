@@ -18,6 +18,12 @@ on:
         default: 'false'
         type: boolean
 
+      CACHE_BUILD:
+        description: '缓存加速'
+        required: false
+        default: 'true'
+        type: choice
+
 
 # 定时触发编译(1,2,5,6,8,10,12,15,16,18,20,22,25,26,28,30早3点)
 #  schedule:
@@ -47,31 +53,6 @@ jobs:
       fail-fast: false
       matrix:
         target: [Lean_x86_64]  #[Lean_x86_64,Lean_x86_64_Long]
-
-    steps:
-    - name: 检测脚本设置
-      run: |
-        source "${GITHUB_WORKSPACE}/build/${{matrix.target}}/settings.ini"
-        echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
-        echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
-        echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
-        echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
-        echo "CUSTOM_SH=${CUSTOM_SH}" >> $GITHUB_ENV
-        echo "CACHE_BUILD=${CACHE_BUILD}" >> $GITHUB_ENV
-        echo "SSH_ACTIONS=${SSH_ACTIONS}" >> $GITHUB_ENV
-        echo "UPLOAD_FIRMWARE=${UPLOAD_FIRMWARE}" >> $GITHUB_ENV
-        echo "UPLOAD_QCOW2=${UPLOAD_QCOW2}" >> $GITHUB_ENV
-        echo "UPLOAD_VHDX=${UPLOAD_VHDX}" >> $GITHUB_ENV
-        echo "UPLOAD_VMDK=${UPLOAD_VMDK}" >> $GITHUB_ENV
-        echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
-        echo "UPLOAD_CONFIG=${UPLOAD_CONFIG}" >> $GITHUB_ENV
-        echo "UPLOAD_WETRANSFER=${UPLOAD_WETRANSFER}" >> $GITHUB_ENV
-        echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
-        echo "WECHAT_WORK_PUSH=${WECHAT_WORK_PUSH}" >> $GITHUB_ENV
-        echo "TELEGRAM_BOT=${TELEGRAM_BOT}" >> $GITHUB_ENV
-        #添加变量
-        echo "HOME=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
-        echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
 
     - name: 初始化系统环境
       env:
@@ -112,6 +93,31 @@ jobs:
         large-packages: true
         swap-storage: true
 
+    steps:
+    - name: 检测脚本设置
+      run: |
+        source "${GITHUB_WORKSPACE}/build/${{matrix.target}}/settings.ini"
+        echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
+        echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
+        echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
+        echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
+        echo "CUSTOM_SH=${CUSTOM_SH}" >> $GITHUB_ENV
+        echo "CACHE_BUILD=${CACHE_BUILD}" >> $GITHUB_ENV
+        echo "SSH_ACTIONS=${SSH_ACTIONS}" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE=${UPLOAD_FIRMWARE}" >> $GITHUB_ENV
+        echo "UPLOAD_QCOW2=${UPLOAD_QCOW2}" >> $GITHUB_ENV
+        echo "UPLOAD_VHDX=${UPLOAD_VHDX}" >> $GITHUB_ENV
+        echo "UPLOAD_VMDK=${UPLOAD_VMDK}" >> $GITHUB_ENV
+        echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
+        echo "UPLOAD_CONFIG=${UPLOAD_CONFIG}" >> $GITHUB_ENV
+        echo "UPLOAD_WETRANSFER=${UPLOAD_WETRANSFER}" >> $GITHUB_ENV
+        echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
+        echo "WECHAT_WORK_PUSH=${WECHAT_WORK_PUSH}" >> $GITHUB_ENV
+        echo "TELEGRAM_BOT=${TELEGRAM_BOT}" >> $GITHUB_ENV
+        #添加变量
+        echo "HOME=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
+        echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
+
     - name: 下载${{matrix.target}}源码
       working-directory: /workdir
       run: |
@@ -121,7 +127,7 @@ jobs:
 
     - name: 缓存加速
       uses: stupidloud/cachewrtbuild@main
-      if: env.CACHE_BUILD == 'true'
+      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
       with:
         ccache: 'true'
         prefix: ${{ github.workspace }}/openwrt
