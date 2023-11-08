@@ -12,14 +12,69 @@ name: 编译OpenWrt固件
 on:
   workflow_dispatch:
     inputs:
+
+      CACHE_BUILD:
+        description: '缓存加速'
+        required: false
+        default: 'true'
+        type: boolean
+
       SSH_ACTION:
         description: 'SSH远程配置固件'
         required: false
         default: 'false'
         type: boolean
 
-      CACHE_BUILDS:
-        description: '缓存加速'
+      UPLOAD_FIRMWARE:
+        description: '上传【固件文件】'
+        required: false
+        default: 'true'
+        type: boolean
+
+      UPLOAD_QCOW2:
+        description: '上传【PVE/KVM镜像文件】'
+        required: false
+        default: 'true'
+        type: boolean
+
+      UPLOAD_VHDX:
+        description: '上传【Hyper-V镜像文件】'
+        required: false
+        default: 'true'
+        type: boolean
+
+      UPLOAD_VMDK:
+        description: '上传【VMware镜像文件】'
+        required: false
+        default: 'true'
+        type: boolean
+
+      UPLOAD_IPK:
+        description: '上传【IPK】 插件包文件'
+        required: false
+        default: 'true'
+        type: boolean
+
+      UPLOAD_CONFIG:
+        description: '上传【.config】配置文件'
+        required: false
+        default: 'true'
+        type: boolean
+
+      UPLOAD_RELEASE:
+        description: '发布固件'
+        required: false
+        default: 'true'
+        type: boolean
+
+      WECHAT_WORK_PUSH:
+        description: '企业微信通知'
+        required: false
+        default: 'true'
+        type: boolean
+
+      TELEGRAM_BOT:
+        description: 'Telegram信息通知'
         required: false
         default: 'true'
         type: boolean
@@ -127,7 +182,7 @@ jobs:
 
     - name: 缓存加速
       uses: stupidloud/cachewrtbuild@main
-      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILDS == 'true')
+      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
       with:
         ccache: 'true'
         prefix: ${{ github.workspace }}/openwrt
@@ -210,6 +265,8 @@ jobs:
         echo "KERNEL_PATCHVER=$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')" >> $GITHUB_ENV
         echo "	    当前编译版本：$(cat $ZZZ|grep DISTRIB_REVISION= | sed 's/^.\{24\}//g' | sed 's/.\{26\}$//')"
         echo "	    内核版本：$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')"
+
+        echo "	    编译时间：${{ env.FILE_TIME1 }}"
 
         echo
         echo "=========================================="
