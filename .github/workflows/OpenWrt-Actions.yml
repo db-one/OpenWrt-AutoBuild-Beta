@@ -129,7 +129,6 @@ jobs:
         echo "UPLOAD_VMDK=${UPLOAD_VMDK}" >> $GITHUB_ENV
         echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
         echo "UPLOAD_CONFIG=${UPLOAD_CONFIG}" >> $GITHUB_ENV
-        echo "UPLOAD_WETRANSFER=${UPLOAD_WETRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
         echo "WECHAT_WORK_PUSH=${WECHAT_WORK_PUSH}" >> $GITHUB_ENV
         echo "TELEGRAM_BOT=${TELEGRAM_BOT}" >> $GITHUB_ENV
@@ -385,15 +384,6 @@ jobs:
         name: OpenWrt_buildinfo_${{matrix.target}}_${{ env.FILE_TIME }}
         path: ./artifact/buildinfo/
 
-    - name: 上传固件到 WeTransfer
-      if: steps.compile.outcome == 'success' && env.UPLOAD_WETRANSFER == 'true'
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ./artifact/firmware/ 2>&1 | tee wetransfer.log
-        echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
-        sed -i "s/Download Link/WeTransfer/g" wetransfer.log
-        echo "::warning file=WeTransfer::$(cat wetransfer.log | grep https)"
-
     - name: 自动发布固件到 Releases
       uses: ncipollo/release-action@main
       if: steps.compile.outcome == 'success' && env.UPLOAD_RELEASE == 'true'
@@ -418,10 +408,6 @@ jobs:
 
             ━━━━━━━━━━━━━━━━━━━━
 
-            ➤ WeTransfer： ${{ env.WETRANSFER_URL }}
-
-               WeTransfer链接有效期为7天，无需注册直接下载
-
             =========================================
 
         artifacts: ./artifact/firmware/*
@@ -444,7 +430,7 @@ jobs:
     - name: 编译成功信息通知-企业微信
       if: steps.compile.outcome == 'success' && env.WECHAT_WORK_PUSH == 'true'
       run: |
-        curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！%0a%0a🎈编译时间：${{ env.FILE_TIME1 }}%0a%0a🛠编译版本：${{ env.DISTRIB_REVISION }}%0a%0a🖥内核版本：${{ env.KERNEL_PATCHVER }}%0a%0a⏰编译用时：${{ env.BUILD_TIME }}%0a%0a🎉发布地址：${{ env.GITHUB_RELEASE }}%0a%0a⛄WeTransfer：${{ env.WETRANSFER_URL }}%0a%0a🌴固件已经编译完成🎈！！！" || true
+        curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！%0a%0a🎈编译时间：${{ env.FILE_TIME1 }}%0a%0a🛠编译版本：${{ env.DISTRIB_REVISION }}%0a%0a🖥内核版本：${{ env.KERNEL_PATCHVER }}%0a%0a⏰编译用时：${{ env.BUILD_TIME }}%0a%0a🎉发布地址：${{ env.GITHUB_RELEASE }}%0a%0a🌴固件已经编译完成🎈！！！" || true
 
     - name: 编译成功信息通知-Telegram
       if: steps.compile.outcome == 'success' && env.TELEGRAM_BOT == 'true'
@@ -460,8 +446,6 @@ jobs:
           ⏰ 编译用时：${{ env.BUILD_TIME }}
 
           🎉 发布地址：${{ env.GITHUB_RELEASE }}
-
-          ⛄ WeTransfer：${{ env.WETRANSFER_URL }}
 
           🌴 固件已经编译完成 🎈！！！" >/dev/null 2>&1 && echo "ok..."
 
