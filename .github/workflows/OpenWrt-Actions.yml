@@ -25,61 +25,6 @@ on:
         default: 'false'
         type: boolean
 
-      UPLOAD_FIRMWARE:
-        description: '上传【固件文件】'
-        required: false
-        default: 'true'
-        type: boolean
-
-      UPLOAD_QCOW2:
-        description: '上传【PVE/KVM镜像文件】'
-        required: false
-        default: 'true'
-        type: boolean
-
-      UPLOAD_VHDX:
-        description: '上传【Hyper-V镜像文件】'
-        required: false
-        default: 'true'
-        type: boolean
-
-      UPLOAD_VMDK:
-        description: '上传【VMware镜像文件】'
-        required: false
-        default: 'true'
-        type: boolean
-
-      UPLOAD_IPK:
-        description: '上传【IPK】 插件包文件'
-        required: false
-        default: 'true'
-        type: boolean
-
-      UPLOAD_CONFIG:
-        description: '上传【.config】配置文件'
-        required: false
-        default: 'true'
-        type: boolean
-
-      UPLOAD_RELEASE:
-        description: '发布固件'
-        required: false
-        default: 'true'
-        type: boolean
-
-      WECHAT_WORK_PUSH:
-        description: '企业微信通知'
-        required: false
-        default: 'true'
-        type: boolean
-
-      TELEGRAM_BOT:
-        description: 'Telegram信息通知'
-        required: false
-        default: 'true'
-        type: boolean
-
-
 # 定时触发编译(1,2,5,6,8,10,12,15,16,18,20,22,25,26,28,30早3点)
 #  schedule:
 #    - cron: 0 17 1,4,5,7,9,11,14,15,17,19,21,24,25,27,29,31 * *
