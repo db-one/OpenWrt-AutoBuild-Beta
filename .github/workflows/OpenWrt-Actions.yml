@@ -380,7 +380,9 @@ jobs:
     - name: 编译成功信息通知-Telegram
       if: steps.compile.outcome == 'success' && env.TELEGRAM_BOT == 'true'
       run: |
-        curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！
+        curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=
+        
+              您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！
 
           🛠 编译版本：${{ env.DISTRIB_REVISION }}
 
@@ -392,7 +394,9 @@ jobs:
 
           🎉 发布地址：${{ env.GITHUB_RELEASE }}
 
-          🌴 固件已经编译完成 🎈！！！" >/dev/null 2>&1 && echo "ok..."
+          🌴 固件已经编译完成 🎈！！！
+          
+          " >/dev/null 2>&1 && echo "ok..."
 
 
 
