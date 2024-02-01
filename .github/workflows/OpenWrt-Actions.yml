@@ -197,9 +197,18 @@ jobs:
     - name: 输出编译信息
       run: |
         cd openwrt
+
+        echo
         echo " 系统空间      类型   总数  已用  可用 使用率"
         df -hT $PWD
-        
+
+        echo
+        echo "=========================================="
+        echo
+
+        echo "	    CPU物理数量:$(cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l)"
+        echo "	    CPU核心及版本信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
+
         echo
         echo "=========================================="
         echo
@@ -381,8 +390,8 @@ jobs:
       if: steps.compile.outcome == 'success' && env.TELEGRAM_BOT == 'true'
       run: |
         curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=
-        
-              您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！
+
+           您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！
 
           🛠 编译版本：${{ env.DISTRIB_REVISION }}
 
@@ -395,7 +404,7 @@ jobs:
           🎉 发布地址：${{ env.GITHUB_RELEASE }}
 
           🌴 固件已经编译完成 🎈！！！
-          
+
           " >/dev/null 2>&1 && echo "ok..."
 
 
