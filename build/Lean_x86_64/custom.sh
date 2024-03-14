@@ -19,6 +19,11 @@ git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-pa
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/lean/autocore
+rm -rf feeds/packages/lang/golang
+
+# 替换部分软件包
+git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
+
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
