@@ -19,10 +19,6 @@ git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-pa
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/lean/autocore
-rm -rf feeds/packages/lang/golang
-
-# 替换部分软件包
-git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
@@ -73,7 +69,7 @@ uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DN
 # 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
 uci set network.ipv6=interface
 uci set network.ipv6.proto='dhcpv6'
-uci set network.ipv6.ifname='eth0'
+uci set network.ipv6.ifname='@lan'
 uci set network.ipv6.reqaddress='try'
 uci set network.ipv6.reqprefix='auto'
 uci set firewall.@zone[0].network='lan ipv6'
