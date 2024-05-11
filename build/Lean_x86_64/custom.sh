@@ -5,7 +5,9 @@
 # sudo -E apt-get -y install rename
 
 # 更新feeds文件
-# sed -i 's@#src-git helloworld@src-git helloworld@g' feeds.conf.default #启用helloworld
+# sed -i 's@#src-git helloworld@src-git helloworld@g' feeds.conf.default # 启用helloworld
+sed -i 's@src-git luci@# src-git luci@g' feeds.conf.default # 禁用18.06Luci
+sed -i 's@## src-git luci@src-git luci@g' feeds.conf.default # 启用23.05Luci
 cat feeds.conf.default
 
 # 添加第三方软件包
