@@ -10,8 +10,6 @@ sed -i 's@src-git luci@# src-git luci@g' feeds.conf.default # 禁用18.06Luci
 sed -i 's@## src-git luci@src-git luci@g' feeds.conf.default # 启用23.05Luci
 cat feeds.conf.default
 
-sed -i '/disable-hax/d' feeds/packages/utils/qemu/makefile # 修复qemu编译报错
-
 # 添加第三方软件包
 git clone https://github.com/db-one/dbone-packages.git -b 19.07 package/dbone-packages
 
@@ -23,6 +21,7 @@ git clone https://github.com/db-one/dbone-packages.git -b 19.07 package/dbone-pa
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/lean/autocore
+sed -i '/disable-hax/d' feeds/packages/utils/qemu/makefile # 修复qemu编译报错
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
