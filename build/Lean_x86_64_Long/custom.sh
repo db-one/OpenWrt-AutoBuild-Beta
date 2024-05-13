@@ -10,8 +10,10 @@ sed -i 's@src-git luci@# src-git luci@g' feeds.conf.default # 禁用18.06Luci
 sed -i 's@## src-git luci@src-git luci@g' feeds.conf.default # 启用23.05Luci
 cat feeds.conf.default
 
+sed -i '/disable-hax/d' feeds/packages/utils/qemu/makefile # 修复qemu编译报错
+
 # 添加第三方软件包
-git clone https://github.com/db-one/dbone-packages.git -b 18.06 package/dbone-packages
+git clone https://github.com/db-one/dbone-packages.git -b 19.07 package/dbone-packages
 
 # 更新并安装源
 ./scripts/feeds clean
