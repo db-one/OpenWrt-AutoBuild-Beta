@@ -20,7 +20,6 @@ git clone https://github.com/db-one/dbone-packages.git -b 19.07 package/dbone-pa
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/themes/luci-theme-argon
-rm -rf package/lean/autocore
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
@@ -349,7 +348,6 @@ EOF
 # LuCI主题:
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-theme-argon=y
-CONFIG_PACKAGE_luci-theme-netgear=y
 EOF
 
 # 常用软件包:
@@ -371,7 +369,7 @@ CONFIG_PACKAGE_iptables-mod-extra=y
 CONFIG_PACKAGE_vsftpd=y
 CONFIG_PACKAGE_openssh-sftp-server=y
 CONFIG_PACKAGE_qemu-ga=n
-CONFIG_PACKAGE_myautocore-x86=y
+CONFIG_PACKAGE_autocore-x86=y
 EOF
 
 # 其他软件包:
