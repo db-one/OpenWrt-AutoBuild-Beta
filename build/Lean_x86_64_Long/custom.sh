@@ -21,7 +21,6 @@ git clone https://github.com/db-one/dbone-packages.git -b 19.07 package/dbone-pa
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/lean/autocore
-sed -i '/disable-hax/d' feeds/packages/utils/qemu/makefile # 修复qemu编译报错
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
@@ -370,7 +369,7 @@ CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables-mod-extra=y
 CONFIG_PACKAGE_vsftpd=y
 CONFIG_PACKAGE_openssh-sftp-server=y
-CONFIG_PACKAGE_qemu-ga=y
+CONFIG_PACKAGE_qemu-ga=n
 CONFIG_PACKAGE_myautocore-x86=y
 EOF
 
