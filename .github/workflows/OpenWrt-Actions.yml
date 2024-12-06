@@ -303,42 +303,42 @@ jobs:
       if: steps.compile.outcome == 'success' && env.UPLOAD_FIRMWARE == 'true'
       uses: actions/upload-artifact@main
       with:
-        name: OpenWrt_firmware_${{matrix.target}}_${{ env.FILE_TIME }}
+        name: ${{matrix.target}}_OpenWrt_firmware_${{ env.FILE_TIME }}
         path: ./artifact/firmware/
 
     - name: 上传PVE/KVM镜像文件
       if: steps.compile.outcome == 'success' && env.UPLOAD_QCOW2 == 'true'
       uses: actions/upload-artifact@main
       with:
-        name: OpenWrt_pvekvm_${{matrix.target}}_${{ env.FILE_TIME }}
+        name: ${{matrix.target}}_OpenWrt_pvekvm_${{ env.FILE_TIME }}
         path: ./artifact/pvekvm/
 
     - name: 上传Hyper-V镜像文件
       if: steps.compile.outcome == 'success' && env.UPLOAD_VHDX == 'true'
       uses: actions/upload-artifact@main
       with:
-        name: OpenWrt_hyperv_${{matrix.target}}_${{ env.FILE_TIME }}
+        name: ${{matrix.target}}_OpenWrt_hyperv_${{ env.FILE_TIME }}
         path: ./artifact/hyperv/
 
     - name: 上传VMware镜像文件
       if: steps.compile.outcome == 'success' && env.UPLOAD_VMDK == 'true'
       uses: actions/upload-artifact@main
       with:
-        name: OpenWrt_vmware_${{matrix.target}}_${{ env.FILE_TIME }}
+        name: ${{matrix.target}}_OpenWrt_vmware_${{ env.FILE_TIME }}
         path: ./artifact/vmware/
 
     - name: 上传插件包文件
       if: steps.compile.outcome == 'success' && env.UPLOAD_IPK == 'true'
       uses: actions/upload-artifact@main
       with:
-        name: OpenWrt_package_${{matrix.target}}_${{ env.FILE_TIME }}
+        name: ${{matrix.target}}_OpenWrt_package_${{ env.FILE_TIME }}
         path: ./artifact/package/
 
     - name: 上传固件信息
       if: steps.compile.outcome == 'success' && env.UPLOAD_CONFIG == 'true'
       uses: actions/upload-artifact@main
       with:
-        name: OpenWrt_buildinfo_${{matrix.target}}_${{ env.FILE_TIME }}
+        name: ${{matrix.target}}_OpenWrt_buildinfo_${{ env.FILE_TIME }}
         path: ./artifact/buildinfo/
 
     - name: 自动发布固件到 Releases
