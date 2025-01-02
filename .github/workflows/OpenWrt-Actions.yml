@@ -45,14 +45,14 @@ env:
 
 jobs: 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
 
     name: 编译 ${{matrix.target}}
     strategy:
       fail-fast: false
       matrix:
-        target: [Lean_x86_64]  #[Lean_x86_64,Lean_x86_64_Long,immortalwrt_x86_64]
+        target: [immortalwrt_x86_64]  #[Lean_x86_64,Lean_x86_64_Long,immortalwrt_x86_64]
 
     steps:
     - name: 检查文件
