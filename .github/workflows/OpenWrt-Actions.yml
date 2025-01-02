@@ -104,7 +104,7 @@ jobs:
 
     - name: 编译前准备
       run: |
-        sudo -E apt-get -y install xsltproc zip grep python3-pip python3-ply libc6-dev libncurses5 libtinfo-dev libtinfo5 ncurses-doc python2.7 git-core wget curl rsync || true
+        sudo -E apt-get -y install xsltproc zip grep python3-pip python3-ply libc6-dev libncurses5-dev libncursesw5-dev libtinfo-dev libtinfo5 ncurses-doc python2.7 git-core wget curl rsync || true
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
         sudo timedatectl set-timezone "$TZ"
