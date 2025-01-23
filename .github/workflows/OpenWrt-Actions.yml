@@ -17,7 +17,7 @@ on:
         required: true
         description: 编译固件
         type: choice
-        default: Lean_x86_64,Lean_x86_64_Long,immortalwrt_x86_64
+        default: 'Lean_x86_64,Lean_x86_64_Long,immortalwrt_x86_64'
         options:
           - Lean_x86_64
           - Lean_x86_64_Long
@@ -62,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ${{ inputs.model }}
+        target: [${{ inputs.model }}]
 
     steps:
     - name: 检查文件
