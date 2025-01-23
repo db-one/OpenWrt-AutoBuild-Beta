@@ -13,6 +13,16 @@ on:
   workflow_dispatch:
     inputs:
 
+      MODEL:
+        required: true
+        description: 编译固件
+        type: choice
+        default: Lean_x86_64,Lean_x86_64_Long,immortalwrt_x86_64
+        options:
+          - Lean_x86_64
+          - Lean_x86_64_Long
+          - immortalwrt_x86_64
+
       CACHE_BUILD:
         description: '缓存加速'
         required: false
@@ -52,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [immortalwrt_x86_64]  #[Lean_x86_64,Lean_x86_64_Long,immortalwrt_x86_64]
+        target: [${{ inputs.model }}]
 
     steps:
     - name: 检查文件
