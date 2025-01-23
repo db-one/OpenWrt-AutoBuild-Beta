@@ -63,7 +63,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ${{ inputs.MODEL }}
+        target: "${{ github.event.inputs.MODEL }}"
 
     steps:
     - name: 检查文件
