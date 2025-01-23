@@ -62,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [${{ inputs.model }}]
+        target: ${{ inputs.model }}
 
     steps:
     - name: 检查文件
