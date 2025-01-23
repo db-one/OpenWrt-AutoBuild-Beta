@@ -17,9 +17,8 @@ on:
         required: true
         description: 选择需要编译的固件
         type: choice
-        default: '[Lean_x86_64,Lean_x86_64_Long,immortalwrt_x86_64]'
+        default: immortalwrt_x86_64
         options:
-          - '[Lean_x86_64,Lean_x86_64_Long,immortalwrt_x86_64]'
           - Lean_x86_64
           - Lean_x86_64_Long
           - immortalwrt_x86_64
@@ -63,10 +62,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: "${{ github.event.inputs.MODEL }}"
+#       target: ${{ fromJson('["Lean_x86_64", "Lean_x86_64_Long"， "immortalwrt_x86_64"]') }}
+        target: ${{ fromJson('["Lean_x86_64", "Lean_x86_64_Long"， "immortalwrt_x86_64"]') }}
+        include:
+          - target: ${{ github.event.inputs.MODEL }}
+            if: github.event_name == 'workflow_dispatch'
 
     steps:
-    - name: 检查文件
+    - name: Checkout 仓库
       uses: actions/checkout@v4
 
     - name: 检测脚本设置
