@@ -22,6 +22,7 @@ on:
           - Lean_x86_64
           - Lean_x86_64_Long
           - immortalwrt_x86_64
+          - immortalwrt_ax6600
 
       CACHE_BUILD:
         description: '缓存加速'
@@ -63,7 +64,7 @@ jobs:
       fail-fast: false
       matrix:
         target: ${{ fromJSON(
-          github.event_name == 'schedule' && '["Lean_x86_64","Lean_x86_64_Long","immortalwrt_x86_64"]' || 
+          github.event_name == 'schedule' && '["Lean_x86_64","Lean_x86_64_Long","immortalwrt_x86_64","immortalwrt_ax6600"]' || 
           format('["{0}"]', github.event.inputs.MODEL )
           )}}
 
@@ -276,6 +277,13 @@ jobs:
         echo
         echo
         # cat .config
+
+    - name: 上传插件信息
+      if: steps.compile.outcome == 'success' && env.UPLOAD_CONFIG == 'true'
+      uses: actions/upload-artifact@main
+      with:
+        name: ${{matrix.target}}_OpenWrt_Pluginsinfo_${{ env.FILE_TIME }}
+        path: openwrt/.config
 
     - name: 下载编译所需文件
       run: |
