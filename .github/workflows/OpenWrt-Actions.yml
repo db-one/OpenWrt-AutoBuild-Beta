@@ -279,7 +279,7 @@ jobs:
         # cat .config
 
     - name: 上传插件信息
-      if: steps.compile.outcome == 'success' && env.UPLOAD_CONFIG == 'true'
+      if: env.UPLOAD_CONFIG == 'true'
       uses: actions/upload-artifact@main
       with:
         name: ${{matrix.target}}_OpenWrt_Pluginsinfo_${{ env.FILE_TIME }}
