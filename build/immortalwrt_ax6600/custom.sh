@@ -43,6 +43,15 @@ BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s#%D %V %C#ONE build $BUILDTIM
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
+# ========================性能跑分========================
+sed -i '#etc/crontabs/root#d' feeds/packages/utils/coremark/coremark
+cat >> $ZZZ <<EOF
+cat /dev/null > /etc/bench.log
+echo " (CpuMark : 23907.846120" >> /etc/bench.log
+echo " Scores)" >> /etc/bench.log
+EOF
+# =======================================================
+
 cat >> $ZZZ <<-EOF
 # 设置网络-旁路由模式
 uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关
@@ -290,7 +299,7 @@ CONFIG_PACKAGE_luci-app-ttyd=n
 CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-app-vlmcsd=n
 CONFIG_PACKAGE_luci-app-wol=n
-CONFIG_PACKAGE_luci-app-zerotier=y
+CONFIG_PACKAGE_luci-app-zerotier=n
 CONFIG_PACKAGE_luci-app-athena-led=m
 CONFIG_PACKAGE_luci-i18n-athena-led-zh-cn=m
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）

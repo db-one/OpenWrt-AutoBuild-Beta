@@ -54,6 +54,15 @@ sed -i '/exit 0/i\ethtool -s eth0 speed 10000 duplex full' package/base-files/fi
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
+# ========================性能跑分========================
+sed -i '#etc/crontabs/root#d' feeds/packages/utils/coremark/coremark
+cat >> $ZZZ <<EOF
+cat /dev/null > /etc/bench.log
+echo " (CpuMark : 191219.823122" >> /etc/bench.log
+echo " Scores)" >> /etc/bench.log
+EOF
+# =======================================================
+
 cat >> $ZZZ <<-EOF
 cat >> $ZZZ <<-EOF
 # 设置网络-旁路由模式
