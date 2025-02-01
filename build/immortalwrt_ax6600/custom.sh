@@ -36,14 +36,10 @@ fi
 #
 sed -i "s#192.168.1.1#10.0.0.1#g" $NET                                                     # 定制默认IP
 sed -i "s#ImmortalWrt#AX6600#g" $NET                                          # 修改默认名称为 AX6600
-# sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                          # 取消系统默认密码
 echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                      # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
-# sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s#%D %V %C#ONE build $BUILDTIME @ %D %V %C#g" package/base-files/files/etc/openwrt_release              # 增加自己个性名称
-# sed -i "s@list listen_https@# list listen_https@g" package/network/services/uhttpd/files/uhttpd.config               # 停止监听443端口
-# sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' package/base-files/files//etc/rc.local               # 强制显示2500M和全双工（默认PVE下VirtIO不识别） ImmortalWrt固件内不显示端口状态，可以关闭
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
@@ -156,8 +152,9 @@ touch ./.config
 # 无论你想要对固件进行怎样的定制, 都需要且只需要修改 EOF 回环内的内容.
 # 
 
-# 编译x64固件:
+# 编译 雅典娜 AX6600 固件:
 cat >> .config <<EOF
+# TARGET config
 CONFIG_TARGET_qualcommax=y
 CONFIG_TARGET_qualcommax_ipq60xx=y
 CONFIG_TARGET_MULTI_PROFILE=y
@@ -165,6 +162,159 @@ CONFIG_TARGET_PER_DEVICE_ROOTFS=y
 CONFIG_TARGET_DEVICE_qualcommax_ipq60xx_DEVICE_jdcloud_re-cs-02=y
 CONFIG_TARGET_DEVICE_PACKAGES_qualcommax_ipq60xx_DEVICE_jdcloud_re-cs-02="ipq-wifi-jdcloud_re-cs-02 ath11k-firmware-qcn9074 kmod-ath11k-pci luci-app-athena-led luci-i18n-athena-led-zh-cn"
 CONFIG_TARGET_ROOTFS_INITRAMFS=n
+
+# Compile
+CONFIG_USE_APK=n
+CONFIG_DEVEL=y
+CONFIG_CCACHE=y
+CONFIG_TARGET_OPTIONS=y
+CONFIG_TARGET_OPTIMIZATION="-O2 -pipe -mcpu=cortex-a53+crc+crypto"
+
+# BUSYBOX
+CONFIG_BUSYBOX_CUSTOM=y
+CONFIG_BUSYBOX_CONFIG_TELNET=y
+
+# Swap
+CONFIG_PACKAGE_zram-swap=n
+
+# NSS
+CONFIG_IPQ_MEM_PROFILE_256=y
+CONFIG_ATH11K_MEM_PROFILE_512M=y
+CONFIG_NSS_MEM_PROFILE_HIGH=y
+CONFIG_NSS_FIRMWARE_VERSION_12_2=y
+CONFIG_PACKAGE_sqm-scripts-nss=y
+CONFIG_PACKAGE_kmod-qca-mcs=y
+CONFIG_KERNEL_SKB_RECYCLER=y
+CONFIG_PACKAGE_kmod-ath11k-pci=m
+CONFIG_NSS_DRV_WIFI_MESH_ENABLE=n
+CONFIG_PACKAGE_MAC80211_MESH=n
+CONFIG_ATH11K_NSS_MESH_SUPPORT=n
+
+# Proto
+CONFIG_PACKAGE_proto-bonding=y
+CONFIG_PACKAGE_luci-proto-quectel=y
+CONFIG_PACKAGE_luci-proto-wireguard=n
+CONFIG_PACKAGE_luci-proto-relay=y
+
+# Kernel modules
+CONFIG_PACKAGE_kmod-fs-exfat=y
+CONFIG_PACKAGE_kmod-fs-ntfs3=y
+CONFIG_PACKAGE_kmod-fs-vfat=y
+CONFIG_PACKAGE_kmod-nft-queue=y
+CONFIG_PACKAGE_kmod-tls=y
+CONFIG_PACKAGE_kmod-tun=y
+
+#  USB Support
+CONFIG_PACKAGE_kmod-usb-acm=y
+CONFIG_PACKAGE_kmod-usb-ehci=y
+CONFIG_PACKAGE_kmod-usb-net-huawei-cdc-ncm=y
+CONFIG_PACKAGE_kmod-usb-net-rndis=y
+CONFIG_PACKAGE_kmod-usb-net-asix-ax88179=y
+CONFIG_PACKAGE_kmod-usb-net-rtl8152=y
+CONFIG_PACKAGE_kmod-usb-net-sierrawireless=y
+CONFIG_PACKAGE_kmod-usb-ohci=y
+CONFIG_PACKAGE_kmod-usb-serial-qualcomm=y
+CONFIG_PACKAGE_kmod-usb-storage=y
+CONFIG_PACKAGE_kmod-usb2=y
+
+#  docker kernel dependencies
+CONFIG_PACKAGE_kmod-br-netfilter=y
+CONFIG_PACKAGE_kmod-ip6tables=y
+CONFIG_PACKAGE_kmod-ipt-conntrack=y
+CONFIG_PACKAGE_kmod-ipt-extra=y
+CONFIG_PACKAGE_kmod-ipt-nat=y
+CONFIG_PACKAGE_kmod-ipt-nat6=y
+CONFIG_PACKAGE_kmod-ipt-physdev=y
+CONFIG_PACKAGE_kmod-nf-ipt6=y
+CONFIG_PACKAGE_kmod-nf-ipvs=y
+CONFIG_PACKAGE_kmod-nf-nat6=y
+CONFIG_PACKAGE_kmod-dummy=y
+CONFIG_PACKAGE_kmod-veth=y
+
+# Libraries
+CONFIG_PACKAGE_luci-lib-ipkg=y
+CONFIG_PACKAGE_libopenssl-legacy=y
+
+# Package
+CONFIG_PACKAGE_htop=y
+CONFIG_PACKAGE_nano=y
+CONFIG_PACKAGE_curl=y
+CONFIG_PACKAGE_wget-ssl=y
+CONFIG_PACKAGE_bash=y
+CONFIG_PACKAGE_snmpd=y
+CONFIG_PACKAGE_fuse-utils=y
+CONFIG_PACKAGE_openssh-sftp-server=y
+CONFIG_PACKAGE_tcpdump=y
+CONFIG_PACKAGE_sgdisk=y
+CONFIG_PACKAGE_openssl-util=y
+CONFIG_PACKAGE_resize2fs=y
+CONFIG_PACKAGE_qrencode=y
+CONFIG_PACKAGE_smartmontools-drivedb=y
+CONFIG_PACKAGE_usbutils=y
+CONFIG_PACKAGE_default-settings=y
+CONFIG_PACKAGE_default-settings-chn=y
+
+#  Coremark
+CONFIG_PACKAGE_coremark=y
+CONFIG_COREMARK_OPTIMIZE_O3=y
+CONFIG_COREMARK_ENABLE_MULTITHREADING=y
+CONFIG_COREMARK_NUMBER_OF_THREADS=6
+
+#  docker dependencies
+CONFIG_PACKAGE_iptables-mod-extra=y
+CONFIG_PACKAGE_ip6tables-nft=y
+CONFIG_PACKAGE_ip6tables-mod-fullconenat=y
+CONFIG_PACKAGE_iptables-mod-fullconenat=y
+CONFIG_PACKAGE_libip4tc=y
+CONFIG_PACKAGE_libip6tc=y
+
+#  mwan3 dependencies
+CONFIG_PACKAGE_iptables-mod-conntrack-extra=y
+
+# LuCI主题:
+CONFIG_PACKAGE_luci-theme-argon=y
+
+# Enable Luci App
+CONFIG_PACKAGE_luci-app-adguardhome=n
+CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=n
+CONFIG_PACKAGE_luci-app-autoreboot=y
+CONFIG_PACKAGE_luci-app-diskman=n
+CONFIG_PACKAGE_luci-app-dockerman=n
+CONFIG_PACKAGE_luci-app-istorex=y
+CONFIG_PACKAGE_luci-app-lucky=n
+CONFIG_PACKAGE_luci-app-mosdns=n
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_luci-app-smartdns=n
+CONFIG_PACKAGE_luci-app-sqm=n
+CONFIG_PACKAGE_luci-app-ttyd=n
+CONFIG_PACKAGE_luci-app-upnp=y
+CONFIG_PACKAGE_luci-app-vlmcsd=n
+CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_PACKAGE_luci-app-zerotier=y
+CONFIG_PACKAGE_luci-app-athena-led=m
+CONFIG_PACKAGE_luci-i18n-athena-led-zh-cn=m
+CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
+CONFIG_PACKAGE_luci-app-filetransfer=y #文件传输
+
+# Proxy
+#  OpenClash
+CONFIG_PACKAGE_luci-app-openclash=y #OpenClash客户端
+
+#  mihomo 客户端
+CONFIG_PACKAGE_luci-app-mihomo=y #mihomo 客户端
+
+#  HomeProxy
+CONFIG_PACKAGE_luci-app-homeproxy=n
+
+#  Passwall
+CONFIG_PACKAGE_luci-app-passwall=y
+# CONFIG_PACKAGE_luci-app-passwall2=y
+# CONFIG_PACKAGE_naiveproxy=y
+CONFIG_PACKAGE_chinadns-ng=y
+# CONFIG_PACKAGE_brook=y
+CONFIG_PACKAGE_trojan-go=y
+CONFIG_PACKAGE_xray-plugin=y
+CONFIG_PACKAGE_shadowsocks-rust-sslocal=y
 EOF
 
 
