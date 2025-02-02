@@ -307,23 +307,23 @@ CONFIG_PACKAGE_luci-app-filetransfer=y #文件传输
 
 # Proxy
 #  OpenClash
-CONFIG_PACKAGE_luci-app-openclash=y #OpenClash客户端
+CONFIG_PACKAGE_luci-app-openclash=n #OpenClash客户端
 
 #  mihomo 客户端
-CONFIG_PACKAGE_luci-app-mihomo=y #mihomo 客户端
+CONFIG_PACKAGE_luci-app-mihomo=n #mihomo 客户端
 
 #  HomeProxy
 CONFIG_PACKAGE_luci-app-homeproxy=n
 
 #  Passwall
-CONFIG_PACKAGE_luci-app-passwall=y
-# CONFIG_PACKAGE_luci-app-passwall2=y
-# CONFIG_PACKAGE_naiveproxy=y
-CONFIG_PACKAGE_chinadns-ng=y
-# CONFIG_PACKAGE_brook=y
-CONFIG_PACKAGE_trojan-go=y
-CONFIG_PACKAGE_xray-plugin=y
-CONFIG_PACKAGE_shadowsocks-rust-sslocal=y
+CONFIG_PACKAGE_luci-app-passwall=n
+# CONFIG_PACKAGE_luci-app-passwall2=n
+# CONFIG_PACKAGE_naiveproxy=n
+CONFIG_PACKAGE_chinadns-ng=n
+# CONFIG_PACKAGE_brook=n
+CONFIG_PACKAGE_trojan-go=n
+CONFIG_PACKAGE_xray-plugin=n
+CONFIG_PACKAGE_shadowsocks-rust-sslocal=n
 EOF
 
 
