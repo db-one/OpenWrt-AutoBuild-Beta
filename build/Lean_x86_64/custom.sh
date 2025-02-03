@@ -104,32 +104,47 @@ sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-# 下载 OpenClash 内核
-grep "CONFIG_PACKAGE_luci-app-openclash=y" $WORKPATH/$CUSTOM_SH >/dev/null
-if [ $? -eq 0 ]; then
-  echo "正在执行：为OpenClash下载内核"
-  mkdir -p $HOME/clash-core
-  mkdir -p $HOME/files/etc/openclash/core
-  cd $HOME/clash-core
 
-# 下载Meta内核
-  wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-amd64.tar.gz
-  if [[ $? -ne 0 ]];then
-    wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-amd64.tar.gz
-  else
-    echo "OpenClash Meta内核压缩包下载成功，开始解压文件"
+# 检查 OpenClash 是否启用编译
+if grep -qE "^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash=y|# CONFIG_PACKAGE_luci-app-openclash is not set)$" "$WORKPATH/$CUSTOM_SH"; then
+  # OpenClash 未启用，不执行任何操作
+  echo "OpenClash 未启用编译"
+else
+  # OpenClash 已启用，执行配置
+  if grep -q "CONFIG_PACKAGE_luci-app-openclash=y" "$WORKPATH/$CUSTOM_SH"; then
+    # 判断系统架构
+    arch=$(uname -m)  # 获取系统架构
+    case "$arch" in
+      x86_64)
+        arch="amd64"
+        ;;
+      aarch64|arm64)
+        arch="arm64"
+        ;;
+    esac
+    # OpenClash Meta 开始配置内核
+    echo "正在执行：为OpenClash下载内核"
+    mkdir -p $HOME/clash-core
+    mkdir -p $HOME/files/etc/openclash/core
+    cd $HOME/clash-core
+    # 下载Meta内核
+    wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-$arch.tar.gz
+    if [[ $? -ne 0 ]];then
+      wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-$arch.tar.gz
+    else
+      echo "OpenClash Meta内核压缩包下载成功，开始解压文件"
+    fi
+    tar -zxvf clash-linux-$arch.tar.gz
+    if [[ -f "$HOME/clash-core/clash" ]]; then
+      mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_meta
+      chmod +x $HOME/files/etc/openclash/core/clash_meta
+      echo "OpenClash Meta内核配置成功"
+    else
+      echo "OpenClash Meta内核配置失败"
+    fi
+    rm -rf $HOME/clash-core/clash-linux-$arch.tar.gz
+    rm -rf $HOME/clash-core
   fi
-  tar -zxvf clash-linux-amd64.tar.gz
-  if [[ -f "$HOME/clash-core/clash" ]]; then
-    mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_meta
-    chmod +x $HOME/files/etc/openclash/core/clash_meta
-    echo "OpenClash Meta内核配置成功"
-  else
-    echo "OpenClash Meta内核配置失败"
-  fi
-  rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
-
-  rm -rf $HOME/clash-core
 fi
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #

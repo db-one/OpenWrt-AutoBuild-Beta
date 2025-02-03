@@ -52,38 +52,7 @@ echo " Scores)" >> /etc/bench.log
 EOF
 # =======================================================
 
-cat >> $ZZZ <<-EOF
-# 设置网络-旁路由模式
-uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关
-uci set network.lan.dns='10.0.0.254'                       # 旁路由设置 DNS(多个DNS要用空格分开)
-uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
-uci delete network.lan.type                                  # 旁路由桥接模式-禁用
-uci set network.lan.delegate='0'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
-uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
 
-# 设置防火墙-旁路由模式
-uci set firewall.@defaults[0].syn_flood='0'                  # 禁用 SYN-flood 防御
-uci set firewall.@defaults[0].flow_offloading='0'           # 禁用基于软件的NAT分载
-uci set firewall.@defaults[0].flow_offloading_hw='0'       # 禁用基于硬件的NAT分载
-uci set firewall.@defaults[0].fullcone='1'                   # 启用 FullCone NAT
-uci set firewall.@defaults[0].fullcone6='1'                  # 启用 FullCone NAT6
-uci set firewall.@zone[0].masq='1'                             # 启用LAN口 IP 动态伪装
-
-# 旁路IPV6需要全部禁用
-uci set network.lan.ip6assign=''                             # IPV6分配长度-禁用
-uci set dhcp.lan.ra=''                                       # 路由通告服务-禁用
-uci set dhcp.lan.dhcpv6=''                                   # DHCPv6 服务-禁用
-uci set dhcp.lan.ra_management=''                            # DHCPv6 模式-禁用
-
-# 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
-uci set network.ipv6=interface
-uci set network.ipv6.proto='dhcpv6'
-uci set network.ipv6.ifname='@lan'
-uci set network.ipv6.reqaddress='try'
-uci set network.ipv6.reqprefix='auto'
-uci set firewall.@zone[0].network='lan ipv6'
-
-EOF
 
 # 修改退出命令到最后
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
@@ -92,32 +61,47 @@ sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-# 下载 OpenClash 内核
-grep "CONFIG_PACKAGE_luci-app-openclash=y" $WORKPATH/$CUSTOM_SH >/dev/null
-if [ $? -eq 0 ]; then
-  echo "正在执行：为OpenClash下载内核"
-  mkdir -p $HOME/clash-core
-  mkdir -p $HOME/files/etc/openclash/core
-  cd $HOME/clash-core
 
-# 下载Meta内核
-  wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-amd64.tar.gz
-  if [[ $? -ne 0 ]];then
-    wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-amd64.tar.gz
-  else
-    echo "OpenClash Meta内核压缩包下载成功，开始解压文件"
+# 检查 OpenClash 是否启用编译
+if grep -qE "^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash=y|# CONFIG_PACKAGE_luci-app-openclash is not set)$" "$WORKPATH/$CUSTOM_SH"; then
+  # OpenClash 未启用，不执行任何操作
+  echo "OpenClash 未启用编译"
+else
+  # OpenClash 已启用，执行配置
+  if grep -q "CONFIG_PACKAGE_luci-app-openclash=y" "$WORKPATH/$CUSTOM_SH"; then
+    # 判断系统架构
+    arch=$(uname -m)  # 获取系统架构
+    case "$arch" in
+      x86_64)
+        arch="amd64"
+        ;;
+      aarch64|arm64)
+        arch="arm64"
+        ;;
+    esac
+    # OpenClash Meta 开始配置内核
+    echo "正在执行：为OpenClash下载内核"
+    mkdir -p $HOME/clash-core
+    mkdir -p $HOME/files/etc/openclash/core
+    cd $HOME/clash-core
+    # 下载Meta内核
+    wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-$arch.tar.gz
+    if [[ $? -ne 0 ]];then
+      wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-$arch.tar.gz
+    else
+      echo "OpenClash Meta内核压缩包下载成功，开始解压文件"
+    fi
+    tar -zxvf clash-linux-$arch.tar.gz
+    if [[ -f "$HOME/clash-core/clash" ]]; then
+      mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_meta
+      chmod +x $HOME/files/etc/openclash/core/clash_meta
+      echo "OpenClash Meta内核配置成功"
+    else
+      echo "OpenClash Meta内核配置失败"
+    fi
+    rm -rf $HOME/clash-core/clash-linux-$arch.tar.gz
+    rm -rf $HOME/clash-core
   fi
-  tar -zxvf clash-linux-amd64.tar.gz
-  if [[ -f "$HOME/clash-core/clash" ]]; then
-    mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_meta
-    chmod +x $HOME/files/etc/openclash/core/clash_meta
-    echo "OpenClash Meta内核配置成功"
-  else
-    echo "OpenClash Meta内核配置失败"
-  fi
-  rm -rf $HOME/clash-core/clash-linux-amd64.tar.gz
-
-  rm -rf $HOME/clash-core
 fi
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
@@ -289,7 +273,7 @@ CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=n
 CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-diskman=n
 CONFIG_PACKAGE_luci-app-dockerman=n
-CONFIG_PACKAGE_luci-app-istorex=y
+CONFIG_PACKAGE_luci-app-istorex=n
 CONFIG_PACKAGE_luci-app-lucky=n
 CONFIG_PACKAGE_luci-app-mosdns=n
 CONFIG_PACKAGE_luci-app-samba4=n
@@ -302,8 +286,8 @@ CONFIG_PACKAGE_luci-app-wol=n
 CONFIG_PACKAGE_luci-app-zerotier=n
 CONFIG_PACKAGE_luci-app-athena-led=m
 CONFIG_PACKAGE_luci-i18n-athena-led-zh-cn=m
-CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
-CONFIG_PACKAGE_luci-app-filetransfer=y #文件传输
+CONFIG_PACKAGE_luci-app-poweroff=n #关机（增加关机功能）
+CONFIG_PACKAGE_luci-app-filetransfer=n #文件传输
 
 # Proxy
 #  OpenClash
