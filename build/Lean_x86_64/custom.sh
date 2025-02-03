@@ -106,7 +106,7 @@ sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
 # 检查 OpenClash 是否启用编译
-if grep -qE "^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash=y|# CONFIG_PACKAGE_luci-app-openclash is not set)$" "$WORKPATH/$CUSTOM_SH"; then
+if grep -qE "^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash(=" "$WORKPATH/$CUSTOM_SH"; then
   # OpenClash 未启用，不执行任何操作
   echo "OpenClash 未启用编译"
 else
