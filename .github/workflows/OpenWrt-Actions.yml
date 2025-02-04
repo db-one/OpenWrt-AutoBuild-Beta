@@ -280,7 +280,7 @@ jobs:
 
     - name: 下载编译所需文件
       run: |
-        cd openwrt && make download -j16
+        cd openwrt && make download -j4
 
     - name: 开始编译固件
       id: compile
