@@ -61,9 +61,8 @@ cat /dev/null > /etc/bench.log
 echo " (CpuMark : 191219.823122" >> /etc/bench.log
 echo " Scores)" >> /etc/bench.log
 EOF
-# =======================================================
+# ================ 网络设置 =======================================
 
-cat >> $ZZZ <<-EOF
 cat >> $ZZZ <<-EOF
 # 设置网络-旁路由模式
 uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关
@@ -101,9 +100,6 @@ EOF
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-
-
-# ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
 # 检查 OpenClash 是否启用编译
 if grep -qE "^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash\\(=" "${WORKPATH}/$CUSTOM_SH"; then

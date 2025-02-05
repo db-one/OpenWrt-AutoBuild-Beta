@@ -50,20 +50,126 @@ cat /dev/null > /etc/bench.log
 echo " (CpuMark : 23907.846120" >> /etc/bench.log
 echo " Scores)" >> /etc/bench.log
 EOF
-# =======================================================
 
+# ================ 网络设置 =======================================
+
+cat >> $ZZZ <<-EOF
+# 设置网络-旁路由模式
+uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关
+uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
+uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
+uci delete network.lan.type                                  # 旁路由桥接模式-禁用
+uci set network.lan.delegate='0'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
+uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
+
+# 设置防火墙-旁路由模式
+uci set firewall.@defaults[0].syn_flood='0'                  # 禁用 SYN-flood 防御
+uci set firewall.@defaults[0].flow_offloading='0'           # 禁用基于软件的NAT分载
+uci set firewall.@defaults[0].flow_offloading_hw='0'       # 禁用基于硬件的NAT分载
+uci set firewall.@defaults[0].fullcone='1'                   # 启用 FullCone NAT
+uci set firewall.@defaults[0].fullcone6='1'                  # 启用 FullCone NAT6
+uci set firewall.@zone[0].masq='1'                             # 启用LAN口 IP 动态伪装
+
+# 旁路IPV6需要全部禁用
+uci set network.lan.ip6assign=''                             # IPV6分配长度-禁用
+uci set dhcp.lan.ra=''                                       # 路由通告服务-禁用
+uci set dhcp.lan.dhcpv6=''                                   # DHCPv6 服务-禁用
+uci set dhcp.lan.ra_management=''                            # DHCPv6 模式-禁用
+
+# 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
+uci set network.ipv6=interface
+uci set network.ipv6.proto='dhcpv6'
+uci set network.ipv6.ifname='@lan'
+uci set network.ipv6.reqaddress='try'
+uci set network.ipv6.reqprefix='auto'
+uci set firewall.@zone[0].network='lan ipv6'
+
+EOF
+
+# ================ WIFI设置 =======================================
+
+cat >> $ZZZ <<EOF
+#!/bin/sh
+
+# 删除默认WIFI配置
+rm -f /etc/uci-defaults/990_set-wireless.sh
+
+# 检查是否存在 /etc/config/wireless 文件
+if [ -f /etc/config/wireless ]; then
+    echo "检测到 /etc/config/wireless 文件存在，跳过配置"
+    exit 0
+fi
+
+# 配置SSID信息
+configure_wifi() {
+    local radio=$1
+    local channel=$2
+    local htmode=$3
+    local txpower=$4
+    local ssid=$5
+    local key=$6
+    local encryption=$7
+
+    # 无需设置 band，系统自动推断
+    uci -q batch <<EOC
+set wireless.radio${radio}.channel="${channel}"
+set wireless.radio${radio}.htmode="${htmode}"
+set wireless.radio${radio}.mu_beamformer='1'
+set wireless.radio${radio}.country='US'
+set wireless.radio${radio}.txpower="${txpower}"
+set wireless.radio${radio}.cell_density='0'
+set wireless.radio${radio}.disabled='0'
+
+set wireless.default_radio${radio}.ssid="${ssid}"
+set wireless.default_radio${radio}.encryption="${encryption}"
+set wireless.default_radio${radio}.key="${key}"
+set wireless.default_radio${radio}.time_advertisement='2'
+set wireless.default_radio${radio}.time_zone='CST-8'
+set wireless.default_radio${radio}.wnm_sleep_mode='1'
+set wireless.default_radio${radio}.wnm_sleep_mode_no_keys='1'
+EOC
+
+    # 特殊加密设置
+    if [ "$encryption" = "sae-mixed" ]; then
+        uci set wireless.default_radio${radio}.ocv='0'
+        uci set wireless.default_radio${radio}.disassoc_low_ack='0'
+    fi
+}
+
+# 配置无线接口
+#            接口顺序    信道     HT频宽      功率      SSID               密码            加密方式
+configure_wifi 0      149     'HE80'      22     'JDC_Guest'       '123456789'     'sae-mixed'
+configure_wifi 1      6       'HE40'      22     'MX-SmartHome'    '123456789'     'psk2+ccmp'
+configure_wifi 2      48      'HE160'     23     'AX6600_5G'       '123456789'     'sae-mixed'
+
+# 添加 radio1 的第二个接口
+uci set wireless.wifinet3=wifi-iface
+uci set wireless.wifinet3.device='radio1'
+uci set wireless.wifinet3.mode='ap'
+uci set wireless.wifinet3.network='lan'
+uci set wireless.wifinet3.ssid='AX6600'
+uci set wireless.wifinet3.encryption='psk2+ccmp'
+uci set wireless.wifinet3.key='123456789'
+uci set wireless.wifinet3.time_advertisement='2'
+uci set wireless.wifinet3.time_zone='CST-8'
+uci set wireless.wifinet3.wnm_sleep_mode='1'
+uci set wireless.wifinet3.wnm_sleep_mode_no_keys='1'
+uci set wireless.wifinet3.disassoc_low_ack='0'
+
+# 提交并重启
+uci commit wireless
+/etc/init.d/network restart
+EOF
+# =======================================================
 
 
 # 修改退出命令到最后
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
-# ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-
-
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
 # 检查 OpenClash 是否启用编译
-if grep -qE "^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash\\(=" "${WORKPATH}/$CUSTOM_SH"; then
+if grep -qE '^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash=)' "${WORKPATH}/$CUSTOM_SH"; then
   # OpenClash 未启用，不执行任何操作
   echo "OpenClash 未启用编译"
 else
@@ -239,7 +345,7 @@ CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=n
 CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-diskman=n
 CONFIG_PACKAGE_luci-app-dockerman=n
-CONFIG_PACKAGE_luci-app-istorex=y
+CONFIG_PACKAGE_luci-app-istorex=n
 CONFIG_PACKAGE_luci-app-lucky=n
 CONFIG_PACKAGE_luci-app-mosdns=n
 CONFIG_PACKAGE_luci-app-samba4=n

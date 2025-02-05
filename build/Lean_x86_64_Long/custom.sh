@@ -54,7 +54,6 @@ sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/h
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
 cat >> $ZZZ <<-EOF
-cat >> $ZZZ <<-EOF
 # 设置网络-旁路由模式
 uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关
 uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
@@ -89,9 +88,6 @@ EOF
 
 # 修改退出命令到最后
 sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
-
-# ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
