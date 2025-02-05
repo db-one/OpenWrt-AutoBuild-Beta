@@ -160,21 +160,22 @@ uci set wireless.wifinet3.disassoc_low_ack='0'
 uci commit wireless
 /etc/init.d/network restart
 EOF
+
 # =======================================================
-
-
-# 修改退出命令到最后
-sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
-
-# ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
 # 检查 OpenClash 是否启用编译
 if grep -qE '^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash=)' "${WORKPATH}/$CUSTOM_SH"; then
   # OpenClash 未启用，不执行任何操作
   echo "OpenClash 未启用编译"
+  echo 'rm -rf /etc/openclash' > $ZZZ
 else
   echo "OpenClash 已启用，执行配置"
 fi
+
+# =======================================================
+
+# 修改退出命令到最后
+sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 

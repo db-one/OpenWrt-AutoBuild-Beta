@@ -96,10 +96,7 @@ uci set firewall.@zone[0].network='lan ipv6'
 
 EOF
 
-# 修改退出命令到最后
-sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
-
-# ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
+# =======================================================
 
 # 检查 OpenClash 是否启用编译
 if grep -qE "^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash\\(=" "${WORKPATH}/$CUSTOM_SH"; then
@@ -142,6 +139,11 @@ else
     rm -rf $HOME/clash-core
   fi
 fi
+
+# =======================================================
+
+# 修改退出命令到最后
+sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
