@@ -61,6 +61,7 @@ cat /dev/null > /etc/bench.log
 echo " (CpuMark : 191219.823122" >> /etc/bench.log
 echo " Scores)" >> /etc/bench.log
 EOF
+
 # ================ 网络设置 =======================================
 
 cat >> $ZZZ <<-EOF

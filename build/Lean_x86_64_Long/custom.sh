@@ -53,6 +53,8 @@ sed -i 's#interval: 5#interval: 1#g' feeds/luci/applications/luci-app-wrtbwmon/h
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
+# ================ 网络设置 =======================================
+
 cat >> $ZZZ <<-EOF
 # 设置网络-旁路由模式
 uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关

@@ -162,6 +162,8 @@ uci set wireless.wifinet3.disassoc_low_ack='0'
 uci commit wireless
 /etc/init.d/network restart
 EOF
+# 设置文件权限
+chmod +x "$AX6600_WIFI/990_ax6600-wireless.sh"
 
 # =======================================================
 
