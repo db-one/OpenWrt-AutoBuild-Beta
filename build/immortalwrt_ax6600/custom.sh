@@ -88,7 +88,9 @@ EOF
 
 # ================ WIFI设置 =======================================
 
-cat >> ${WORKPATH}/files//etc/uci-defaults/990_ax6600-wireless.sh <<EOF
+AX6600_WIFI="${WORKPATH}/files/etc/uci-defaults"
+mkdir -p "$AX6600_WIFI"
+cat >> "$AX6600_WIFI/990_ax6600-wireless.sh" << EOF
 #!/bin/sh
 
 # 删除默认WIFI配置
@@ -167,7 +169,7 @@ EOF
 if grep -qE '^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash=)' "${WORKPATH}/$CUSTOM_SH"; then
   # OpenClash 未启用，不执行任何操作
   echo "OpenClash 未启用编译"
-  echo 'rm -rf /etc/openclash' > $ZZZ
+  echo 'rm -rf /etc/openclash' >> $ZZZ
 else
   # OpenClash 已启用，执行配置
   if grep -q "CONFIG_PACKAGE_luci-app-openclash=y" "${WORKPATH}/$CUSTOM_SH"; then

@@ -96,7 +96,7 @@ EOF
 if grep -qE '^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash=)' "${WORKPATH}/$CUSTOM_SH"; then
   # OpenClash 未启用，不执行任何操作
   echo "OpenClash 未启用编译"
-  echo 'rm -rf /etc/openclash' > $ZZZ
+  echo 'rm -rf /etc/openclash' >> $ZZZ
 else
   # OpenClash 已启用，执行配置
   if grep -q "CONFIG_PACKAGE_luci-app-openclash=y" "${WORKPATH}/$CUSTOM_SH"; then
