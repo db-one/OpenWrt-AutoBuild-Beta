@@ -88,7 +88,7 @@ EOF
 
 # ================ WIFI设置 =======================================
 
-cat >> $ZZZ <<EOF
+cat >> ${WORKPATH}/files//etc/uci-defaults/990_ax6600-wireless.sh <<EOF
 #!/bin/sh
 
 # 删除默认WIFI配置
@@ -169,7 +169,41 @@ if grep -qE '^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-ope
   echo "OpenClash 未启用编译"
   echo 'rm -rf /etc/openclash' > $ZZZ
 else
-  echo "OpenClash 已启用，执行配置"
+  # OpenClash 已启用，执行配置
+  if grep -q "CONFIG_PACKAGE_luci-app-openclash=y" "${WORKPATH}/$CUSTOM_SH"; then
+    # 判断系统架构
+    arch=$(uname -m)  # 获取系统架构
+    case "$arch" in
+      x86_64)
+        arch="amd64"
+        ;;
+      aarch64|arm64)
+        arch="arm64"
+        ;;
+    esac
+    # OpenClash Meta 开始配置内核
+    echo "正在执行：为OpenClash下载内核"
+    mkdir -p $HOME/clash-core
+    mkdir -p $HOME/files/etc/openclash/core
+    cd $HOME/clash-core
+    # 下载Meta内核
+    wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-$arch.tar.gz
+    if [[ $? -ne 0 ]];then
+      wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-$arch.tar.gz
+    else
+      echo "OpenClash Meta内核压缩包下载成功，开始解压文件"
+    fi
+    tar -zxvf clash-linux-$arch.tar.gz
+    if [[ -f "$HOME/clash-core/clash" ]]; then
+      mv -f $HOME/clash-core/clash $HOME/files/etc/openclash/core/clash_meta
+      chmod +x $HOME/files/etc/openclash/core/clash_meta
+      echo "OpenClash Meta内核配置成功"
+    else
+      echo "OpenClash Meta内核配置失败"
+    fi
+    rm -rf $HOME/clash-core/clash-linux-$arch.tar.gz
+    rm -rf $HOME/clash-core
+  fi
 fi
 
 # =======================================================
@@ -346,7 +380,7 @@ CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=n
 CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-diskman=n
 CONFIG_PACKAGE_luci-app-dockerman=n
-CONFIG_PACKAGE_luci-app-istorex=n
+CONFIG_PACKAGE_luci-app-istorex=y
 CONFIG_PACKAGE_luci-app-lucky=n
 CONFIG_PACKAGE_luci-app-mosdns=n
 CONFIG_PACKAGE_luci-app-samba4=n
@@ -359,8 +393,8 @@ CONFIG_PACKAGE_luci-app-wol=n
 CONFIG_PACKAGE_luci-app-zerotier=n
 CONFIG_PACKAGE_luci-app-athena-led=m
 CONFIG_PACKAGE_luci-i18n-athena-led-zh-cn=m
-CONFIG_PACKAGE_luci-app-poweroff=n #关机（增加关机功能）
-CONFIG_PACKAGE_luci-app-filetransfer=n #文件传输
+CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
+CONFIG_PACKAGE_luci-app-filetransfer=y #文件传输
 
 # Proxy
 #  OpenClash
