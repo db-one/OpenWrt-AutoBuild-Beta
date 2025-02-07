@@ -39,7 +39,7 @@ sed -i "s#ImmortalWrt#AX6600#g" $NET                                          # 
 echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                      # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s#%D %V %C#ONE build $BUILDTIME @ %D %V %C#g" package/base-files/files/etc/openwrt_release              # 增加自己个性名称
+# sed -i "/_('Firmware Version')/s/\(_('Firmware Version'), *\)/\1(\"ONE build $(TZ=UTC-8 date "+%Y.%m.%d") \" + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js              # 增加自己个性名称
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
@@ -63,11 +63,11 @@ uci set network.lan.delegate='0'                             # 去掉LAN口使�
 uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
 
 # 设置防火墙-旁路由模式
-uci set firewall.@defaults[0].syn_flood='0'                  # 禁用 SYN-flood 防御
+uci set firewall.@defaults[0].synflood_protect='0'          # 禁用 SYN-flood 防御
 uci set firewall.@defaults[0].flow_offloading='0'           # 禁用基于软件的NAT分载
 uci set firewall.@defaults[0].flow_offloading_hw='0'       # 禁用基于硬件的NAT分载
-uci set firewall.@defaults[0].fullcone='1'                   # 启用 FullCone NAT
-uci set firewall.@defaults[0].fullcone6='1'                  # 启用 FullCone NAT6
+uci set firewall.@defaults[0].fullcone='0'                   # 禁用 FullCone NAT
+uci set firewall.@defaults[0].fullcone6='0'                  # 禁用 FullCone NAT6
 uci set firewall.@zone[0].masq='1'                             # 启用LAN口 IP 动态伪装
 
 # 旁路IPV6需要全部禁用
@@ -84,21 +84,68 @@ uci set network.ipv6.reqaddress='try'
 uci set network.ipv6.reqprefix='auto'
 uci set firewall.@zone[0].network='lan ipv6'
 
+# 配置Dropbear SSH服务
+uci delete dropbear.main.RootPasswordAuth
+uci set dropbear.main.enable='1'
+uci set dropbear.main.Interface='lan'
+
+uci commit dhcp
+uci commit network
+uci commit firewall
+uci commit dropbear
+
+EOF
+
+# 软件源设置
+echo "sed -i '#distfeeds.conf#d' /etc/uci-defaults/99-default-settings-chinese" >> "$ZZZ"
+AX6600_OPKG="${WORKPATH}/files/etc/opkg"
+mkdir -p "$AX6600_OPKG"
+cat << EOF > "$AX6600_OPKG/distfeeds.conf"
+src/gz openwrt_base https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_cortex-a53/base/
+src/gz openwrt_luci https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_cortex-a53/luci/
+src/gz openwrt_packages https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_cortex-a53/packages
+src/gz openwrt_routing https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_cortex-a53/routing
+src/gz openwrt_telephony https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_cortex-a53/telephony
+EOF
+
+# 指示灯定义
+AX6600_LED="${WORKPATH}/files/etc/config"
+mkdir -p "$AX6600_LED"
+cat << EOF >> "$AX6600_LED/system"
+
+config led
+	option name 'LAN'
+	option sysfs 'green:status'
+	option trigger 'netdev'
+	option dev 'br-lan'
+	list mode 'tx'
+	list mode 'rx'
+
+config led
+	option name 'Red load'
+	option sysfs 'red:status'
+	option trigger 'heartbeat'
+
+config led
+	option sysfs 'blue:status'
+	option trigger 'none'
+	option name 'Blue Off'
+	option default '0'
 EOF
 
 # ================ WIFI设置 =======================================
 
 AX6600_WIFI="${WORKPATH}/files/etc/uci-defaults"
 mkdir -p "$AX6600_WIFI"
-cat >> "$AX6600_WIFI/990_ax6600-wireless.sh" << EOF
+cat >> "$AX6600_WIFI/990_ax6600-wireless.sh" << 'EOF'
 #!/bin/sh
 
-# 删除默认WIFI配置
+# 删除默认WIFI脚本
 rm -f /etc/uci-defaults/990_set-wireless.sh
 
-# 检查是否存在 /etc/config/wireless 文件
-if [ -f /etc/config/wireless ]; then
-    echo "检测到 /etc/config/wireless 文件存在，跳过配置"
+# 检查初始配置文件
+if ! grep -q "option ssid 'ImmortalWrt'" /etc/config/wireless; then
+    echo "检测到 /etc/config/wireless 文件不包含 ImmortalWrt 的 SSID，跳过配置"
     exit 0
 fi
 

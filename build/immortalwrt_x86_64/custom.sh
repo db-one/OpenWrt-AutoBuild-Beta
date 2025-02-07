@@ -41,7 +41,7 @@ echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                
 # sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s#%D %V %C#ONE build $BUILDTIME @ %D %V %C#g" package/base-files/files/etc/openwrt_release              # 增加自己个性名称
+sed -i "/_('Firmware Version')/s/\(_('Firmware Version'), *\)/\1(\"ONE build $(TZ=UTC-8 date "+%Y.%m.%d") \" + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js              # 增加自己个性名称
 # sed -i "s@list listen_https@# list listen_https@g" package/network/services/uhttpd/files/uhttpd.config               # 停止监听443端口
 # sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' package/base-files/files//etc/rc.local               # 强制显示2500M和全双工（默认PVE下VirtIO不识别） ImmortalWrt固件内不显示端口状态，可以关闭
 
@@ -70,8 +70,8 @@ uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6
 uci set firewall.@defaults[0].syn_flood='0'                  # 禁用 SYN-flood 防御
 uci set firewall.@defaults[0].flow_offloading='0'           # 禁用基于软件的NAT分载
 uci set firewall.@defaults[0].flow_offloading_hw='0'       # 禁用基于硬件的NAT分载
-uci set firewall.@defaults[0].fullcone='1'                   # 启用 FullCone NAT
-uci set firewall.@defaults[0].fullcone6='1'                  # 启用 FullCone NAT6
+uci set firewall.@defaults[0].fullcone='0'                   # 禁用 FullCone NAT
+uci set firewall.@defaults[0].fullcone6='0'                  # 禁用 FullCone NAT6
 uci set firewall.@zone[0].masq='1'                             # 启用LAN口 IP 动态伪装
 
 # 旁路IPV6需要全部禁用
@@ -87,6 +87,10 @@ uci set network.ipv6.ifname='@lan'
 uci set network.ipv6.reqaddress='try'
 uci set network.ipv6.reqprefix='auto'
 uci set firewall.@zone[0].network='lan ipv6'
+
+uci commit dhcp
+uci commit network
+uci commit firewall
 
 EOF
 
