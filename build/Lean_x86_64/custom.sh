@@ -82,10 +82,10 @@ uci set firewall.@defaults[0].fullcone6='0'                  # 禁用 FullCone N
 uci set firewall.@zone[0].masq='1'                             # 启用LAN口 IP 动态伪装
 
 # 旁路IPV6需要全部禁用
-uci set network.lan.ip6assign=''                             # IPV6分配长度-禁用
-uci set dhcp.lan.ra=''                                       # 路由通告服务-禁用
-uci set dhcp.lan.dhcpv6=''                                   # DHCPv6 服务-禁用
-uci set dhcp.lan.ra_management=''                            # DHCPv6 模式-禁用
+uci del network.lan.ip6assign                                 # IPV6分配长度-禁用
+uci del dhcp.lan.ra                                             # 路由通告服务-禁用
+uci del dhcp.lan.dhcpv6                                        # DHCPv6 服务-禁用
+uci del dhcp.lan.ra_management                               # DHCPv6 模式-禁用
 
 # 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
 uci set network.ipv6=interface

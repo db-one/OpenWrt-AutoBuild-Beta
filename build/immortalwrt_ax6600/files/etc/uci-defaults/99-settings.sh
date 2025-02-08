@@ -2,7 +2,6 @@
 #!/bin/bash
 
 # 软件源设置
-sed -i '/distfeeds/d' /etc/uci-defaults/99-default-settings-chinese
 cat << EOF > "/etc/opkg/distfeeds.conf"
 src/gz openwrt_base https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_cortex-a53/base/
 src/gz openwrt_luci https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_cortex-a53/luci/
@@ -13,7 +12,6 @@ EOF
 
 # 指示灯定义
 cat >> "/etc/config/system" << 'EOF'
-
 config led
 	option name 'LAN'
 	option sysfs 'green:status'
@@ -103,7 +101,7 @@ uci set wireless.wifinet3.disassoc_low_ack='0'
 
 # 提交并重启
 uci commit wireless
-/etc/init.d/network restart
+wifi
 
 # =======================================================
 
