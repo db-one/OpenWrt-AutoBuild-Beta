@@ -86,7 +86,8 @@ uci set network.ipv6.reqprefix='auto'
 uci set firewall.@zone[0].network='lan ipv6'
 
 # 配置Dropbear SSH服务
-uci delete dropbear.main.RootPasswordAuth
+uci del dropbear.main.RootPasswordAuth
+uci del dropbear.main.DirectInterface
 uci set dropbear.main.enable='1'
 uci set dropbear.main.Interface='lan'
 

@@ -41,9 +41,9 @@ echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                
 # sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm               # 修改默认时间格式
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
-sed -i "/_('Firmware Version')/s/\(_('Firmware Version'), *\)/\1(\"ONE build $(TZ=UTC-8 date "+%Y.%m.%d") \" + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js              # 增加自己个性名称
-sed -i 's#_('"'"'Local Time'"'"'), *datestr#_('"'"'Local Time'"'"'), os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%H:%M:%S")#g' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-sed -i 's#_('"'"'Uptime'"'"'), *systeminfo.uptime ? '"'"'%t'"'"'.format(systeminfo.uptime) : null#_('"'"'Uptime'"'"'), systeminfo.uptime ? (Math.floor(systeminfo.uptime / 86400) + "天 " + Math.floor((systeminfo.uptime % 86400) / 3600) + "小时 " + Math.floor((systeminfo.uptime % 3600) / 60) + "分 " + (systeminfo.uptime % 60) + "秒") : null#g' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s/\(_('Firmware Version'), *\)/\1 ('ONE build $BUILDTIME ') + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js              # 增加自己个性名称
+# sed -i 's#_('"'"'Local Time'"'"'), *datestr#_('"'"'Local Time'"'"'), os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%H:%M:%S")#g' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+# sed -i 's#_('"'"'Uptime'"'"'), *systeminfo.uptime ? '"'"'%t'"'"'.format(systeminfo.uptime) : null#_('"'"'Uptime'"'"'), systeminfo.uptime ? (Math.floor(systeminfo.uptime / 86400) + "天 " + Math.floor((systeminfo.uptime % 86400) / 3600) + "小时 " + Math.floor((systeminfo.uptime % 3600) / 60) + "分 " + (systeminfo.uptime % 60) + "秒") : null#g' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
 # sed -i "s@list listen_https@# list listen_https@g" package/network/services/uhttpd/files/uhttpd.config               # 停止监听443端口
 # sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' package/base-files/files//etc/rc.local               # 强制显示2500M和全双工（默认PVE下VirtIO不识别） ImmortalWrt固件内不显示端口状态，可以关闭
