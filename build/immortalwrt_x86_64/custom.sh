@@ -41,11 +41,14 @@ echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
-BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s/\(_('Firmware Version'), *\)/\1 ('ONE build $BUILDTIME ') + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js              # 增加自己个性名称
+BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s/\(_('Firmware Version'), *\)/\1 ('ONE build $BUILDTIME @ ') + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js              # 增加自己个性名称
 # sed -i "s@list listen_https@# list listen_https@g" package/network/services/uhttpd/files/uhttpd.config               # 停止监听443端口
 # sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' package/base-files/files//etc/rc.local               # 强制显示2500M和全双工（默认PVE下VirtIO不识别） ImmortalWrt固件内不显示端口状态，可以关闭
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
+
+echo 测试
+ls -l "$(dirname "$ZZZ")"
 
 # ========================性能跑分========================
 echo "rm -f /rom/etc/uci-defaults/xxx-coremark" >> "$ZZZ"
@@ -54,6 +57,9 @@ cat /dev/null > /etc/bench.log
 echo " (CpuMark : 191219.823122" >> /etc/bench.log
 echo " Scores)" >> /etc/bench.log
 EOF
+
+echo 测试
+ls -l "$(dirname "$ZZZ")"
 
 # ================ 网络设置 =======================================
 
@@ -93,6 +99,9 @@ uci commit network
 uci commit firewall
 
 EOF
+
+echo 测试
+ls -l "$(dirname "$ZZZ")"
 
 # =======================================================
 
@@ -141,11 +150,21 @@ fi
 
 # =======================================================
 
+echo 测试
+ls -l "$(dirname "$ZZZ")"
+
 # 修改退出命令到最后
 sed -i '/exit 0/d' $ZZZ
+
+echo 测试
+ls -l "$(dirname "$ZZZ")"
+
 echo "exit 0" >> $ZZZ
 echo "查看 default-settings 文件"
 cat $ZZZ
+
+echo 测试
+ls -l "$(dirname "$ZZZ")"
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
