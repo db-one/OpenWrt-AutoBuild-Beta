@@ -20,6 +20,9 @@ rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/dbone-packages/passwall/packages/v2ray-geoview
 
+# 修复rust错误
+sed -i '/download-ci-llvm/d' feeds/packages/lang/rust/Makefile
+
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
 ZZZ="package/emortal/default-settings/files/99-default-settings"
@@ -39,7 +42,7 @@ BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s/\(_('Firmware Version'), *\)
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
 # ========================性能跑分========================
-echo "rm -f /rom/etc/uci-defaults/xxx-coremark" >> "$ZZZ"
+echo "rm -f /etc/uci-defaults/xxx-coremark" >> "$ZZZ"
 cat >> $ZZZ <<EOF
 cat /dev/null > /etc/bench.log
 echo " (CpuMark : 191219.823122" >> /etc/bench.log
@@ -273,7 +276,7 @@ CONFIG_PACKAGE_chinadns-ng=y
 # CONFIG_PACKAGE_brook=y
 CONFIG_PACKAGE_trojan-go=y
 CONFIG_PACKAGE_xray-plugin=y
-CONFIG_PACKAGE_shadowsocks-rust-sslocal=y
+CONFIG_PACKAGE_shadowsocks-rust-sslocal=n
 EOF
 
 # 常用LuCI插件:
@@ -288,7 +291,6 @@ CONFIG_PACKAGE_luci-app-wol=n #网络唤醒
 CONFIG_PACKAGE_luci-app-firewall=y #防火墙
 CONFIG_PACKAGE_luci-app-package-manager=y #包管理
 CONFIG_PACKAGE_luci-app-upnp=y #upnp服务
-
 #
 # VPN相关插件(禁用):
 #
@@ -318,6 +320,7 @@ CONFIG_PACKAGE_htop=y
 CONFIG_PACKAGE_nano=y
 # CONFIG_PACKAGE_screen=y
 # CONFIG_PACKAGE_tree=y
+CONFIG_PACKAGE_uhttpd=y
 # CONFIG_PACKAGE_vim-fuller=y
 CONFIG_PACKAGE_wget-ssl=y
 CONFIG_PACKAGE_bash=y
