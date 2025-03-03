@@ -21,7 +21,7 @@ rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/dbone-packages/passwall/packages/v2ray-geoview
 
 # 修复rust错误
-sed -i '/download-ci-llvm/d' feeds/packages/lang/rust/Makefile
+sed -i "s#download-ci-llvm=true#download-ci-llvm=false#g" feeds/packages/lang/rust/Makefile
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
