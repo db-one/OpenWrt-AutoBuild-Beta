@@ -3,8 +3,8 @@
 
 # 设置屏幕定时开关
 sed -i '/athena_led/d' /etc/crontabs/root
-echo '30 6 * * * uci set athena_led.config.enable="1" && uci commit athena_led && /etc/init.d/athena_led restart && logger "开启屏幕显示"' >> /etc/crontabs/root
-echo '0 22 * * * uci set athena_led.config.enable="0" && uci commit athena_led && /etc/init.d/athena_led restart && logger "关闭屏幕显示"' >> /etc/crontabs/root
+echo '30 6 * * * uci set athena_led.config.lightLevel="3" && uci commit athena_led && /etc/init.d/athena_led restart && logger "屏幕亮度设置"' >> /etc/crontabs/root
+echo '0 22 * * * uci set athena_led.config.lightLevel="1" && uci commit athena_led && /etc/init.d/athena_led restart && logger "屏幕亮度设置"' >> /etc/crontabs/root
 crontab /etc/crontabs/root
 # 设置屏幕配置
 uci set athena_led.config.enable="1"
@@ -42,8 +42,9 @@ config led
 config led
 	option name 'Blue Off'
 	option sysfs 'blue:status'
-	option trigger 'none'
-	option default '0'
+	option trigger 'timer'
+	option delayon '100'
+	option delayoff '1500'
 EOF
 fi
 
@@ -73,7 +74,7 @@ configure_wifi() {
 set wireless.radio${radio}.channel="${channel}"
 set wireless.radio${radio}.htmode="${htmode}"
 set wireless.radio${radio}.mu_beamformer='1'
-set wireless.radio${radio}.country='US'
+set wireless.radio${radio}.country='CN'
 set wireless.radio${radio}.txpower="${txpower}"
 set wireless.radio${radio}.cell_density='0'
 set wireless.radio${radio}.disabled='0'
