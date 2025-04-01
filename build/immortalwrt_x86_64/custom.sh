@@ -285,9 +285,6 @@ CONFIG_PACKAGE_luci-app-upnp=n #UPNP服务器
 CONFIG_PACKAGE_luci-app-vlmcsd=n #KMS激活服务器
 CONFIG_PACKAGE_luci-app-nlbwmon=n #宽带流量监控
 CONFIG_PACKAGE_luci-app-wol=n #网络唤醒
-CONFIG_PACKAGE_luci-app-firewall=y #防火墙
-CONFIG_PACKAGE_luci-app-package-manager=y #包管理
-CONFIG_PACKAGE_luci-app-upnp=y #upnp服务
 #
 # VPN相关插件(禁用):
 #
