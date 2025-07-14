@@ -50,9 +50,6 @@ fi
 
 # ================ WIFI设置 =======================================
 
-# 删除默认WIFI脚本
-rm -f /etc/uci-defaults/990_set-wireless.sh
-
 # 检查初始配置文件
 if ! grep -q "option ssid 'ImmortalWrt'" /etc/config/wireless; then
     echo "检测到 /etc/config/wireless 文件不包含 ImmortalWrt 的 SSID，跳过配置"
@@ -97,9 +94,9 @@ EOC
 
 # 配置无线接口
 #            接口顺序    信道     HT频宽      功率      SSID               密码            加密方式
-configure_wifi 0      149     'HE80'      22     'JDC_Guest'       '123456789'     'sae-mixed'
-configure_wifi 1      6       'HE40'      22     'MX-SmartHome'    '123456789'     'psk2+ccmp'
-configure_wifi 2      44      'HE160'     23     'AX6600_5G'       '123456789'     'sae-mixed'
+configure_wifi 0      149     'HE80'      25     'JDC_Guest'       '123456789'     'sae-mixed'
+configure_wifi 1      6       'HE40'      25     'MX-SmartHome'    '123456789'     'psk2+ccmp'
+configure_wifi 2      44      'HE160'     25     'AX6600_5G'       '123456789'     'sae-mixed'
 
 # 添加 radio1 的第二个接口
 uci set wireless.wifinet3=wifi-iface
