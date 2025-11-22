@@ -17,6 +17,7 @@ git clone https://github.com/db-one/dbone-packages.git -b 23.05 package/dbone-pa
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
+rm -rf feeds/luci/applications/luci-app-attendedsysupgrade
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/dbone-packages/passwall/packages/v2ray-geoview
 
@@ -312,10 +313,6 @@ CONFIG_PACKAGE_luci-theme-argon=y
 # Enable Luci App
 CONFIG_PACKAGE_luci-app-adguardhome=n
 CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=n
-CONFIG_PACKAGE_luci-app-attendedsysupgrade=n
-CONFIG_PACKAGE_attendedsysupgrade-common=n
-CONFIG_PACKAGE_luci-i18n-attendedsysupgrade-zh-cn=n
-# CONFIG_PACKAGE_luci-app-attendedsysupgrade=y is not set
 CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-diskman=n
 CONFIG_PACKAGE_luci-app-dockerman=n
