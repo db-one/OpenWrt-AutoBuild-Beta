@@ -312,6 +312,7 @@ CONFIG_PACKAGE_luci-theme-argon=y
 # Enable Luci App
 CONFIG_PACKAGE_luci-app-adguardhome=n
 CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=n
+CONFIG_PACKAGE_luci-app-attendedsysupgrade=n
 CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-diskman=n
 CONFIG_PACKAGE_luci-app-dockerman=n
