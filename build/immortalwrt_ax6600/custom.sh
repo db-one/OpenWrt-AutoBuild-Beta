@@ -311,6 +311,9 @@ CONFIG_PACKAGE_iptables-mod-conntrack-extra=y
 CONFIG_PACKAGE_luci-theme-argon=y
 
 # Enable Luci App
+CONFIG_PACKAGE_luci-app-attendedsysupgrade=n
+CONFIG_PACKAGE_attendedsysupgrade-common=n
+CONFIG_PACKAGE_luci-i18n-attendedsysupgrade-zh-cn=n
 CONFIG_PACKAGE_luci-app-adguardhome=n
 CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=n
 CONFIG_PACKAGE_luci-app-autoreboot=y
