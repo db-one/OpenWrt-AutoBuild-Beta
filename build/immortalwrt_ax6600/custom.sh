@@ -21,6 +21,9 @@ rm -rf feeds/luci/applications/luci-app-attendedsysupgrade
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/dbone-packages/passwall/packages/v2ray-geoview
 
+#移除 luci-app-attendedsysupgrade 依赖
+sed -i "/attendedsysupgrade/d" $(find ./feeds/luci/collections/ -type f -name "Makefile")
+
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
 ZZZ="package/emortal/default-settings/files/99-default-settings"
@@ -311,9 +314,6 @@ CONFIG_PACKAGE_iptables-mod-conntrack-extra=y
 CONFIG_PACKAGE_luci-theme-argon=y
 
 # Enable Luci App
-CONFIG_PACKAGE_luci-app-attendedsysupgrade=n
-CONFIG_PACKAGE_attendedsysupgrade-common=n
-CONFIG_PACKAGE_luci-i18n-attendedsysupgrade-zh-cn=n
 CONFIG_PACKAGE_luci-app-adguardhome=n
 CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=n
 CONFIG_PACKAGE_luci-app-autoreboot=y
