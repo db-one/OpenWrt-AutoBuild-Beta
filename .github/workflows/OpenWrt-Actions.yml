@@ -275,6 +275,11 @@ jobs:
         awk '$0=NR$0' Plug-in > Plug-2
         awk '{print "	" $0}' Plug-2 > Plug-in
 
+        # 将结果写入 GitHub 环境变量 (用于 Release Body)
+        echo "PACKAGED_PLUGINS<<EOF" >> $GITHUB_ENV
+        cat Plug-in >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
         echo
         echo
         echo "	      已选插件列表"
@@ -398,11 +403,12 @@ jobs:
 
             ⏰ 编译用时：${{ env.BUILD_TIME }}
 
-            🎉 [ ${{ env.FIRMWARE_MESSAGE }} ]固件下载
+            📦 包含插件列表：
+            ${{ env.PACKAGED_PLUGINS }}
 
             ━━━━━━━━━━━━━━━━━━━━
 
-            =========================================
+            🎉 [ ${{ env.FIRMWARE_MESSAGE }} ]固件下载
 
         artifacts: ./artifact/firmware/*
 
@@ -448,6 +454,10 @@ jobs:
           ⏰ 编译用时：${{ env.BUILD_TIME }}
 
           🎉 发布地址：${{ env.GITHUB_RELEASE }}
+
+          📦 包含插件列表：
+
+          ${{ env.PACKAGED_PLUGINS }}
 
           🌴 固件已经编译完成 🎈！！！
 
