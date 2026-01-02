@@ -4,21 +4,22 @@
 # 安装额外依赖软件包
 # sudo -E apt-get -y install rename
 
-# 更新feeds文件
+# 添加第三方软件包，并更新feeds文件
+sed -i '1i src-git dbone-packages https://github.com/db-one/dbone-packages.git;23.05' feeds.conf.default
 cat feeds.conf.default
 
-# 添加第三方软件包
-git clone https://github.com/db-one/dbone-packages.git -b 23.05 package/dbone-packages
-
-# 更新并安装源
+# 更新源
 # ./scripts/feeds clean
-./scripts/feeds update -a && ./scripts/feeds install -a -f
+./scripts/feeds update
 
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/themes/luci-theme-argon
-rm -rf package/dbone-packages/passwall/packages/v2ray-geoview
+rm -rf feeds/dbone-packages/passwall/packages/v2ray-geoview
+
+# 安装源
+./scripts/feeds install -a -f
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
@@ -32,7 +33,7 @@ echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
-BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s/\(_('Firmware Version'), *\)/\1 ('ONE build $BUILDTIME @ ') + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js              # 增加自己个性名称
+BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s/\(_('Firmware Version'), *\)/\1 ('ONE build $BUILDTIME @ ') + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js               # 增加自己个性名称
 # sed -i "s@list listen_https@# list listen_https@g" package/network/services/uhttpd/files/uhttpd.config               # 停止监听443端口
 # sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' package/base-files/files//etc/rc.local               # 强制显示2500M和全双工（默认PVE下VirtIO不识别） ImmortalWrt固件内不显示端口状态，可以关闭
 

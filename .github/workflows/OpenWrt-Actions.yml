@@ -30,6 +30,12 @@ on:
         default: 'true'
         type: boolean
 
+      Build_Mod:
+        description: '调试模式，只配置环境不编译'
+        required: false
+        default: 'false'
+        type: boolean
+
 # 定时触发编译(1,2,5,6,8,10,12,15,16,18,20,22,25,26,28,30早3点)
 #  schedule:
 #    - cron: 0 17 1,4,5,7,9,11,14,15,17,19,21,24,25,27,29,31 * *
@@ -298,13 +304,18 @@ jobs:
 
     - name: 下载编译所需文件
       run: |
-        cd openwrt && make download -j4
+        cd openwrt && make download -j$(($(nproc) * 2))
 
     - name: 开始编译固件
       id: compile
       run: |
         cd openwrt
-        make -j$(nproc) || make -j1 V=s
+        if [[ "${{ github.event.inputs.Build_Mod }}" == "true" ]]; then
+            curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=调试运行已结束，请检查运行结果..." || true && curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=调试运行已结束，请检查运行结果..." >/dev/null 2>&1 && echo "ok..."
+            echo "当前处于调试模式，环境配置已完成，跳过编译步骤。"
+            exit 0
+        fi
+        make -j$(($(nproc) + 1)) || make -j1 V=s
 
     - name: 检查空间使用情况
       run: |
@@ -319,6 +330,7 @@ jobs:
 
     - name: 整理固件文件
       id: organizer
+      if: github.event.inputs.Build_Mod == 'false'
       run: |
         mkdir -p ./artifact/firmware
         mkdir -p ./artifact/pvekvm
@@ -344,42 +356,42 @@ jobs:
         echo "BUILD_TIME=${HOUR}时${MIN}分${SEC}秒" >> $GITHUB_ENV
 
     - name: 上传固件文件
-      if: steps.compile.outcome == 'success' && env.UPLOAD_FIRMWARE == 'true'
+      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_FIRMWARE == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_firmware_${{ env.FILE_TIME }}
         path: ./artifact/firmware/
 
     - name: 上传PVE/KVM镜像文件
-      if: steps.compile.outcome == 'success' && env.UPLOAD_QCOW2 == 'true'
+      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_QCOW2 == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_pvekvm_${{ env.FILE_TIME }}
         path: ./artifact/pvekvm/
 
     - name: 上传Hyper-V镜像文件
-      if: steps.compile.outcome == 'success' && env.UPLOAD_VHDX == 'true'
+      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_VHDX == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_hyperv_${{ env.FILE_TIME }}
         path: ./artifact/hyperv/
 
     - name: 上传VMware镜像文件
-      if: steps.compile.outcome == 'success' && env.UPLOAD_VMDK == 'true'
+      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_VMDK == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_vmware_${{ env.FILE_TIME }}
         path: ./artifact/vmware/
 
     - name: 上传插件包文件
-      if: steps.compile.outcome == 'success' && env.UPLOAD_IPK == 'true'
+      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_IPK == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_package_${{ env.FILE_TIME }}
         path: ./artifact/package/
 
     - name: 上传固件信息
-      if: steps.compile.outcome == 'success' && env.UPLOAD_CONFIG == 'true'
+      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_CONFIG == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_buildinfo_${{ env.FILE_TIME }}
@@ -387,7 +399,7 @@ jobs:
 
     - name: 自动发布固件到 Releases
       uses: ncipollo/release-action@main
-      if: steps.compile.outcome == 'success' && env.UPLOAD_RELEASE == 'true'
+      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_RELEASE == 'true'
       with:
         name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
         tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
@@ -422,7 +434,6 @@ jobs:
 
     - name: 删除自动发布的旧固件
       uses: shidahuilang/delete-older-releases@main
-      if: steps.compile.outcome == 'success' && env.UPLOAD_RELEASE == 'true'
       with:
         keep_latest: 4         #保留多少个releases不删除
         delete_tags: true
@@ -430,7 +441,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
 
     - name: 编译成功信息通知-企业微信
-      if: steps.compile.outcome == 'success' && env.WECHAT_WORK_PUSH == 'true'
+      if: github.event.inputs.Build_Mod == 'false' && env.WECHAT_WORK_PUSH == 'true'
       run: |
         curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=\
         您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！%0a%0a\
@@ -441,7 +452,7 @@ jobs:
         🌴固件已经编译完成🎈！！！" || true
 
     - name: 编译成功信息通知-Telegram
-      if: steps.compile.outcome == 'success' && env.TELEGRAM_BOT == 'true'
+      if: github.event.inputs.Build_Mod == 'false' && env.TELEGRAM_BOT == 'true'
       run: |
         curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=
 

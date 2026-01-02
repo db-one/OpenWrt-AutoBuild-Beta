@@ -4,23 +4,24 @@
 # 安装额外依赖软件包
 # sudo -E apt-get -y install rename
 
-# 更新feeds文件
+# 添加第三方软件包，并更新feeds文件
 # sed -i 's@#src-git helloworld@src-git helloworld@g' feeds.conf.default # 启用helloworld
 # sed -i 's@src-git luci@# src-git luci@g' feeds.conf.default # 禁用18.06Luci
 # sed -i 's@## src-git luci@src-git luci@g' feeds.conf.default # 启用23.05Luci
+sed -i '1i src-git dbone-packages https://github.com/db-one/dbone-packages.git;23.05' feeds.conf.default
 cat feeds.conf.default
 
-# 添加第三方软件包
-git clone https://github.com/db-one/dbone-packages.git -b 23.05 package/dbone-packages
-
-# 更新并安装源
-./scripts/feeds clean
-./scripts/feeds update -a && ./scripts/feeds install -a -f
+# 更新源
+# ./scripts/feeds clean
+./scripts/feeds update
 
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/themes/luci-theme-argon
+
+# 安装源
+./scripts/feeds install -a -f
 
 # 自定义定制选项
 NET="package/base-files/luci2/bin/config_generate"
