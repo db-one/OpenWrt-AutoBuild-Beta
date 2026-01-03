@@ -266,9 +266,6 @@ EOF
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-app-istorex=y
 CONFIG_PACKAGE_luci-app-quickstart=y
-CONFIG_PACKAGE_taskd=y
-CONFIG_PACKAGE_luci-lib-taskd=y
-CONFIG_PACKAGE_luci-lib-xterm=y
 EOF
 
 # ShadowsocksR插件:
