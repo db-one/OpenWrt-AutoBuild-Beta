@@ -6,7 +6,7 @@
 
 # 添加第三方软件包，并更新feeds文件
 sed -i '1i src-git dbone-packages https://github.com/db-one/dbone-packages.git^23.05' feeds.conf.default
-cat feeds.conf.default
+head -n 1 feeds.conf.default | cat -A
 
 # 更新源
 # ./scripts/feeds clean
