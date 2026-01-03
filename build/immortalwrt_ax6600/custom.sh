@@ -4,20 +4,19 @@
 # 安装额外依赖软件包
 # sudo -E apt-get -y install rename
 
-# 添加第三方软件包，并更新feeds文件
-sed -i '1i src-git dbone-packages https://github.com/db-one/dbone-packages.git^23.05' feeds.conf.default
-head -n 1 feeds.conf.default | cat -A
-
 # 更新源
 # ./scripts/feeds clean
 ./scripts/feeds update
+
+# 添加第三方软件包
+git clone https://github.com/db-one/dbone-packages.git -b 23.05 package/dbone-packages
 
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/applications/luci-app-attendedsysupgrade
 rm -rf feeds/luci/themes/luci-theme-argon
-rm -rf feeds/dbone-packages/passwall/packages/v2ray-geoview
+rm -rf package/dbone-packages/passwall/packages/v2ray-geoview
 
 # 安装源
 ./scripts/feeds install -a -f

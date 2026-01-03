@@ -57,7 +57,7 @@ env:
 
 jobs: 
   # 生成设备数组
-  prepare:
+  build-openwrt:
     runs-on: ubuntu-latest
     outputs:
       selected_models: ${{ steps.set-models.outputs.models }}
@@ -81,16 +81,16 @@ jobs:
           echo "models=$JSON_MODELS" >> $GITHUB_OUTPUT
 
   build:
-    needs: [prepare]
+    needs: [build-openwrt]
     runs-on: ubuntu-22.04
     env:
       CACHE_BUILD: ${{ github.event.inputs.CACHE_BUILD || 'true' }}
       BUILD_MOD: ${{ github.event.inputs.Build_Mod || 'false' }}
-    if: needs.prepare.outputs.selected_models != '[]' && (github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id)
+    if: needs.build-openwrt.outputs.selected_models != '[]' && (github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id)
     strategy:
       fail-fast: false
       matrix:
-        target: ${{ fromJSON(needs.prepare.outputs.selected_models) }}
+        target: ${{ fromJSON(needs.build-openwrt.outputs.selected_models) }}
 
     name: 编译 ${{matrix.target}}
     steps:

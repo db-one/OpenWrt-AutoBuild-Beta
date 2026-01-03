@@ -4,16 +4,18 @@
 # 安装额外依赖软件包
 # sudo -E apt-get -y install rename
 
-# 添加第三方软件包，并更新feeds文件
+# 更新feeds文件
 # sed -i 's@#src-git helloworld@src-git helloworld@g' feeds.conf.default # 启用helloworld
 # sed -i 's@src-git luci@# src-git luci@g' feeds.conf.default # 禁用18.06Luci
 # sed -i 's@## src-git luci@src-git luci@g' feeds.conf.default # 启用23.05Luci
-sed -i '1i src-git dbone-packages https://github.com/db-one/dbone-packages.git^23.05' feeds.conf.default
 cat feeds.conf.default
 
 # 更新源
 # ./scripts/feeds clean
 ./scripts/feeds update
+
+# 添加第三方软件包
+git clone https://github.com/db-one/dbone-packages.git -b 23.05 package/dbone-packages
 
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
