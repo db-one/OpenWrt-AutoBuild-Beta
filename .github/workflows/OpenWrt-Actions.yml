@@ -23,7 +23,7 @@ on:
       immortalwrt_x86_64:
         description: '编译 immortalwrt_x86_64'
         type: boolean
-        default: true
+        default: false
       immortalwrt_ax6600:
         description: '编译 immortalwrt_ax6600'
         type: boolean
