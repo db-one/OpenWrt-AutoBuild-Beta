@@ -322,8 +322,6 @@ CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=n
 CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-diskman=n
 CONFIG_PACKAGE_luci-app-dockerman=n
-CONFIG_PACKAGE_luci-app-istorex=y
-CONFIG_PACKAGE_luci-app-quickstart=y
 CONFIG_PACKAGE_luci-app-lucky=n
 CONFIG_PACKAGE_luci-app-mosdns=n
 CONFIG_PACKAGE_luci-app-samba4=n
@@ -338,6 +336,13 @@ CONFIG_PACKAGE_luci-app-athena-led=y
 CONFIG_PACKAGE_luci-i18n-athena-led-zh-cn=y
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 CONFIG_PACKAGE_luci-app-filetransfer=y #文件传输
+
+# istorex插件
+CONFIG_PACKAGE_luci-app-istorex=y
+CONFIG_PACKAGE_luci-app-quickstart=y
+CONFIG_PACKAGE_taskd=y
+CONFIG_PACKAGE_luci-lib-taskd=y
+CONFIG_PACKAGE_luci-lib-xterm=y
 
 # Proxy
 #  OpenClash

@@ -262,6 +262,15 @@ CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 # CONFIG_PACKAGE_ddnsto=y #DDNS.to内网穿透软件包
 EOF
 
+# # istorex首页插件:
+cat >> .config <<EOF
+CONFIG_PACKAGE_luci-app-istorex=y
+CONFIG_PACKAGE_luci-app-quickstart=y
+CONFIG_PACKAGE_taskd=y
+CONFIG_PACKAGE_luci-lib-taskd=y
+CONFIG_PACKAGE_luci-lib-xterm=y
+EOF
+
 # ShadowsocksR插件:
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-app-ssr-plus=y
@@ -282,6 +291,8 @@ EOF
 
 # 常用LuCI插件:
 cat >> .config <<EOF
+CONFIG_PACKAGE_luci-app-firewall=y
+CONFIG_PACKAGE_luci-app-package-manager=y
 CONFIG_PACKAGE_luci-app-accesscontrol=n #上网时间控制
 CONFIG_PACKAGE_luci-app-filetransfer=y #文件传输
 CONFIG_PACKAGE_luci-app-frpc=y #Frpc客户端
