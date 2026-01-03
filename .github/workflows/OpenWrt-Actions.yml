@@ -100,7 +100,6 @@ jobs:
           echo "是否开启缓存: ${CACHE_BUILD}"
           echo "是否为调试模式: ${BUILD_MOD}"
 
-    steps:
     - name: Checkout 仓库
       uses: actions/checkout@v4
 
