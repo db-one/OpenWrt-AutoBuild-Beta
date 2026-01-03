@@ -335,17 +335,17 @@ jobs:
 
       - name: 下载编译所需文件
         run: |
+          if [[ "${BUILD_MOD}" == "true" ]]; then
+            curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=调试运行已结束，请检查运行结果..." || true && curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=调试运行已结束，请检查运行结果..." >/dev/null 2>&1 && echo "ok..."
+            echo "当前处于调试模式，环境配置已完成，跳过编译步骤。"
+            exit 0
+          fi
           cd openwrt && make download -j$(($(nproc) * 2))
 
       - name: 开始编译固件
         id: compile
         run: |
           cd openwrt
-          if [[ "${{ github.event.inputs.Build_Mod }}" == "true" ]]; then
-            curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=调试运行已结束，请检查运行结果..." || true && curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=调试运行已结束，请检查运行结果..." >/dev/null 2>&1 && echo "ok..."
-            echo "当前处于调试模式，环境配置已完成，跳过编译步骤。"
-            exit 0
-          fi
           make -j$(($(nproc) + 1)) || make -j1 V=s
 
       - name: 检查空间使用情况
