@@ -8,7 +8,7 @@
 # sed -i 's@#src-git helloworld@src-git helloworld@g' feeds.conf.default # 启用helloworld
 # sed -i 's@src-git luci@# src-git luci@g' feeds.conf.default # 禁用18.06Luci
 # sed -i 's@## src-git luci@src-git luci@g' feeds.conf.default # 启用23.05Luci
-sed -i '1i src-git dbone-packages https://github.com/db-one/dbone-packages.git ;23.05' feeds.conf.default
+sed -i '1i src-git dbone-packages https://github.com/db-one/dbone-packages.git^23.05' feeds.conf.default
 cat feeds.conf.default
 
 # 更新源

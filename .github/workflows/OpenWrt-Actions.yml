@@ -12,29 +12,30 @@ name: 编译OpenWrt固件
 on:
   workflow_dispatch:
     inputs:
-
-      MODEL:
-        required: true
-        description: 选择需要编译的固件
-        type: choice
-        default: immortalwrt_x86_64
-        options:
-          - Lean_x86_64
-          - Lean_x86_64_Long
-          - immortalwrt_x86_64
-          - immortalwrt_ax6600
-
+      Lean_x86_64:
+        description: '编译 Lean_x86_64'
+        type: boolean
+        default: false
+      Lean_x86_64_Long:
+        description: '编译 Lean_x86_64_Long'
+        type: boolean
+        default: false
+      immortalwrt_x86_64:
+        description: '编译 immortalwrt_x86_64'
+        type: boolean
+        default: true
+      immortalwrt_ax6600:
+        description: '编译 immortalwrt_ax6600'
+        type: boolean
+        default: false
       CACHE_BUILD:
         description: '缓存加速'
-        required: false
-        default: 'true'
         type: boolean
-
+        default: true
       Build_Mod:
         description: '调试模式，只配置环境不编译'
-        required: false
-        default: 'false'
         type: boolean
+        default: false
 
 # 定时触发编译(1,2,5,6,8,10,12,15,16,18,20,22,25,26,28,30早3点)
 #  schedule:
@@ -55,18 +56,49 @@ env:
   GITHUB_RELEASE: "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases"
 
 jobs: 
-  build:
-    runs-on: ubuntu-22.04
-    if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
+  # 生成设备数组
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      selected_models: ${{ steps.set-models.outputs.models }}
+    steps:
+      - id: set-models
+        run: |
+          MODELS=()
+          # 定时触发编译全部
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            MODELS=("Lean_x86_64" "Lean_x86_64_Long" "immortalwrt_x86_64" "immortalwrt_ax6600")
+          else
+            # 手动触发判断
+            [ "${{ github.event.inputs.Lean_x86_64 }}" = "true" ] && MODELS+=("Lean_x86_64")
+            [ "${{ github.event.inputs.Lean_x86_64_Long }}" = "true" ] && MODELS+=("Lean_x86_64_Long")
+            [ "${{ github.event.inputs.immortalwrt_x86_64 }}" = "true" ] && MODELS+=("immortalwrt_x86_64")
+            [ "${{ github.event.inputs.immortalwrt_ax6600 }}" = "true" ] && MODELS+=("immortalwrt_ax6600")
+          fi
+          
+          # 转换为 JSON 数组
+          JSON_MODELS=$(printf '%s\n' "${MODELS[@]}" | jq -R . | jq -s -c .)
+          echo "models=$JSON_MODELS" >> $GITHUB_OUTPUT
 
-    name: 编译 ${{matrix.target}}
+  build:
+    needs: [prepare]
+    runs-on: ubuntu-22.04
+    env:
+      CACHE_BUILD: ${{ github.event.inputs.CACHE_BUILD || 'true' }}
+      BUILD_MOD: ${{ github.event.inputs.Build_Mod || 'false' }}
+    if: needs.prepare.outputs.selected_models != '[]' && (github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id)
     strategy:
       fail-fast: false
       matrix:
-        target: ${{ fromJSON(
-          github.event_name == 'schedule' && '["Lean_x86_64","Lean_x86_64_Long","immortalwrt_x86_64","immortalwrt_ax6600"]' || 
-          format('["{0}"]', github.event.inputs.MODEL )
-          )}}
+        target: ${{ fromJSON(needs.prepare.outputs.selected_models) }}
+
+    name: 编译 ${{matrix.target}}
+    steps:
+      - name: 编译参数
+        run: |
+          echo "正在编译目标设备: ${{ matrix.target }}"
+          echo "是否开启缓存: ${CACHE_BUILD}"
+          echo "是否为调试模式: ${BUILD_MOD}"
 
     steps:
     - name: Checkout 仓库
@@ -330,7 +362,7 @@ jobs:
 
     - name: 整理固件文件
       id: organizer
-      if: github.event.inputs.Build_Mod == 'false'
+      if: env.BUILD_MOD == 'false'
       run: |
         mkdir -p ./artifact/firmware
         mkdir -p ./artifact/pvekvm
@@ -356,42 +388,42 @@ jobs:
         echo "BUILD_TIME=${HOUR}时${MIN}分${SEC}秒" >> $GITHUB_ENV
 
     - name: 上传固件文件
-      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_FIRMWARE == 'true'
+      if: env.BUILD_MOD == 'false' && env.UPLOAD_FIRMWARE == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_firmware_${{ env.FILE_TIME }}
         path: ./artifact/firmware/
 
     - name: 上传PVE/KVM镜像文件
-      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_QCOW2 == 'true'
+      if: env.BUILD_MOD == 'false' && env.UPLOAD_QCOW2 == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_pvekvm_${{ env.FILE_TIME }}
         path: ./artifact/pvekvm/
 
     - name: 上传Hyper-V镜像文件
-      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_VHDX == 'true'
+      if: env.BUILD_MOD == 'false' && env.UPLOAD_VHDX == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_hyperv_${{ env.FILE_TIME }}
         path: ./artifact/hyperv/
 
     - name: 上传VMware镜像文件
-      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_VMDK == 'true'
+      if: env.BUILD_MOD == 'false' && env.UPLOAD_VMDK == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_vmware_${{ env.FILE_TIME }}
         path: ./artifact/vmware/
 
     - name: 上传插件包文件
-      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_IPK == 'true'
+      if: env.BUILD_MOD == 'false' && env.UPLOAD_IPK == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_package_${{ env.FILE_TIME }}
         path: ./artifact/package/
 
     - name: 上传固件信息
-      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_CONFIG == 'true'
+      if: env.BUILD_MOD == 'false' && env.UPLOAD_CONFIG == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.target}}_OpenWrt_buildinfo_${{ env.FILE_TIME }}
@@ -399,7 +431,7 @@ jobs:
 
     - name: 自动发布固件到 Releases
       uses: ncipollo/release-action@main
-      if: github.event.inputs.Build_Mod == 'false' && env.UPLOAD_RELEASE == 'true'
+      if: env.BUILD_MOD == 'false' && env.UPLOAD_RELEASE == 'true'
       with:
         name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
         tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
@@ -441,7 +473,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
 
     - name: 编译成功信息通知-企业微信
-      if: github.event.inputs.Build_Mod == 'false' && env.WECHAT_WORK_PUSH == 'true'
+      if: env.BUILD_MOD == 'false' && env.WECHAT_WORK_PUSH == 'true'
       run: |
         curl "http://${{ secrets.WECHAT_WORK_URL }}/push?token=${{ secrets.WECHAT_WORK_TOKEN }}&message=\
         您的${{ env.FIRMWARE_MESSAGE }}固件成功编译完成了！%0a%0a\
@@ -452,7 +484,7 @@ jobs:
         🌴固件已经编译完成🎈！！！" || true
 
     - name: 编译成功信息通知-Telegram
-      if: github.event.inputs.Build_Mod == 'false' && env.TELEGRAM_BOT == 'true'
+      if: env.BUILD_MOD == 'false' && env.TELEGRAM_BOT == 'true'
       run: |
         curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=
 
