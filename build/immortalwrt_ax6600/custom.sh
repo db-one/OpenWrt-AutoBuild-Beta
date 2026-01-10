@@ -4,6 +4,11 @@
 # 安装额外依赖软件包
 # sudo -E apt-get -y install rename
 
+# 增加高铁
+sed -i '1i src-git sqm_scripts_nss https://github.com/qosmio/sqm-scripts-nss.git' feeds.conf.default
+sed -i '1i src-git nss_packages https://github.com/qosmio/nss-packages.git' feeds.conf.default
+cat feeds.conf.default
+
 # 更新源
 # ./scripts/feeds clean
 ./scripts/feeds update
