@@ -4,11 +4,6 @@
 # 安装额外依赖软件包
 # sudo -E apt-get -y install rename
 
-# 增加高铁
-sed -i '1i src-git sqm_scripts_nss https://github.com/qosmio/sqm-scripts-nss.git' feeds.conf.default
-sed -i '1i src-git nss_packages https://github.com/qosmio/nss-packages.git' feeds.conf.default
-cat feeds.conf.default
-
 # 更新源
 # ./scripts/feeds clean
 ./scripts/feeds update
@@ -41,9 +36,7 @@ echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
 BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s/\(_('Firmware Version'), *\)/\1 ('ONE build $BUILDTIME @ ') + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js               # 增加自己个性名称
-wget -q https://raw.githubusercontent.com/VIKINGYFY/immortalwrt/refs/heads/main/package/firmware/ath11k-firmware/Makefile -O package/firmware/ath11k-firmware/Makefile --no-check-certificate               # 更新 ath11k-firmware Makefile
-sed -i 's/EXTRA_CFLAGS.*-Wno-implicit-fallthrough/& -Wno-error=implicit-function-declaration/' package/feeds/nss_packages/qca-mcs/Makefile #修复qca-mcs
-
+# wget -q https://raw.githubusercontent.com/VIKINGYFY/immortalwrt/refs/heads/main/package/firmware/ath11k-firmware/Makefile -O package/firmware/ath11k-firmware/Makefile --no-check-certificate               # 更新 ath11k-firmware Makefile
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 

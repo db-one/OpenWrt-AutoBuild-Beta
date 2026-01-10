@@ -331,7 +331,9 @@ jobs:
           echo "输出完整插件信息..."
           echo
           echo
+          echo "配置开始"
           cat .config
+          echo "配置结束"
 
       - name: 下载编译所需文件
         run: |
