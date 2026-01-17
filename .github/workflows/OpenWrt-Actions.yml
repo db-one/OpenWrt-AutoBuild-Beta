@@ -142,6 +142,7 @@ jobs:
                    ninja-build p7zip p7zip-full patch pkgconf python3 python3 python3-ply python3-docutils \
                    python3-pyelftools qemu-utils re2c rsync scons squashfs-tools subversion swig texinfo uglifyjs \
                    upx-ucl unzip vim wget xmlto xxd zlib1g-dev zstd libfuse-dev gettext genisoimage python3-setuptools || true
+          sudo -E apt -y scdoc
           sudo -E systemctl daemon-reload
           sudo -E apt -y autoremove --purge
           sudo -E apt clean
@@ -262,11 +263,11 @@ jobs:
           mv ${WORKPATH}/$CONFIG_FILE .config
           make defconfig
 
-          echo "GitHub Action 移除国内下载源"
-          PROJECT_MIRRORS_FILE="scripts/projectsmirrors.json"
-          if [ -f "$PROJECT_MIRRORS_FILE" ]; then
-              sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
-          fi
+          # echo "GitHub Action 移除国内下载源"
+          # PROJECT_MIRRORS_FILE="scripts/projectsmirrors.json"
+          # if [ -f "$PROJECT_MIRRORS_FILE" ]; then
+          #     sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
+          # fi
 
       - name: 输出编译信息
         run: |
