@@ -16,6 +16,7 @@ rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/applications/luci-app-attendedsysupgrade
 rm -rf feeds/luci/themes/luci-theme-argon
+rm -rf feeds/packages/net/quectel-cm
 rm -rf package/dbone-packages/passwall/packages/v2ray-geoview
 
 # 安装源
