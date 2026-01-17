@@ -142,7 +142,7 @@ jobs:
                    ninja-build p7zip p7zip-full patch pkgconf python3 python3 python3-ply python3-docutils \
                    python3-pyelftools qemu-utils re2c rsync scons squashfs-tools subversion swig texinfo uglifyjs \
                    upx-ucl unzip vim wget xmlto xxd zlib1g-dev zstd libfuse-dev gettext genisoimage python3-setuptools || true
-          sudo -E apt -y scdoc
+          sudo apt-get install -y scdoc
           sudo -E systemctl daemon-reload
           sudo -E apt -y autoremove --purge
           sudo -E apt clean
