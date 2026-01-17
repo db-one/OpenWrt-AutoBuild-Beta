@@ -311,13 +311,13 @@ CONFIG_PACKAGE_luci-app-minidlna=n #miniDLNA服务
 CONFIG_PACKAGE_luci-app-vsftpd=n #FTP 服务器
 CONFIG_PACKAGE_luci-app-samba=n #网络共享
 CONFIG_PACKAGE_autosamba=n #网络共享
-CONFIG_PACKAGE_smartd=y
-CONFIG_PACKAGE_libsmartcols=y
-CONFIG_PACKAGE_smartmontools=y
-CONFIG_PACKAGE_smartmontools-drivedb=y
-CONFIG_PACKAGE_kmod-md-raid0=y
-CONFIG_PACKAGE_kmod-md-raid1=y
-CONFIG_PACKAGE_kmod-md-raid10=y
+CONFIG_PACKAGE_smartd=n
+CONFIG_PACKAGE_libsmartcols=n
+CONFIG_PACKAGE_smartmontools=n
+CONFIG_PACKAGE_smartmontools-drivedb=n
+CONFIG_PACKAGE_kmod-md-raid0=n
+CONFIG_PACKAGE_kmod-md-raid1=n
+CONFIG_PACKAGE_kmod-md-raid10=n
 EOF
 
 # LuCI主题:

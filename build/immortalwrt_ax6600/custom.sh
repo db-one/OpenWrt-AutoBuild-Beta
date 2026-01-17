@@ -361,15 +361,13 @@ CONFIG_PACKAGE_xray-plugin=n
 CONFIG_PACKAGE_shadowsocks-rust-sslocal=n
 
 # 硬盘服务相关
-CONFIG_PACKAGE_smartd=y
-CONFIG_PACKAGE_libsmartcols=y
-CONFIG_PACKAGE_smartmontools=y
-CONFIG_PACKAGE_smartmontools-drivedb=y
-CONFIG_PACKAGE_kmod-md-raid0=y
-CONFIG_PACKAGE_kmod-md-raid1=y
-CONFIG_PACKAGE_kmod-md-raid10=y
-
-CONFIG_PACKAGE_quectel-cm=n
+CONFIG_PACKAGE_smartd=n
+CONFIG_PACKAGE_libsmartcols=n
+CONFIG_PACKAGE_smartmontools=n
+CONFIG_PACKAGE_smartmontools-drivedb=n
+CONFIG_PACKAGE_kmod-md-raid0=n
+CONFIG_PACKAGE_kmod-md-raid1=n
+CONFIG_PACKAGE_kmod-md-raid10=n
 EOF
 
 
