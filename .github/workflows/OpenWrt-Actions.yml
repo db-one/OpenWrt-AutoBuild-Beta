@@ -330,6 +330,7 @@ jobs:
 
       - name: 查找文件路径
         run: |
+          cd openwrt
           echo "正在查找 .config 的位置："
           find . -name ".config"
           echo "正在查找 .packageinfo 的位置："
@@ -368,7 +369,7 @@ jobs:
           echo "======================="
           du -h --max-depth=1 openwrt/ --exclude=build_dir --exclude=bin
           [ -d openwrt/build_dir ] && du -h --max-depth=1 openwrt/build_dir
-          du -h --max-depth=1 openwrt/bin
+          [ -d openwrt/bin ] && du -h --max-depth=1 openwrt/bin
 
       - name: 整理固件文件
         id: organizer
