@@ -36,6 +36,10 @@ on:
         description: '调试模式，只配置环境不编译'
         type: boolean
         default: false
+      Custom_Commands:
+        description: '临时调试命令 (手动输入要执行的 Shell 命令)'
+        type: string
+        default: ''
 
 # 定时触发编译(1,2,5,6,8,10,12,15,16,18,20,22,25,26,28,30早3点)
 #  schedule:
@@ -325,9 +329,9 @@ jobs:
           echo "输出完整插件信息..."
           echo
           echo
-          echo "配置开始"
+          echo "==== 配置开始 ===="
           cat .config
-          echo "配置结束"
+          echo "==== 配置结束 ===="
 
       - name: 准备上传文件
         run: |
@@ -340,6 +344,14 @@ jobs:
         with:
           name: ${{matrix.target}}_OpenWrt_packageinfo_${{ env.FILE_TIME }}
           path: ./upload_tmp/
+
+      - name: 执行临时调试命令
+        if: github.event.inputs.Custom_Commands != ''
+        run: |
+          cd openwrt
+          echo "==== 开始执行自定义调试命令 ===="
+          ${{ github.event.inputs.Custom_Commands }}
+          echo "==== 自定义命令执行完毕 ===="
 
       - name: 下载编译所需文件
         run: |
