@@ -328,14 +328,6 @@ jobs:
           cat .config
           echo "配置结束"
 
-      - name: 上传插件列表和依赖归递文件
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{matrix.target}}_OpenWrt_packageinfo_${{ env.FILE_TIME }}
-          path: |
-            openwrt/.config
-            openwrt/tmp/.packageinfo
-
       - name: 下载编译所需文件
         run: |
           if [[ "${BUILD_MOD}" == "true" ]]; then
@@ -373,6 +365,7 @@ jobs:
           mkdir -p ./artifact/package
           mkdir -p ./artifact/buildinfo
           cp -rf openwrt/.config ./artifact/buildinfo/${{matrix.target}}.config || true
+          cp -rf openwrt/tmp/.packageinfo ./artifact/buildinfo/${{matrix.target}}.packageinfo || true
           rm -rf $(find openwrt/bin/targets/ -type d -name "packages")
           cp -rf $(find openwrt/bin/packages/ -type f -name "*.ipk") ./artifact/package/ || true
           cp -rf $(find openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/ || true        
