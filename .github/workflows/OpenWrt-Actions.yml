@@ -328,6 +328,16 @@ jobs:
           cat .config
           echo "配置结束"
 
+      - name: 上传插件列表和依赖归递文件
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{matrix.target}}_OpenWrt_packageinfo_${{ env.FILE_TIME }}
+          path: |
+            find . -name ".config"
+            find . -name ".packageinfo"
+            openwrt/.config
+            openwrt/tmp/.packageinfo
+
       - name: 下载编译所需文件
         run: |
           if [[ "${BUILD_MOD}" == "true" ]]; then
@@ -339,6 +349,7 @@ jobs:
 
       - name: 开始编译固件
         id: compile
+        if: env.BUILD_MOD == 'false'
         run: |
           cd openwrt
           make -j$(($(nproc) + 1)) || make -j1 V=s
