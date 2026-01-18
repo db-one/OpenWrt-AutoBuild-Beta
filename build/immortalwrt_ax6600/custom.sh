@@ -16,7 +16,6 @@ rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/applications/luci-app-attendedsysupgrade
 rm -rf feeds/luci/themes/luci-theme-argon
-rm -rf feeds/packages/net/quectel-cm
 rm -rf package/dbone-packages/passwall/packages/v2ray-geoview
 
 # 安装源
@@ -234,7 +233,7 @@ CONFIG_ATH11K_NSS_MESH_SUPPORT=y
 
 # Proto
 CONFIG_PACKAGE_proto-bonding=y
-CONFIG_PACKAGE_luci-proto-quectel=y
+CONFIG_PACKAGE_luci-proto-quectel=n
 CONFIG_PACKAGE_luci-proto-wireguard=n
 CONFIG_PACKAGE_luci-proto-relay=y
 
@@ -369,6 +368,7 @@ CONFIG_PACKAGE_smartmontools-drivedb=n
 CONFIG_PACKAGE_kmod-md-raid0=n
 CONFIG_PACKAGE_kmod-md-raid1=n
 CONFIG_PACKAGE_kmod-md-raid10=n
+
 EOF
 
 
