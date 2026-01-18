@@ -329,21 +329,17 @@ jobs:
           cat .config
           echo "配置结束"
 
-      - name: 查找文件路径
+      - name: 准备上传文件
         run: |
-          cd openwrt
-          echo "正在查找 .config 的位置："
-          find . -name ".config"
-          echo "正在查找 .packageinfo 的位置："
-          find . -name ".packageinfo"
+          mkdir -p ./upload_tmp
+          cp openwrt/.config ./upload_tmp/${{matrix.target}}.config
+          cp openwrt/tmp/.packageinfo ./upload_tmp/${{matrix.target}}.packageinfo
 
       - name: 上传插件列表和依赖归递文件
         uses: actions/upload-artifact@v4
         with:
           name: ${{matrix.target}}_OpenWrt_packageinfo_${{ env.FILE_TIME }}
-          path: |
-            openwrt/.config
-            openwrt/tmp/.packageinfo
+          path: ./upload_tmp/
 
       - name: 下载编译所需文件
         run: |
