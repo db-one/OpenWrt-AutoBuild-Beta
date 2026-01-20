@@ -5,6 +5,16 @@ if [ -f /bin/bash ];then
   sed -i '/^root:/s#/bin/ash#/bin/bash#' /etc/passwd
 fi
 
+# 去除 Nginx 强制跳转 https
+uci delete nginx._redirect2ssl
+uci commit nginx
+/etc/init.d/nginx restart
+
+# 允许SSH以root密码登陆
+sed -i 's/^PermitEmptyPasswords.*/PermitEmptyPasswords yes/' /etc/ssh/sshd_config
+sed -i 's/^PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+/etc/init.d/sshd restart
+
 # 修复OpenClash核心文件错误
 cp -rf /rom/etc/openclash/core/* /etc/openclash/core
 
