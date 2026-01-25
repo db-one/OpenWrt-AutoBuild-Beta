@@ -139,7 +139,6 @@ if [ -f "$nginx_template" ]; then
 fi
 
 local luci_support_script="feeds/packages/net/nginx/files-luci-support/60_nginx-luci-support"
-
 if [ -f "$luci_support_script" ]; then
   # 检查是否已经为 ubus location 应用了修复
   if ! grep -q "client_body_in_file_only off;" "$luci_support_script"; then
@@ -149,7 +148,8 @@ if [ -f "$luci_support_script" ]; then
         client_max_body_size 1M;" "$luci_support_script"
   fi
 fi
-
+sed -i 's|install_cron_job(CRON_C.*);|// &|' feeds/packages/net/nginx-util/src/nginx-ssl-util.hpp
+sed -i 's/remove_cron_job(CRON_CHECK);/// &/' feeds/packages/net/nginx-util/src/nginx-ssl-util.hpp
 
 # 检查 OpenClash 是否启用编译
 if grep -qE '^(CONFIG_PACKAGE_luci-app-openclash=n|# CONFIG_PACKAGE_luci-app-openclash=)' "${WORKPATH}/$CUSTOM_SH"; then
