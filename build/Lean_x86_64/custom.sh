@@ -107,11 +107,12 @@ EOF
 
 # =======================================================
 
+# 移除对uhttpd的依赖
+sed -i '/luci-light/d' feeds/luci/collections/luci/Makefile
 # 设置 Nginx 默认配置
-local nginx_config_path="feeds/packages/net/nginx-util/files/nginx.config"
-if [ -f "$nginx_config_path" ]; then
-  # 使用 cat 和 heredoc 覆盖写入 nginx.config 文件
-  cat > "$nginx_config_path" <<'EOF'
+nginx_config_path="feeds/packages/net/nginx-util/files/nginx.config"
+# 使用 cat 和 heredoc 覆盖写入 nginx.config 文件
+cat > "$nginx_config_path" <<'EOF'
 config main 'global'
         option uci_enable 'true'
 
@@ -135,9 +136,9 @@ config server 'http_only'
         list include 'conf.d/*.locations'
         option access_log 'off; # logd openwrt'
 EOF
-fi
 
-local nginx_template="feeds/packages/net/nginx-util/files/uci.conf.template"
+
+nginx_template="feeds/packages/net/nginx-util/files/uci.conf.template"
 if [ -f "$nginx_template" ]; then
   # 检查是否已存在配置，避免重复添加
   if ! grep -q "client_body_in_file_only clean;" "$nginx_template"; then
@@ -147,7 +148,7 @@ if [ -f "$nginx_template" ]; then
   fi
 fi
 
-local luci_support_script="feeds/packages/net/nginx/files-luci-support/60_nginx-luci-support"
+luci_support_script="feeds/packages/net/nginx/files-luci-support/60_nginx-luci-support"
 if [ -f "$luci_support_script" ]; then
   # 检查是否已经为 ubus location 应用了修复
   if ! grep -q "client_body_in_file_only off;" "$luci_support_script"; then
