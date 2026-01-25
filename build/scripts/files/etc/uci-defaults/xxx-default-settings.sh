@@ -6,10 +6,10 @@ if [ -f /bin/bash ];then
 fi
 
 # 去除 Nginx 强制跳转 https 和检查证书的计划任务
-# uci delete nginx._redirect2ssl
-# uci commit nginx
-# /etc/init.d/nginx restart
-# sed -i '/check_ssl/d' /etc/crontabs/root
+uci delete nginx._redirect2ssl
+uci commit nginx
+/etc/init.d/nginx restart
+sed -i '/check_ssl/d' /etc/crontabs/root
 
 # 允许SSH以root用户和空密码登陆
 sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config

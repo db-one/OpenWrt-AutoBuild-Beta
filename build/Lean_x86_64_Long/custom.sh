@@ -287,6 +287,27 @@ CONFIG_PACKAGE_xray-plugin=y
 CONFIG_PACKAGE_shadowsocks-rust-sslocal=n
 EOF
 
+# 禁用默认的 Dropbear
+cat >> .config <<EOF
+CONFIG_PACKAGE_dropbear=n
+EOF
+
+# 启用 OpenSSH-Server
+cat >> .config <<EOF
+CONFIG_PACKAGE_openssh-server=y # 安装 OpenSSH 服务
+CONFIG_PACKAGE_openssh-sftp-server=y # 安装 SFTP 支持
+EOF
+
+# 禁用 uhttpd ，替换 nginx
+cat >> .config <<EOF
+CONFIG_PACKAGE_luci=n
+CONFIG_PACKAGE_luci-light=n
+CONFIG_PACKAGE_uhttpd=n
+CONFIG_PACKAGE_uhttpd-mod-ubus=n
+CONFIG_PACKAGE_luci-nginx=y
+CONFIG_PACKAGE_nginx-util=y
+EOF
+
 # Turbo ACC 网络加速:
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-app-turboacc=y

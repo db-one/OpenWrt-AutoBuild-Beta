@@ -290,7 +290,6 @@ CONFIG_PACKAGE_sgdisk=y
 CONFIG_PACKAGE_openssl-util=y
 CONFIG_PACKAGE_resize2fs=y
 CONFIG_PACKAGE_qrencode=y
-CONFIG_PACKAGE_smartmontools-drivedb=y
 CONFIG_PACKAGE_usbutils=y
 CONFIG_PACKAGE_default-settings=y
 CONFIG_PACKAGE_default-settings-chn=y
@@ -359,6 +358,21 @@ CONFIG_PACKAGE_chinadns-ng=n
 CONFIG_PACKAGE_trojan-go=n
 CONFIG_PACKAGE_xray-plugin=n
 CONFIG_PACKAGE_shadowsocks-rust-sslocal=n
+
+# 禁用默认的 Dropbear
+CONFIG_PACKAGE_dropbear=n
+
+# 启用 OpenSSH-Server
+CONFIG_PACKAGE_openssh-server=y # 安装 OpenSSH 服务
+CONFIG_PACKAGE_openssh-sftp-server=y # 安装 SFTP 支持
+
+# 禁用 uhttpd ，替换 nginx
+CONFIG_PACKAGE_luci=n
+CONFIG_PACKAGE_luci-light=n
+CONFIG_PACKAGE_uhttpd=n
+CONFIG_PACKAGE_uhttpd-mod-ubus=n
+CONFIG_PACKAGE_luci-nginx=y
+CONFIG_PACKAGE_nginx-util=y
 
 EOF
 
