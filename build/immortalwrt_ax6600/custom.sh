@@ -421,7 +421,6 @@ CONFIG_PACKAGE_openssh-server=y # 安装 OpenSSH 服务
 CONFIG_PACKAGE_openssh-sftp-server=y # 安装 SFTP 支持
 
 # 禁用 uhttpd ，替换 nginx
-CONFIG_PACKAGE_luci=n
 CONFIG_PACKAGE_luci-light=n
 CONFIG_PACKAGE_uhttpd=n
 CONFIG_PACKAGE_uhttpd-mod-ubus=n

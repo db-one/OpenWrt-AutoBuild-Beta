@@ -353,7 +353,6 @@ EOF
 
 # 禁用 uhttpd ，替换 nginx
 cat >> .config <<EOF
-CONFIG_PACKAGE_luci=n
 CONFIG_PACKAGE_luci-light=n
 CONFIG_PACKAGE_uhttpd=n
 CONFIG_PACKAGE_uhttpd-mod-ubus=n
