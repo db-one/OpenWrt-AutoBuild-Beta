@@ -1,5 +1,7 @@
 #!/bin/bash
-
+pwd
+cd $HOME
+pwd
 
 # 移除对uhttpd的依赖
 sed -i '/luci-light/d' feeds/luci/collections/luci/Makefile
