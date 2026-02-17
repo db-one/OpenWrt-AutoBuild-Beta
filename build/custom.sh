@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #进入工作目录
-cd "${WORKPATH}/openwrt"
+cd $HOME
 
 # =======================================================
 
@@ -98,8 +98,6 @@ else
     rm -rf $HOME/clash-core/clash-linux-$arch.tar.gz
     rm -rf $HOME/clash-core
   fi
-
-  find / -name "openclash_custom_overwrite.sh" 2>/dev/null
 
   # 写入 proxy-server-nameserver 参数
   sed -i '/ruby_edit "$CONFIG_FILE" "\[.dns.\]\[.proxy-server-nameserver.\]"/a\    ruby_edit "$CONFIG_FILE" "['\''dns'\''\]['\''proxy-server-nameserver'\'']" "['\''https://doh.pub/dns-query'\'','\''https://dns.alidns.com/dns-query'\'','\''https://223.5.5.5:443/dns-query'\'','\''https://dns.cloudflare.com/dns-query'\'','\''https://dns.google/dns-query'\'']"' package/dbone-packages/luci-app-openclash/root/etc/openclash/custom/openclash_custom_overwrite.sh
