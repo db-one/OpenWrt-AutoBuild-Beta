@@ -51,9 +51,7 @@ if [ -f "$luci_support_script" ]; then
   echo 检查是否已经为 ubus location 应用了修复
   if ! grep -q "client_body_in_file_only off;" "$luci_support_script"; then
     echo "正在为 Nginx ubus location 配置应用修复..."
-    sed -i "/ubus_parallel_req 2;/a\\
-        client_body_in_file_only off;\\
-        client_max_body_size 1M;" "$luci_support_script"
+    sed -i "/ubus_parallel_req 2;/a\\        client_body_in_file_only off;\\n        client_max_body_size 1M;" "$luci_support_script"
   fi
 fi
 sed -i 's|install_cron_job(CRON_C.*);|// &|' feeds/packages/net/nginx-util/src/nginx-ssl-util.hpp
@@ -100,6 +98,9 @@ else
     rm -rf $HOME/clash-core/clash-linux-$arch.tar.gz
     rm -rf $HOME/clash-core
   fi
+
+  find / -name "openclash_custom_overwrite.sh" 2>/dev/null
+
   # 写入 proxy-server-nameserver 参数
   sed -i '/ruby_edit "$CONFIG_FILE" "\[.dns.\]\[.proxy-server-nameserver.\]"/a\    ruby_edit "$CONFIG_FILE" "['\''dns'\''\]['\''proxy-server-nameserver'\'']" "['\''https://doh.pub/dns-query'\'','\''https://dns.alidns.com/dns-query'\'','\''https://223.5.5.5:443/dns-query'\'','\''https://dns.cloudflare.com/dns-query'\'','\''https://dns.google/dns-query'\'']"' package/dbone-packages/luci-app-openclash/root/etc/openclash/custom/openclash_custom_overwrite.sh
   
