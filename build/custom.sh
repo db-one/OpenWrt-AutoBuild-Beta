@@ -1,7 +1,7 @@
 #!/bin/bash
-pwd
+
+#进入工作目录
 cd $HOME
-pwd
 
 # 移除对uhttpd的依赖
 sed -i '/luci-light/d' feeds/luci/collections/luci/Makefile
@@ -96,10 +96,12 @@ else
     rm -rf $HOME/clash-core/clash-linux-$arch.tar.gz
     rm -rf $HOME/clash-core
   fi
+  # 返回工作目录
+  cd $HOME
 
   # 写入 proxy-server-nameserver 参数
   sed -i '/ruby_edit "$CONFIG_FILE" "\[.dns.\]\[.proxy-server-nameserver.\]"/a\    ruby_edit "$CONFIG_FILE" "['\''dns'\''\]['\''proxy-server-nameserver'\'']" "['\''https://doh.pub/dns-query'\'','\''https://dns.alidns.com/dns-query'\'','\''https://223.5.5.5:443/dns-query'\'','\''https://dns.cloudflare.com/dns-query'\'','\''https://dns.google/dns-query'\'']"' package/dbone-packages/luci-app-openclash/root/etc/openclash/custom/openclash_custom_overwrite.sh
-  
+
   # 写入自定义规则
   cat >> package/dbone-packages/luci-app-openclash/root/etc/openclash/custom/openclash_custom_rules.list <<EOF
 
