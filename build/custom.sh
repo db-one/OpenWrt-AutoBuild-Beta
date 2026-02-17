@@ -33,10 +33,9 @@ config server 'http_only'
         option access_log 'off; # logd openwrt'
 EOF
 
-
+echo 优化Nginx配置
 nginx_template="feeds/packages/net/nginx-util/files/uci.conf.template"
 if [ -f "$nginx_template" ]; then
-  echo 检查是否已存在配置，避免重复添加
   if ! grep -q "client_body_in_file_only clean;" "$nginx_template"; then
     sed -i "/client_max_body_size 128M;/a\\
         client_body_in_file_only clean;\\
@@ -44,14 +43,18 @@ if [ -f "$nginx_template" ]; then
   fi
 fi
 
+echo 对ubus接口安全和性能优化 
 luci_support_script="feeds/packages/net/nginx/files-luci-support/60_nginx-luci-support"
 if [ -f "$luci_support_script" ]; then
-  echo 检查是否已经为 ubus location 应用了修复
   if ! grep -q "client_body_in_file_only off;" "$luci_support_script"; then
-    echo "正在为 Nginx ubus location 配置应用修复..."
-    sed -i "/ubus_parallel_req 2;/a\\        client_body_in_file_only off;\\n        client_max_body_size 1M;" "$luci_support_script"
+    sed -i '/ubus_parallel_req 2;/a\
+        client_body_in_file_only off;\
+        client_max_body_size 1M;' "$luci_support_script"
+
   fi
 fi
+
+echo 删除证书定时更新计划任务
 sed -i 's|install_cron_job(CRON_C.*);|// &|' feeds/packages/net/nginx-util/src/nginx-ssl-util.hpp
 sed -i 's/remove_cron_job(CRON_CHECK);/// &/' feeds/packages/net/nginx-util/src/nginx-ssl-util.hpp
 
