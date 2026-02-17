@@ -91,8 +91,6 @@ EOF
 
 # 修改退出命令到最后
 cd $HOME && sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
-echo "查看 default-settings 文件"
-cat $ZZZ
 
 # ================ 网络设置 =======================================
 
