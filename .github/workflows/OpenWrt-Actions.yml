@@ -32,12 +32,12 @@ on:
         description: '缓存加速'
         type: boolean
         default: true
-      Build_Mod:
-        description: '调试模式，只配置环境不编译'
-        type: boolean
-        default: false
       Build_SSH:
         description: '开启SSH调试模式'
+        type: boolean
+        default: false
+      Build_Mod:
+        description: '调试模式，只配置环境不编译'
         type: boolean
         default: false
       Custom_Commands:
@@ -93,6 +93,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       CACHE_BUILD: ${{ github.event.inputs.CACHE_BUILD || 'true' }}
+      BUILD_SSH: ${{ github.event.inputs.Build_SSH || 'false' }}
       BUILD_MOD: ${{ github.event.inputs.Build_Mod || 'false' }}
     if: needs.build-openwrt.outputs.selected_models != '[]' && (github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id)
     strategy:
@@ -106,6 +107,7 @@ jobs:
         run: |
           echo "正在编译目标设备: ${{ matrix.target }}"
           echo "是否开启缓存: ${CACHE_BUILD}"
+          echo "是否开启SSH: ${BUILD_SSH}"
           echo "是否为调试模式: ${BUILD_MOD}"
 
       - name: Checkout 仓库
@@ -366,7 +368,7 @@ jobs:
           echo "==== 自定义命令执行完毕 ===="
 
       - name: SSH远程调试
-        if: env.Build_SSH == 'true'
+        if: env.BUILD_SSH == 'true'
         uses: datout/debugger-action@main
 
       - name: 调试结束
