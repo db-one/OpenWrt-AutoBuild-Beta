@@ -36,6 +36,10 @@ on:
         description: '调试模式，只配置环境不编译'
         type: boolean
         default: false
+      Build_SSH:
+        description: '开启SSH调试模式'
+        type: boolean
+        default: false
       Custom_Commands:
         description: '临时调试命令 (手动输入要执行的 Shell 命令)'
         type: string
@@ -360,6 +364,10 @@ jobs:
           echo "==== 开始执行自定义调试命令 ===="
           ${{ github.event.inputs.Custom_Commands }}
           echo "==== 自定义命令执行完毕 ===="
+
+      - name: SSH远程调试
+        if: env.Build_SSH == 'true'
+        uses: datout/debugger-action@main
 
       - name: 调试结束
         run: |
