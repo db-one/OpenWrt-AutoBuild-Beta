@@ -109,6 +109,7 @@ jobs:
           echo "是否开启缓存: ${CACHE_BUILD}"
           echo "是否开启SSH: ${BUILD_SSH}"
           echo "是否为调试模式: ${BUILD_MOD}"
+          echo "调试命令: ${{ github.event.inputs.Custom_Commands }}"
 
       - name: Checkout 仓库
         uses: actions/checkout@v4
