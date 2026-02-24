@@ -6,7 +6,8 @@ set -e
 
 echo "🛠️ 正在设置 SSH 调试环境..."
 
-TIMEOUT=1800
+TIMEOUT=1800        # 保持运行时间
+CHECK_INTERVAL=30   # 检查间隔30秒
 TIME_REMAINING=$TIMEOUT
 SESSION_ACTIVE=true
 
@@ -38,14 +39,14 @@ SSH_CMD=$(echo "$SSH_INFO" | cut -d ' ' -f2)
 if [[ -n "$TELEGRAM_BOT_TOKEN" && -n "$TELEGRAM_CHAT_ID" ]]; then
   echo "发送 Telegram 通知..."
   curl --silent --output /dev/null \
-    -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
-    -d chat_id="$TELEGRAM_CHAT_ID" \
-    -d text="🖥️ SSH 调试会话已启动
-    🔗 连接命令：
-    ssh -o StrictHostKeyChecking=no $SSH_CMD
-    ⏱️ 超时：30分钟
-    📁 目录：$GITHUB_WORKSPACE"
-  echo "ok..."
+  -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+  -d chat_id="$TELEGRAM_CHAT_ID" \
+  -d text="🖥️ SSH 调试会话已启动
+  🔗 连接命令：
+  ssh -o StrictHostKeyChecking=no $SSH_CMD
+  ⏱️ 超时：30分钟
+  📁 目录：$GITHUB_WORKSPACE"
+  echo ""
 fi
 
 # 主循环
@@ -86,8 +87,8 @@ while [ $TIME_REMAINING -gt 0 ] && [ "$SESSION_ACTIVE" = true ]; do
     echo ""
 
     # 等待
-    sleep 10
-    TIME_REMAINING=$((TIME_REMAINING - 10))
+    sleep $CHECK_INTERVAL
+    TIME_REMAINING=$((TIME_REMAINING - CHECK_INTERVAL))
 done
 
 # 如果超时但会话还在
