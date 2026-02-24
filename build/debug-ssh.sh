@@ -37,13 +37,15 @@ SSH_CMD=$(echo "$SSH_INFO" | cut -d ' ' -f2)
 # 发送通知（可选）
 if [[ -n "$TELEGRAM_BOT_TOKEN" && -n "$TELEGRAM_CHAT_ID" ]]; then
   echo "发送 Telegram 通知..."
-  curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+  curl --silent --output /dev/null \
+    -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
     -d chat_id="$TELEGRAM_CHAT_ID" \
     -d text="🖥️ SSH 调试会话已启动
-            🔗 连接命令：
-            ssh -o StrictHostKeyChecking=no $SSH_CMD
-            ⏱️ 超时：30分钟
-            📁 目录：$GITHUB_WORKSPACE" || echo "通知发送失败（可忽略）" >/dev/null 2>&1 && echo "ok..."
+    🔗 连接命令：
+    ssh -o StrictHostKeyChecking=no $SSH_CMD
+    ⏱️ 超时：30分钟
+    📁 目录：$GITHUB_WORKSPACE"
+  echo "ok..."
 fi
 
 # 主循环
