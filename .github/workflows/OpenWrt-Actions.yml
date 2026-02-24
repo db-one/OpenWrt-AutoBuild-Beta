@@ -56,7 +56,6 @@ on:
 
 env: 
   TZ: Asia/Shanghai
-  REPO_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
   MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
   WECHAT_WORK_URL: ${{ secrets.WECHAT_WORK_URL }}
   WECHAT_WORK_TOKEN: ${{ secrets.WECHAT_WORK_TOKEN }}
@@ -371,7 +370,10 @@ jobs:
 
       - name: SSH远程调试
         if: env.BUILD_SSH == 'true'
-        uses: datout/debugger-action@main
+        timeout-minutes: 35
+        run: |
+          chmod +x .github/scripts/debug-ssh.sh
+          ./.github/scripts/debug-ssh.sh
 
       - name: 调试结束
         run: |
