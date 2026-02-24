@@ -12,8 +12,8 @@ SESSION_ACTIVE=true
 
 # 安装 tmate
 if ! command -v tmate &> /dev/null; then
-  sudo apt-get update
-  sudo apt-get install -y tmate
+  sudo apt-get update >/dev/null 2>&1
+  sudo apt-get install -y tmate >/dev/null 2>&1
 fi
 
 # 生成 SSH 密钥
@@ -39,9 +39,11 @@ if [[ -n "$TELEGRAM_BOT_TOKEN" && -n "$TELEGRAM_CHAT_ID" ]]; then
   echo "发送 Telegram 通知..."
   curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
     -d chat_id="$TELEGRAM_CHAT_ID" \
-    -d text="🖥️ SSH 调试会话已启动\n\n🔗 连接命令：\n<code>ssh -o StrictHostKeyChecking=no $SSH_CMD</code>\n\n⏱️ 超时：30分钟\n📁 目录：$GITHUB_WORKSPACE" \
-    -d parse_mode="HTML" \
-    -d disable_web_page_preview="true" || echo "通知发送失败（可忽略）"
+    -d text="🖥️ SSH 调试会话已启动
+            🔗 连接命令：
+            ssh -o StrictHostKeyChecking=no $SSH_CMD
+            ⏱️ 超时：30分钟
+            📁 目录：$GITHUB_WORKSPACE" || echo "通知发送失败（可忽略）" >/dev/null 2>&1 && echo "ok..."
 fi
 
 # 主循环
