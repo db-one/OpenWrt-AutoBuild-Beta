@@ -56,7 +56,6 @@ on:
 
 env: 
   TZ: Asia/Shanghai
-  REPO_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
   MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
   WECHAT_WORK_URL: ${{ secrets.WECHAT_WORK_URL }}
   WECHAT_WORK_TOKEN: ${{ secrets.WECHAT_WORK_TOKEN }}
@@ -238,10 +237,10 @@ jobs:
           fi
 
           echo "执行全局脚本"
-          if [ -f "${GITHUB_WORKSPACE}/openwrt/build/$CUSTOM_SH" ]; then
+          if [ -f "${GITHUB_WORKSPACE}/openwrt/build/custom.sh" ]; then
           (
-            chmod +x ${GITHUB_WORKSPACE}/openwrt/build/$CUSTOM_SH
-            /bin/bash "${GITHUB_WORKSPACE}/openwrt/build/$CUSTOM_SH"
+            chmod +x ${GITHUB_WORKSPACE}/openwrt/build/custom.sh
+            /bin/bash "${GITHUB_WORKSPACE}/openwrt/build/custom.sh"
           )
           fi
 
@@ -372,7 +371,10 @@ jobs:
       - name: SSH远程调试
         if: env.BUILD_SSH == 'true'
         timeout-minutes: 35
-        uses: datout/debugger-action@main
+        run: |
+          chmod +x ${GITHUB_WORKSPACE}/openwrt/build/debug-ssh.sh
+          /bin/bash "${GITHUB_WORKSPACE}/openwrt/build/debug-ssh.sh"
+
 
       - name: 调试结束
         run: |

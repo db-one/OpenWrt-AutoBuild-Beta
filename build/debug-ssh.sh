@@ -75,6 +75,7 @@ while [ $TIME_REMAINING -gt 0 ] && [ "$SESSION_ACTIVE" = true ]; do
     echo ""
     echo "  ⏰ 剩余时间: ${MINUTES}分${SECONDS}秒"
     echo ""
+    echo "用终端连接SSH，然后以[q]或[ctrl+c]开始和[ctrl+d]结束"
     echo "想要快速跳过此步骤，只需连接SSH并退出即可"
     echo ""
     echo "═══════════════════════════════════════════════════════════"
