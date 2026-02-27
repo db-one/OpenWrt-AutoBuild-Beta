@@ -166,11 +166,17 @@ while [ $TIME_REMAINING -gt 0 ] && [ "$SESSION_ACTIVE" = true ]; do
     SECONDS=$((TIME_REMAINING % 60))
 
     # 检查当前会话是否有连接
-if tmate -S "$TMATE_SOCK" list-sessions 2>/dev/null | grep -q -E "1|created"; then
+    ATTACHED=$(tmate -S "$TMATE_SOCK" display -p '#{session_attached}' 2>/dev/null)
+    TTYD_CONNECTIONS=$(ss -tn state established "sport = :7681" 2>/dev/null | tail -n +2 | wc -l)
+
+    if [ "$ATTACHED" = "1" ]; then
         ssh_attached_once=1
+        echo "SSH连接中..."
+    elif [ "$TTYD_CONNECTIONS" -gt 0 ]; then
+        ssh_attached_once=1
+        echo "Web连接中..."
     elif [ "${ssh_attached_once}" -eq 1 ]; then
-        echo "🔐 用户已断开 SSH 连接，继续执行..."
-        break
+        echo "🔐 用户已断开所有连接，继续执行..."
     fi
 
     # 检查会话是否还存在
@@ -206,9 +212,9 @@ if tmate -S "$TMATE_SOCK" list-sessions 2>/dev/null | grep -q -E "1|created"; th
     echo "    • pwd             - 查看当前目录"
     echo "    • ls -la          - 查看文件列表"
     echo ""
+    echo "  ⏰ 剩余时间: ${MINUTES}分${SECONDS}秒"
     # 超时提示（仅在未通过 SSH 连接时显示）
     if [ ${ssh_attached_once} -eq 0 ]; then
-        echo "  ⏰ 剩余时间: ${MINUTES}分${SECONDS}秒"
         echo "  ⚠️  如果未连接，将自动继续"
     else
         echo "  ✅ 已连接，随时可输入 exit 或 Ctrl+D 退出"
@@ -231,7 +237,6 @@ if [ $TIME_REMAINING -le 0 ] && [ "$SESSION_ACTIVE" = true ]; then
     echo "═══════════════════════════════════════════════════════════"
     echo "  ⏰ 连接超时，自动继续工作流"
     echo "═══════════════════════════════════════════════════════════"
-    cleanup
     SESSION_ACTIVE=false
 fi
 
