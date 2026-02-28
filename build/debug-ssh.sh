@@ -166,13 +166,9 @@ while [ $TIME_REMAINING -gt 0 ] && [ "$SESSION_ACTIVE" = true ]; do
     SECONDS=$((TIME_REMAINING % 60))
 
     # 检查当前会话是否有连接
-    ATTACHED=$(tmate -S "$TMATE_SOCK" display -p '#{session_attached}' 2>/dev/null)
     TTYD_CONNECTIONS=$(ss -tn state established "sport = :7681" 2>/dev/null | tail -n +2 | wc -l)
 
-    if [ "$ATTACHED" = "1" ]; then
-        ssh_attached_once=1
-        echo "SSH连接中..."
-    elif [ "$TTYD_CONNECTIONS" -gt 0 ]; then
+    if [ "$TTYD_CONNECTIONS" -gt 0 ]; then
         ssh_attached_once=1
         echo "Web连接中..."
     elif [ "${ssh_attached_once}" -eq 1 ]; then
