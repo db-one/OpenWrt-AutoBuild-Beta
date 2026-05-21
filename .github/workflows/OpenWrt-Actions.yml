@@ -514,8 +514,8 @@ jobs:
         with:
           name: ${{matrix.target}}_OpenWrt_iso_${{ env.FILE_TIME }}
           path: img-installer/output/*-installer-x86_64.iso
-        # 💡 增加防错：如果万一没找到文件，忽略它而不是让编译红叉挂掉
-        if-no-files-found: ignore
+          # 💡 增加防错：如果万一没找到文件，忽略它而不是让编译红叉挂掉
+          if-no-files-found: ignore
 
       - name: 自动发布固件及各自的 ISO 到 Releases
         uses: ncipollo/release-action@main
