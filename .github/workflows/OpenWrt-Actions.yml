@@ -538,7 +538,7 @@ jobs:
 
               ━━━━━━━━━━━━━━━━━━━━
 
-              🎉 [ ${{ env.FIRMWARE_MESSAGE }} ] 固件及 ISO 镜像下载：
+              🎉 [ ${{ env.FIRMWARE_MESSAGE }} ] 固件及 ISO 镜像下载
                  (提示：非 x86_64 架构固件不包含 ISO 镜像)
 
           artifacts: |
