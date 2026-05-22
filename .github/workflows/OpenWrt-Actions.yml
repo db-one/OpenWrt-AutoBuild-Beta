@@ -32,7 +32,7 @@ on:
         description: '缓存加速'
         type: boolean
         default: true
-      Build_SSH:
+      BUILD_SSH:
         description: '开启SSH调试模式'
         type: boolean
         default: false
@@ -45,9 +45,9 @@ on:
         type: string
         default: ''
 
-# 定时触发编译(1,2,5,6,8,10,12,15,16,18,20,22,25,26,28,30早3点)
+# 定时触发编译(1,5,10,15,20,25,30早3点)
 #  schedule:
-#    - cron: 0 17 1,4,5,7,9,11,14,15,17,19,21,24,25,27,29,31 * *
+#    - cron: 0 17 4,9,14,19,24,31 * *
 
 # 点赞☆Star触发编译
 #  watch:
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       CACHE_BUILD: ${{ github.event.inputs.CACHE_BUILD || 'true' }}
-      BUILD_SSH: ${{ github.event.inputs.Build_SSH || 'false' }}
+      BUILD_SSH: ${{ github.event.inputs.BUILD_SSH || 'false' }}
       BUILD_MOD: ${{ github.event.inputs.Build_Mod || 'false' }}
     if: needs.build-openwrt.outputs.selected_models != '[]' && (github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id)
     strategy:
@@ -477,7 +477,7 @@ jobs:
           path: ./artifact/buildinfo/
 
       - name: 同步 img-installer 项目准备制作 ISO
-        if: env.BUILD_MOD == 'false' && (contains(matrix.target, 'x86_64') || contains(matrix.target, 'x86-64'))
+        if: env.BUILD_MOD == 'false' && env.UPLOAD_ISO == 'true' && (contains(matrix.target, 'x86_64') || contains(matrix.target, 'x86-64'))
         run: |
           echo "检测到当前编译目标为 x86-64 架构，正在同步 ISO 打包工具..."
           git clone https://github.com/wukongdaily/img-installer.git
@@ -486,7 +486,7 @@ jobs:
           chmod +x img-installer/autobuild/autobuild.sh
 
       - name: 制作专属一键刷机 ISO
-        if: env.BUILD_MOD == 'false' && (contains(matrix.target, 'x86_64') || contains(matrix.target, 'x86-64'))
+        if: env.BUILD_MOD == 'false' && env.UPLOAD_ISO == 'true' && (contains(matrix.target, 'x86_64') || contains(matrix.target, 'x86-64'))
         run: |
           # 直接去 ./artifact/firmware/ 目录下匹配带 efi 且以 .img 或 .img.gz 结尾的固件
           firmware_file=$(ls ./artifact/firmware/*efi*.img* 2>/dev/null | head -n 1)
@@ -540,14 +540,15 @@ jobs:
 
               ━━━━━━━━━━━━━━━━━━━━
 
-              🎉 [ ${{ env.FIRMWARE_MESSAGE }} ] 固件及专属物理机刷机 ISO 下载：
-                 (提示：非 x86_64 架构固件不包含一键安装 ISO 镜像)
+              🎉 [ ${{ env.FIRMWARE_MESSAGE }} ] 固件及 ISO 镜像下载：
+                 (提示：非 x86_64 架构固件不包含 ISO 镜像)
 
           artifacts: |
             ./artifact/firmware/*
             img-installer/output/*-installer-x86_64.iso
-            # 非 x86_64 架构（如 ARM 任务）不会生成 ISO，开启此项可确保找不到 ISO 时不报错，依然正常发布普通固件
-          allowMissingFiles: true
+
+          # 当找不到 ISO 文件时，不让构建失败，继续发布其他文件
+          artifactErrorsFailBuild: false
 
       - name: 自动生成并保存固件与 ISO 下载直链
         if: env.BUILD_MOD == 'false' && env.UPLOAD_RELEASE == 'true' && always()
@@ -558,9 +559,9 @@ jobs:
           base_url="${{ env.GITHUB_RELEASE }}/download/${{ env.FILE_TIME2 }}-${{ matrix.target }}"
           
           # 创建或清空用于后续通知的链接文件
-          echo "## 📥 本次编译直链下载" > ./artifact/download_links.txt
+          echo "   📥 本次编译直链下载: " > ./artifact/download_links.txt
           
-          # 抓取当前编译出的固件纯文件名
+          # 抓取当前编译出的固件文件名
           full_path=$(ls ./artifact/firmware/*efi*.img* 2>/dev/null | head -n 1)
           if [ -n "$full_path" ]; then
             firmware_name=$(basename "$full_path")
@@ -569,7 +570,7 @@ jobs:
             echo "🔗 固件直链: $firmware_download_url"
             echo "* 📦 固件下载: $firmware_download_url" >> ./artifact/download_links.txt
           else
-            echo "⚠️ 未能抓取到常规固件文件名。"
+            echo "⚠️ 未能抓取到固件文件名。"
           fi
           
           # 如果是 x86 架构，才去拼接并打印 ISO 的直链
@@ -631,7 +632,7 @@ jobs:
           
           ⏰ 编译用时：${{ env.BUILD_TIME }}
           
-          🎉 发布地址：${{ env.GITHUB_RELEASE }}
+          🎉 发布地址：${{ env.GITHUB_RELEASE }}/tag/${{ env.FILE_TIME2 }}-${{ matrix.target }}
 
           ${{ env.DOWNLOAD_LINKS }}
 
