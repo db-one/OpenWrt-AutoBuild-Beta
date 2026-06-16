@@ -101,6 +101,14 @@ cd $HOME && sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ================ 网络设置 =======================================
 
+# ===== 关键修复：解决 iptables 文件冲突 =====
+# 强制使用旧版 iptables（LEGACY）避免 kmod-nf-ipt 和 kmod-iptables 冲突
+echo "修复 netfilter 配置以避免 iptables 包冲突..."
+if [ -f "include/netfilter.mk" ]; then
+    sed -i 's/CONFIG_IP_NF_IPTABLES,/CONFIG_IP_NF_IPTABLES_LEGACY,/g' include/netfilter.mk
+    sed -i 's/CONFIG_IP6_NF_IPTABLES,/CONFIG_IP6_NF_IPTABLES_LEGACY,/g' include/netfilter.mk
+    echo "✓ 已强制使用 iptables 旧版实现"
+fi
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
@@ -328,11 +336,9 @@ CONFIG_PACKAGE_uhttpd-mod-ubus=n
 CONFIG_PACKAGE_luci-nginx=y
 CONFIG_PACKAGE_nginx-util=y
 
-# 禁用旧版 kmod-ipt-fullconenat
-# CONFIG_PACKAGE_kmod-ipt-fullconenat is not set
+# 禁用新版 nftables-based iptables
 # CONFIG_PACKAGE_kmod-nf-ipt is not set
-# CONFIG_PACKAGE_kmod-nf-ipt6 is not set
-# CONFIG_PACKAGE_kmod-ipt-core is not set
+CONFIG_PACKAGE_kmod-iptables=y
 EOF
 
 
