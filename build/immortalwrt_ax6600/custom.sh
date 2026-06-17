@@ -337,8 +337,8 @@ CONFIG_PACKAGE_luci-nginx=y
 CONFIG_PACKAGE_nginx-util=y
 
 # 禁用新版 nftables-based iptables
-# CONFIG_PACKAGE_kmod-nf-ipt is not set
-CONFIG_PACKAGE_kmod-iptables=y
+CONFIG_PACKAGE_kmod-nf-ipt=y
+CONFIG_PACKAGE_kmod-iptables=n
 EOF
 
 
