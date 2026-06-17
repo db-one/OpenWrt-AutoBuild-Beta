@@ -101,14 +101,33 @@ cd $HOME && sed -i '/exit 0/d' $ZZZ && echo "exit 0" >> $ZZZ
 
 # ================ 网络设置 =======================================
 
-# ===== 关键修复：解决 iptables 文件冲突 =====
-# 强制使用旧版 iptables（LEGACY）避免 kmod-nf-ipt 和 kmod-iptables 冲突
-echo "修复 netfilter 配置以避免 iptables 包冲突..."
-if [ -f "include/netfilter.mk" ]; then
-    sed -i 's/CONFIG_IP_NF_IPTABLES,/CONFIG_IP_NF_IPTABLES_LEGACY,/g' include/netfilter.mk
-    sed -i 's/CONFIG_IP6_NF_IPTABLES,/CONFIG_IP6_NF_IPTABLES_LEGACY,/g' include/netfilter.mk
-    echo "✓ 已强制使用 iptables 旧版实现"
+echo "========== 修复 Linux 6.18 iptables 冲突 =========="
+
+include_netfilter_mk="include/netfilter.mk"
+netfilter_mk="package/kernel/linux/modules/netfilter.mk"
+
+# 修复 NF_IPT 映射（IPv4）
+if grep -q '$(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT,CONFIG_IP_NF_IPTABLES, $(P_V4)ip_tables),))' "$include_netfilter_mk"; then
+    echo "修正 NF_IPT 映射..."
+    sed -i 's@$(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT,CONFIG_IP_NF_IPTABLES, $(P_V4)ip_tables),))@$(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT,CONFIG_IP_NF_IPTABLES, $(P_V4)ip_tables, lt 6.12),))@' "$include_netfilter_mk"
+    sed -i '/CONFIG_IP_NF_IPTABLES, $(P_V4)ip_tables, lt 6\.12)/a$(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT,CONFIG_IP_NF_IPTABLES_LEGACY, $(P_V4)ip_tables, ge 6.12),))' "$include_netfilter_mk"
 fi
+
+# 修复 NF_IPT6 映射（IPv6）
+if grep -q '$(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT6,CONFIG_IP6_NF_IPTABLES, $(P_V6)ip6_tables),))' "$include_netfilter_mk"; then
+    echo "修正 NF_IPT6 映射..."
+    sed -i 's@$(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT6,CONFIG_IP6_NF_IPTABLES, $(P_V6)ip6_tables),))@$(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT6,CONFIG_IP6_NF_IPTABLES, $(P_V6)ip6_tables, lt 6.12),))@' "$include_netfilter_mk"
+    sed -i '/CONFIG_IP6_NF_IPTABLES, $(P_V6)ip6_tables, lt 6\.12)/a$(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT6,CONFIG_IP6_NF_IPTABLES_LEGACY, $(P_V6)ip6_tables, ge 6.12),))' "$include_netfilter_mk"
+fi
+
+# 修复依赖关系 - 这是关键！6.18 需要跳过 kmod-nf-ipt
+if grep -q 'DEPENDS:=+!LINUX_6_12:kmod-iptables' "$netfilter_mk"; then
+    echo "修正依赖关系..."
+    sed -i 's/DEPENDS:=+!LINUX_6_12:kmod-iptables/DEPENDS:=+(!(LINUX_6_12||LINUX_6_18)):kmod-iptables/' "$netfilter_mk"
+    echo "✓ 已为 Linux 6.18 禁用 kmod-nf-ipt"
+fi
+
+echo "========== ✓ iptables 冲突修复完成 =========="
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
@@ -335,10 +354,6 @@ CONFIG_PACKAGE_uhttpd=n
 CONFIG_PACKAGE_uhttpd-mod-ubus=n
 CONFIG_PACKAGE_luci-nginx=y
 CONFIG_PACKAGE_nginx-util=y
-
-# 禁用新版 nftables-based iptables
-CONFIG_PACKAGE_kmod-nf-ipt=y
-CONFIG_PACKAGE_kmod-iptables=n
 EOF
 
 
