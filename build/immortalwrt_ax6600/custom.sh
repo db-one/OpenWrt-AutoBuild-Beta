@@ -257,6 +257,9 @@ CONFIG_PACKAGE_kmod-veth=y
 CONFIG_PACKAGE_luci-lib-ipkg=y
 CONFIG_PACKAGE_libopenssl-legacy=y
 
+CONFIG_PACKAGE_libffi=y
+CONFIG_PACKAGE_python3-ctypes=y
+
 # Package
 CONFIG_PACKAGE_htop=y
 CONFIG_PACKAGE_nano=y
@@ -294,6 +297,8 @@ CONFIG_PACKAGE_iptables-mod-conntrack-extra=y
 
 # LuCI主题:
 CONFIG_PACKAGE_luci-theme-argon=y
+CONFIG_PACKAGE_luci-app-argon-config=n #argon主题设置
+CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=n #argon主题设置
 
 # Enable Luci App
 CONFIG_PACKAGE_luci-app-adguardhome=n

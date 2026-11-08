@@ -390,6 +390,13 @@ jobs:
         run: |
           cd openwrt && make download -j$(($(nproc) * 2))
 
+      - name: 补齐 host upx
+        if: env.BUILD_MOD == 'false'
+        run: |
+          cd openwrt
+          mkdir -p staging_dir/host/bin
+          ln -sf /usr/bin/upx staging_dir/host/bin/upx
+
       - name: 开始编译固件
         id: compile
         if: env.BUILD_MOD == 'false'
