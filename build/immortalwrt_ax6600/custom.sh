@@ -21,6 +21,12 @@ rm -rf feeds/luci/applications/luci-app-argon-config
 rm -rf package/dbone-packages/luci-theme-argon/compat/luci-app-argon-config
 find package/dbone-packages/luci-theme-argon/po -name 'argon-config.po' -delete
 
+# 修复libffi问题
+mkdir -p feeds/packages/libs/libffi
+curl -fsSL \
+  https://raw.githubusercontent.com/immortalwrt/packages/openwrt-24.10/libs/libffi/Makefile \
+  -o feeds/packages/libs/libffi/Makefile
+
 # 安装源
 ./scripts/feeds install -a -f
 
