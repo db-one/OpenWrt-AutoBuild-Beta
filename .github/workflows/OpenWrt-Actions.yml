@@ -123,7 +123,6 @@ jobs:
           echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
           echo "CUSTOM_SH=${CUSTOM_SH}" >> $GITHUB_ENV
           echo "CACHE_BUILD=${CACHE_BUILD}" >> $GITHUB_ENV
-          echo "UPLOAD_FIRMWARE=${UPLOAD_FIRMWARE}" >> $GITHUB_ENV
           echo "UPLOAD_QCOW2=${UPLOAD_QCOW2}" >> $GITHUB_ENV
           echo "UPLOAD_VHDX=${UPLOAD_VHDX}" >> $GITHUB_ENV
           echo "UPLOAD_VMDK=${UPLOAD_VMDK}" >> $GITHUB_ENV
@@ -441,47 +440,55 @@ jobs:
           HOUR=$(( $SECONDS/3600 )) && MIN=$(( ($SECONDS-${HOUR}*3600)/60 )) && SEC=$(( $SECONDS-${HOUR}*3600-${MIN}*60 ))
           echo "BUILD_TIME=${HOUR}时${MIN}分${SEC}秒" >> $GITHUB_ENV
 
-      - name: 上传固件文件
-        if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_FIRMWARE == 'true'
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{matrix.target}}_OpenWrt_firmware_${{ env.FILE_TIME }}
-          path: ./artifact/firmware/
-
-      - name: 上传PVE/KVM镜像文件
+      - name: 上传PVE/KVM镜像文件到 Releases
+        uses: ncipollo/release-action@main
         if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_QCOW2 == 'true'
-        uses: actions/upload-artifact@v7
         with:
-          name: ${{matrix.target}}_OpenWrt_pvekvm_${{ env.FILE_TIME }}
-          path: ./artifact/pvekvm/
+          name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
+          tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          artifacts: ./artifact/pvekvm/*
+          allowUpdates: true
 
-      - name: 上传Hyper-V镜像文件
+      - name: 上传Hyper-V镜像文件到 Releases
+        uses: ncipollo/release-action@main
         if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_VHDX == 'true'
-        uses: actions/upload-artifact@v7
         with:
-          name: ${{matrix.target}}_OpenWrt_hyperv_${{ env.FILE_TIME }}
-          path: ./artifact/hyperv/
+          name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
+          tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          artifacts: ./artifact/hyperv/*
+          allowUpdates: true
 
-      - name: 上传VMware镜像文件
+      - name: 上传VMware镜像文件到 Releases
+        uses: ncipollo/release-action@main
         if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_VMDK == 'true'
-        uses: actions/upload-artifact@v7
         with:
-          name: ${{matrix.target}}_OpenWrt_vmware_${{ env.FILE_TIME }}
-          path: ./artifact/vmware/
+          name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
+          tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          artifacts: ./artifact/vmware/*
+          allowUpdates: true
 
-      - name: 上传插件包文件
+      - name: 上传插件包文件到 Releases
+        uses: ncipollo/release-action@main
         if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_IPK == 'true'
-        uses: actions/upload-artifact@v7
         with:
-          name: ${{matrix.target}}_OpenWrt_package_${{ env.FILE_TIME }}
-          path: ./artifact/package/
+          name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
+          tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          artifacts: ./artifact/package/*
+          allowUpdates: true
 
-      - name: 上传固件信息
+      - name: 上传固件信息到 Releases
+        uses: ncipollo/release-action@main
         if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_CONFIG == 'true'
-        uses: actions/upload-artifact@v7
         with:
-          name: ${{matrix.target}}_OpenWrt_buildinfo_${{ env.FILE_TIME }}
-          path: ./artifact/buildinfo/
+          name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
+          tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          artifacts: ./artifact/buildinfo/*
+          allowUpdates: true
 
       - name: 同步 img-installer 项目准备制作 ISO
         if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_ISO == 'true' && (contains(matrix.target, 'x86_64') || contains(matrix.target, 'x86-64'))
@@ -515,12 +522,6 @@ jobs:
           # 清理临时目录
           rm -rf ../tmp_iso_build
 
-      - name: 上传ISO固件文件
-        if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_ISO == 'true' && (contains(matrix.target, 'x86_64') || contains(matrix.target, 'x86-64'))
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{matrix.target}}_OpenWrt_ISO_${{ env.FILE_TIME }}
-          path: img-installer/output/*-installer-x86_64.iso
 
       - name: 自动发布固件及各自的 ISO 到 Releases
         uses: ncipollo/release-action@main
@@ -554,6 +555,7 @@ jobs:
 
           # 当找不到 ISO 文件时，不让构建失败，继续发布其他文件
           artifactErrorsFailBuild: false
+          allowUpdates: true
 
       - name: 自动生成并保存固件与 ISO 下载直链
         if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_RELEASE == 'true' && always()
@@ -577,7 +579,7 @@ jobs:
           else
             echo "⚠️ 未能抓取到固件文件名。"
           fi
-
+          
           # 如果是 x86 架构，才去拼接并打印 ISO 的直链
           if [[ "${{ matrix.target }}" =~ "x86" ]]; then
             iso_download_url="${base_url}/${{ matrix.target }}-installer-x86_64.iso"
@@ -599,7 +601,7 @@ jobs:
         with:
           token: ${{ secrets.MY_GITHUB_TOKEN }}
           repository: ${{ github.repository }}
-          retain_days: 1     #保留最后多少记录不删除
+          retain_days: 30     #保留最后多少记录不删除
           keep_minimum_runs: 0
 
       - name: 删除自动发布的旧固件
@@ -607,7 +609,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           RELEASE_PATTERN: ".*"     # 匹配所有 Release 标签（也可以写正则，比如 "^v.*"）
-          RELEASES_TO_KEEP: 4       # 保留最新的 4 个
+          RELEASES_TO_KEEP: 20       # 保留最新的 4 个
           #DAYS_TO_KEEP: 30          # 或者保留 30 天内的（二者满足其一即保留）
 
       - name: 编译成功信息通知-企业微信
