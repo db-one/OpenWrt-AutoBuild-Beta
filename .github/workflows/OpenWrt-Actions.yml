@@ -470,6 +470,18 @@ jobs:
           artifacts: ./artifact/vmware/*
           allowUpdates: true
 
+      - name: 打包 IPK 与固件信息
+        if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false'
+        run: |
+          ZIPDIR="$GITHUB_WORKSPACE/artifact/zip"
+          mkdir -p "$ZIPDIR"
+          if compgen -G "./artifact/package/*" > /dev/null; then
+            zip -q -j "$ZIPDIR/${{ matrix.target }}-packages.zip" ./artifact/package/*
+          fi
+          if compgen -G "./artifact/buildinfo/*" > /dev/null; then
+            zip -q -j "$ZIPDIR/${{ matrix.target }}-buildinfo.zip" ./artifact/buildinfo/*
+          fi
+
       - name: 上传插件包文件到 Releases
         uses: ncipollo/release-action@main
         if: steps.compile.outcome == 'success' && env.BUILD_MOD == 'false' && env.UPLOAD_IPK == 'true'
@@ -477,7 +489,7 @@ jobs:
           name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
           tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
           token: ${{ secrets.MY_GITHUB_TOKEN }}
-          artifacts: ./artifact/package/*
+          artifacts: ./artifact/zip/${{ matrix.target }}-packages.zip
           allowUpdates: true
 
       - name: 上传固件信息到 Releases
@@ -487,7 +499,7 @@ jobs:
           name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
           tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
           token: ${{ secrets.MY_GITHUB_TOKEN }}
-          artifacts: ./artifact/buildinfo/*
+          artifacts: ./artifact/zip/${{ matrix.target }}-buildinfo.zip
           allowUpdates: true
 
       - name: 同步 img-installer 项目准备制作 ISO
