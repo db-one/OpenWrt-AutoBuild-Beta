@@ -22,8 +22,7 @@ rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf feeds/luci/applications/luci-app-argon-config
-rm -rf package/dbone-packages/luci-theme-argon/compat/luci-app-argon-config
-find package/dbone-packages/luci-theme-argon/po -name 'argon-config.po' -delete
+rm -rf package/dbone-packages/luci-app-argon-config
 
 # 安装源
 ./scripts/feeds install -a -f
