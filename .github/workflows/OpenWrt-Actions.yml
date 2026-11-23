@@ -365,6 +365,8 @@ jobs:
         run: |
           cd openwrt
           echo "==== 开始执行自定义调试命令 ===="
+          echo " ${{ github.event.inputs.Custom_Commands }}"
+          echo "==== 命令执行结果显示 ===="
           ${{ github.event.inputs.Custom_Commands }}
           echo "==== 自定义命令执行完毕 ===="
 
