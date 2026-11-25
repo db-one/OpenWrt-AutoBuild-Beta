@@ -47,7 +47,8 @@ on:
 
 # 定时触发编译(1,5,10,15,20,25,30早3点)
 #  schedule:
-#    - cron: 0 17 4,9,14,19,24,31 * *
+#    - cron: '17 3 */5 * *'
+#      timezone: Asia/Shanghai
 
 # 点赞☆Star触发编译
 #  watch:
