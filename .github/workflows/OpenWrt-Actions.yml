@@ -45,7 +45,7 @@ on:
         type: string
         default: ''
 
-# 定时触发编译(1,5,10,15,20,25,30早3点)
+# 定时触发编译
 #  schedule:
 #    - cron: '17 3 */5 * *'
 #      timezone: Asia/Shanghai
